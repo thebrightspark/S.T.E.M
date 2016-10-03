@@ -43,7 +43,7 @@ public class ClientUtils
             return;
         }
         ModelBakery.registerItemVariants(item);
-        final ModelResourceLocation modelLoc = new ModelResourceLocation(STEM.MOD_ID + ":fluid"); //, fluidBlock.getFluid().getName());
+        final ModelResourceLocation modelLoc = new ModelResourceLocation(STEM.MOD_ID + ":fluid", fluidBlock.getFluid().getName());
         ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
         {
             @Override
