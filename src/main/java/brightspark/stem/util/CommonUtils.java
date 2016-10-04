@@ -35,4 +35,12 @@ public class CommonUtils
             return text;
         return text.substring(0, 1).toUpperCase() + text.substring(1);
     }
+
+    public static int[] createAscIntArray(int size)
+    {
+        int[] array = new int[size];
+        for(int i = 0; i < size; ++i)
+            array[i] = i;
+        return array;
+    }
 }
