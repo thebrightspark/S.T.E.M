@@ -10,12 +10,14 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.IFluidBlock;
 
 public class ClientUtils
 {
     private static Minecraft mc = Minecraft.getMinecraft();
+    private static int chatMessageId = 1;
 
     //Register a model
     public static void regModel(Item item)
@@ -60,5 +62,15 @@ public class ClientUtils
                 return modelLoc;
             }
         });
+    }
+
+    public static int getNewChatMessageId()
+    {
+        return chatMessageId++;
+    }
+
+    public static void addClientChatMessage(ITextComponent message, int deleteId)
+    {
+        mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(message, deleteId);
     }
 }
