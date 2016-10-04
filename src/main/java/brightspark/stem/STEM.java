@@ -45,20 +45,21 @@ public class STEM
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        //Initialize item, blocks and configs here
+        //Initialize item, blocks, textures/models and configs here
 
         StemFluids.regFluids();
-    }
-
-    @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
-    {
-        //Initialize textures/models, GUIs, tile entities, recipies, event handlers here
 
         if(event.getSide() == Side.CLIENT)
         {
             StemFluids.regModels();
         }
+    }
+
+    @Mod.EventHandler
+    public void init(FMLInitializationEvent event)
+    {
+        //Initialize GUIs, tile entities, recipies, event handlers here
+
     }
 
     @Mod.EventHandler
