@@ -2,6 +2,7 @@ package brightspark.stem.block;
 
 import brightspark.stem.tileentity.TileMachine;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
@@ -16,21 +17,12 @@ import net.minecraft.world.World;
 
 public abstract class AbstractBlockMachineDirectional<T extends TileMachine> extends AbstractBlockMachine<T>
 {
-    public static final PropertyDirection FACING = BlockDirectional.FACING;
+    public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
     public AbstractBlockMachineDirectional(String name)
     {
         super(name);
         setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-    }
-
-    public void setFacingWithWrench(World world, BlockPos pos, IBlockState state, EnumFacing facing)
-    {
-        EnumFacing currentFacing = state.getValue(FACING);
-        if(facing == currentFacing)
-            world.setBlockState(pos, state.withProperty(FACING, facing.getOpposite()));
-        else
-            world.setBlockState(pos, state.withProperty(FACING, facing));
     }
 
     /**

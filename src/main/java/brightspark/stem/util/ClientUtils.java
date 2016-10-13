@@ -35,7 +35,7 @@ public class ClientUtils
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
     }
 
-    //Register a fluid model
+    //Register a liquid model
     public static void regFluidModel(IFluidBlock fluidBlock)
     {
         Item item = Item.getItemFromBlock((Block) fluidBlock);
@@ -45,7 +45,7 @@ public class ClientUtils
             return;
         }
         ModelBakery.registerItemVariants(item);
-        final ModelResourceLocation modelLoc = new ModelResourceLocation(STEM.MOD_ID + ":fluid", fluidBlock.getFluid().getName());
+        final ModelResourceLocation modelLoc = new ModelResourceLocation(STEM.MOD_ID + ":liquid", fluidBlock.getFluid().getName());
         ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
         {
             @Override

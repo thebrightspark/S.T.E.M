@@ -1,10 +1,9 @@
 package brightspark.stem.tileentity;
 
-import brightspark.stem.StemEnergyStorage;
+import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.NBTHelper;
-import cofh.api.energy.IEnergyProvider;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,28 +19,19 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 
-public class TileMachine extends TileEntity implements IEnergyReceiver, ITickable, ISidedInventory
+public class TileMachine extends TileEntity implements IEnergyReceiver, ITickable
 {
-    public enum SideEnergyPerm
+    public enum EnumSidePerm
     {
         ALL(0),
         INPUT(1),
         OUTPUT(2),
         NONE(3);
 
-        private static SideEnergyPerm[] allPerms = new SideEnergyPerm[4];
         public final int id;
 
-        static
-        {
-            //Create array of all perms
-            for(SideEnergyPerm perm : values())
-                allPerms[perm.id] = perm;
-        }
-
-        SideEnergyPerm(int id)
+        EnumSidePerm(int id)
         {
             this.id = id;
         }
@@ -52,14 +42,14 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             return I18n.format("sideEnergyPerm." + name().toLowerCase());
         }
 
-        public static SideEnergyPerm getById(int id)
+        public static EnumSidePerm getById(int id)
         {
-            return id < 0 || id > allPerms.length - 1 ? null : allPerms[id];
+            return id < 0 || id > EnumSidePerm.values().length - 1 ? null : EnumSidePerm.values()[id];
         }
 
-        public SideEnergyPerm getNextPerm()
+        public EnumSidePerm getNextPerm()
         {
-            return id + 1 > allPerms.length - 1 ? getById(0) : getById(id + 1);
+            return id + 1 > EnumSidePerm.values().length - 1 ? getById(0) : getById(id + 1);
         }
 
         public boolean canInput()
@@ -75,35 +65,39 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         public String getChatDisplay(EnumFacing side)
         {
             String sideText = CommonUtils.capitaliseFirstLetter(side.getName());
-            return TextFormatting.BLUE + "[" + I18n.format("sideEnergyPerm.mode", sideText) + " " + TextFormatting.DARK_AQUA + toString() + TextFormatting.BLUE + "]" + TextFormatting.RESET;
+            return TextFormatting.BLUE + "[" + I18n.format("sideEnergyPerm.mode", sideText) + " " + TextFormatting.DARK_AQUA + toString() + TextFormatting.BLUE + "] " + TextFormatting.RESET;
         }
     }
 
-    protected HashMap<EnumFacing, SideEnergyPerm>  energySides = new HashMap<EnumFacing, SideEnergyPerm>(6);
+    //The facings are relative to the block's front.
+    //TODO: Uncomment machine side permissions!
+    //protected HashMap<EnumFacing, EnumSidePerm> sideConfigs = new HashMap<EnumFacing, EnumSidePerm>(6);
     protected StemEnergyStorage energy;
     //This is used in block.getDrops() so that the energy is only saved to the ItemStack when a wrench is used.
     public boolean usedWrenchToBreak = false;
-    protected ItemStack[] slots;
+    //protected ItemStack[] slots;
     //This is used by getSlotsForFace
-    protected int[] slotsForFaces;
+    //protected int[] slotsForFaces;
+    //Dependant on redstone input. Redstone signal = machine off //TODO: Make a button to change redstone interactivity
+    public boolean active = true;
 
     public static final String KEY_STACK_ENERGY = "stackEnergy";
     public static final String KEY_SIDE_PERMS = "sidePerms";
     public static final String KEY_INVENTORY = "inventory";
 
-    public TileMachine(int numSlots)
+    public TileMachine()
     {
         //Machine default energy
-        this(new StemEnergyStorage(100000, 1000), numSlots); //TODO: Later use configs
+        this(new StemEnergyStorage(100000, 1000)); //TODO: Later use configs
     }
 
-    public TileMachine(StemEnergyStorage energy, int numSlots)
+    public TileMachine(StemEnergyStorage energy)
     {
         this.energy = energy;
-        slots = new ItemStack[numSlots];
-        for(EnumFacing side : EnumFacing.VALUES)
-            energySides.put(side, SideEnergyPerm.ALL);
-        slotsForFaces = CommonUtils.createAscIntArray(numSlots);
+        //slots = new ItemStack[numSlots];
+        //for(EnumFacing side : EnumFacing.VALUES)
+        //    sideConfigs.put(side, EnumSidePerm.ALL);
+        //slotsForFaces = CommonUtils.createAscIntArray(numSlots);
     }
 
     public boolean hasEnergy()
@@ -118,23 +112,23 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
 
     public boolean canReceiveEnergy(EnumFacing side)
     {
-        return !isEnergyFull() && energySides.get(side).canInput();
+        return !isEnergyFull(); //&& sideConfigs.get(side).canInput();
     }
 
     public int getMaxExtract(EnumFacing side)
     {
-        if(side == null || energySides.get(side).canOutput())
+        //if(side == null || sideConfigs.get(side).canOutput())
             return energy.getMaxExtract();
-        else
-            return 0;
+        //else
+        //    return 0;
     }
 
     public int getMaxReceieve(EnumFacing side)
     {
-        if(side == null || energySides.get(side).canInput())
+        //if(side == null || sideConfigs.get(side).canInput())
             return energy.getMaxReceive();
-        else
-            return 0;
+        //else
+        //    return 0;
     }
 
     /**
@@ -155,34 +149,157 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     {
         if(machine == null || machine.energy == null)
             return;
+        //Copy energy
         energy.setCapacity(machine.getMaxEnergyStored(null));
         energy.setMaxExtract(machine.getMaxExtract(null));
         energy.setMaxReceive(machine.getMaxReceieve(null));
         energy.setEnergyStored(machine.getEnergyStored(null));
+        //Copy side permissions
+        //for(EnumFacing side : EnumFacing.VALUES)
+        //    sideConfigs.put(side, machine.getPermForSide(side));
+        //Copy inventory
+        //for(int i = 0; i < machine.slots.length; ++i)
+        //    slots[i] = machine.slots[i];
     }
 
-    public void setEnergySidePerm(EnumFacing side, SideEnergyPerm perm)
+    /**
+     * Gets the relative side from the block's front and the absolute side.
+     * If the block isn't an instance of AbstractBlockMachineDirectional then it'll just return the given side.
+     */
+    /*
+    private EnumFacing getRelativeSide(IBlockState state, EnumFacing side)
     {
-        energySides.put(side, perm);
+        if(state.getBlock() instanceof AbstractBlockMachineDirectional)
+            return CommonUtils.getRelativeSide(side, state.getValue(AbstractBlockMachineDirectional.FACING));
+        else
+            return side;
     }
+    */
 
-    public void nextEnergySidePerm(EnumFacing side)
+    /**
+     * Gets the absolute side from the block's front and the relative side.
+     * If the block isn't an instance of AbstractBlockMachineDirectional then it'll just return the given side.
+     */
+    /*
+    private EnumFacing getAbsoluteSide(IBlockState state, EnumFacing side)
     {
-        SideEnergyPerm perm = SideEnergyPerm.getById(energySides.get(side).id).getNextPerm();
-        energySides.put(side, perm);
+        if(state.getBlock() instanceof AbstractBlockMachineDirectional)
+            return CommonUtils.getAbsoluteSide(side, state.getValue(AbstractBlockMachineDirectional.FACING));
+        else
+            return side;
     }
+    */
 
-    public SideEnergyPerm getEnergyPermForSide(EnumFacing side)
+    /**
+     * Sets the permission for an absolute side.
+     */
+    /*
+    public void setSidePerm(IBlockState state, EnumFacing side, EnumSidePerm perm)
     {
-        return energySides.get(side);
+        sideConfigs.put(getRelativeSide(state, side), perm);
     }
+    */
+
+    /**
+     * Changes the absolute side to the next permission.
+     */
+    /*
+    public void nextSidePerm(IBlockState state, EnumFacing side)
+    {
+        EnumFacing relSide = getRelativeSide(state, side);
+        EnumSidePerm nextPerm = sideConfigs.get(relSide).getNextPerm();
+        sideConfigs.put(relSide, nextPerm);
+    }
+    */
+
+    /**
+     * Gets the permission for an absolute side.
+     */
+    /*
+    public EnumSidePerm getPermForSide(IBlockState state, EnumFacing side)
+    {
+        return sideConfigs.get(getRelativeSide(state, side));
+    }
+    */
+
+    /**
+     * Gets the permission saved for the given side.
+     * Note: The value returned is the tile's relative side directly from the stored value!
+     */
+    /*
+    public EnumSidePerm getPermForSide(EnumFacing side)
+    {
+        return sideConfigs.get(side);
+    }
+    */
 
     /* NBT */
 
-    public void writeEnergyToStack(ItemStack stack)
+    /**
+     * Writes the tile's data to the ItemStack.
+     */
+    public void writeDataToStack(ItemStack stack)
     {
+        //Write energy
         LogHelper.info("Machine Energy (write): " + energy.getEnergyStored());
         NBTHelper.setInteger(stack, KEY_STACK_ENERGY, energy.getEnergyStored());
+
+        //Write side permissions
+        /*
+        NBTTagList sideList = new NBTTagList();
+        for(EnumFacing facing : EnumFacing.values())
+        {
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setByte("side", (byte) facing.getIndex());
+            tag.setByte("perm", (byte) sideConfigs.get(facing).id);
+            sideList.appendTag(tag);
+        }
+        NBTHelper.setList(stack, KEY_SIDE_PERMS, sideList);
+        */
+
+        //Write inventory
+        /*
+        NBTTagList stackList = new NBTTagList();
+        for(int i = 0; i < slots.length; ++i)
+        {
+            if(slots[i] == null) continue;
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setByte("slot", (byte) i);
+            slots[i].writeToNBT(tag);
+            stackList.appendTag(tag);
+        }
+        NBTHelper.setList(stack, KEY_INVENTORY, stackList);
+        */
+    }
+
+    /**
+     * Reads and set the energy saved to the ItemStack to the energy for this TileMachine.
+     */
+    public void readDataFromStack(ItemStack stack)
+    {
+        //Read energy
+        energy.setEnergyStored(NBTHelper.getInt(stack, KEY_STACK_ENERGY));
+        LogHelper.info("Machine Energy (read): " + energy.getEnergyStored());
+
+        //Read side permissions
+        /*
+        NBTTagList sideList = NBTHelper.getList(stack, KEY_SIDE_PERMS);
+        for(int i = 0; i < sideList.tagCount(); ++i)
+        {
+            NBTTagCompound tag = sideList.getCompoundTagAt(i);
+            sideConfigs.put(EnumFacing.getFront(tag.getByte("side")), EnumSidePerm.getById(tag.getByte("perm")));
+        }
+        */
+
+        //Read inventory
+        /*
+        NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
+        for(int i = 0; i < stackList.tagCount(); ++i)
+        {
+            NBTTagCompound tag = stackList.getCompoundTagAt(i);
+            slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+        }
+        */
     }
 
     /**
@@ -193,15 +310,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         return NBTHelper.getInt(stack, KEY_STACK_ENERGY);
     }
 
-    /**
-     * Reads and set the energy save to the ItemStack to the energy for this TileMachine.
-     */
-    public void getEnergyFromStack(ItemStack stack)
-    {
-        energy.setEnergyStored(NBTHelper.getInt(stack, KEY_STACK_ENERGY));
-        LogHelper.info("Machine Energy (read): " + energy.getEnergyStored());
-    }
-
+    @Override
     public void readFromNBT(NBTTagCompound nbt)
     {
         super.readFromNBT(nbt);
@@ -210,41 +319,47 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         energy.readFromNBT(nbt);
 
         //Read side permissions
+        /*
         NBTTagList sideList = nbt.getTagList(KEY_SIDE_PERMS, Constants.NBT.TAG_COMPOUND);
         for(int i = 0; i < sideList.tagCount(); ++i)
         {
             NBTTagCompound tag = sideList.getCompoundTagAt(i);
-            setEnergySidePerm(EnumFacing.getFront(tag.getByte("side")), SideEnergyPerm.getById(tag.getByte("perm")));
+            sideConfigs.put(EnumFacing.getFront(tag.getByte("side")), EnumSidePerm.getById(tag.getByte("perm")));
         }
+        */
 
         //Read inventory
+        /*
         NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
         for(int i = 0; i < stackList.tagCount(); ++i)
         {
             NBTTagCompound tag = stackList.getCompoundTagAt(i);
             slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
         }
+        */
     }
 
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(nbt);
-
         //Write energy
         energy.writeToNBT(nbt);
 
         //Write side permissions
+        /*
         NBTTagList sideList = new NBTTagList();
         for(EnumFacing facing : EnumFacing.values())
         {
             NBTTagCompound tag = new NBTTagCompound();
             tag.setByte("side", (byte) facing.getIndex());
-            tag.setByte("perm", (byte) getEnergyPermForSide(facing).id);
+            tag.setByte("perm", (byte) sideConfigs.get(facing).id);
             sideList.appendTag(tag);
         }
         nbt.setTag(KEY_SIDE_PERMS, sideList);
+        */
 
         //Write inventory
+        /*
         NBTTagList stackList = new NBTTagList();
         for(int i = 0; i < slots.length; ++i)
         {
@@ -255,7 +370,8 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             stackList.appendTag(tag);
         }
         nbt.setTag(KEY_INVENTORY, stackList);
-        return nbt;
+        */
+        return super.writeToNBT(nbt);
     }
 
     /* Overrides */
@@ -288,32 +404,32 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public void update()
     {
-        //Draw power from neighbouring blocks if set to
-        if(!isEnergyFull())
+        /*
+        IHaveFluid fluidTE = this instanceof IHaveFluid ? (IHaveFluid) this : null;
+        IBlockState state = worldObj.getBlockState(pos);
+
+        //Transfer energy/liquid with adjacent blocks
+        for(EnumFacing side : EnumFacing.VALUES)
         {
-            int totalExtracted = 0;
-            for(EnumFacing side : EnumFacing.VALUES)
+            TileEntity te = worldObj.getTileEntity(pos.offset(side));
+            switch(getPermForSide(state, side))
             {
-                if(getEnergyPermForSide(side) == SideEnergyPerm.INPUT)
-                {
-                    TileEntity te = worldObj.getTileEntity(pos.offset(side));
-                    if(te instanceof IEnergyProvider)
+                case INPUT:
+                    if(!isEnergyFull() && te instanceof IEnergyProvider)
                     {
                         int extracted = ((IEnergyProvider) te).extractEnergy(side.getOpposite(), getMaxReceieve(side), false);
-                        if(extracted > 0)
-                        {
-                            if(totalExtracted + extracted > energy.getMaxReceive())
-                            {
-                                totalExtracted = energy.getMaxReceive();
-                                break;
-                            }
-                            else totalExtracted += extracted;
-                        }
+                        energy.modifyEnergyStored(extracted);
                     }
-                }
+                    break;
+                case OUTPUT:
+                    if(fluidTE != null && te instanceof IFluidHandler && fluidTE.getFluidAmount() > 0)
+                    {
+                        FluidStack extracted = ((IFluidHandler) te).drain(new FluidStack(fluidTE.getFluidType(), fluidTE.getFluidTransferRate()), true);
+                        //TODO: Finish!
+                    }
             }
-            energy.modifyEnergyStored(totalExtracted);
         }
+        */
     }
 
     @Override
@@ -340,8 +456,14 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public boolean canConnectEnergy(EnumFacing from)
     {
-        return energySides.get(from) != SideEnergyPerm.NONE;
+        return true; //sideConfigs.get(from) != EnumSidePerm.NONE;
     }
+
+    //
+    // The following was all for ISidedInventory, which I don't need in this class.
+    // Instead I'll copy to any class I might need items in.
+    //
+    /*
 
     private boolean isValidSlot(int index)
     {
@@ -423,10 +545,9 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        return index >= 0 && index < slots.length && stack != null;
+        return isValidSlot(index) && stack != null;
     }
 
-    //TODO: Use the field for progress
     @Override
     public int getField(int id)
     {
@@ -465,4 +586,5 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     {
         return isValidSlot(index);
     }
+    */
 }

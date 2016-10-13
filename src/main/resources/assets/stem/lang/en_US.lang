@@ -1,0 +1,41 @@
+//Items
+
+item.itemWrench.name=Wrench
+wrenchMode.mode=Mode:
+wrenchMode.turn=Turn
+wrenchMode.config_side=Configure
+wrenchMode.overlay.mode=Current Wrench Mode:
+wrenchMode.overlay.side=Side %s Permission:
+
+
+//Blocks
+
+tile.liquidEnergiser.name=Liquid Energiser
+
+//Fluids
+
+tile.stem.name=S.T.E.M
+fluid.stem=S.T.E.M
+
+//Entiies
+
+
+
+//Generic
+
+tooltip.shift=Hold SHIFT for extra info
+
+sideEnergyPerm.mode=Side %s Permission:
+sideEnergyPerm.all=All
+sideEnergyPerm.input=Input
+sideEnergyPerm.output=Output
+sideEnergyPerm.none=None
+
+//GUIs
+
+gui.energyStorage.max=Max:
+
+//Misc
+
+waila.energyStorage.stored=Energy:
+waila.energyStorage.inOut=Max Input/Output:

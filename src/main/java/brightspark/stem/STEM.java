@@ -1,14 +1,21 @@
 package brightspark.stem;
 
+import brightspark.stem.handler.GuiHandler;
+import brightspark.stem.handler.WrenchHandler;
+import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
+import brightspark.stem.init.StemItems;
+import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = STEM.MOD_ID, name = STEM.MOD_NAME, version = STEM.VERSION)
@@ -17,6 +24,7 @@ public class STEM
     public static final String MOD_ID = "stem";
     public static final String MOD_NAME = "S.T.E.M";
     public static final String VERSION = "1.10.2-1.0.0";
+    public static final String GUI_TEXTURE_DIR = "textures/gui/";
 
     @Mod.Instance(MOD_ID)
     public static STEM instance;
@@ -38,7 +46,7 @@ public class STEM
 
     static
     {
-        //Enable universal buckets for S.T.E.M fluid
+        //Enable universal buckets for S.T.E.M liquid
         FluidRegistry.enableUniversalBucket();
     }
 
@@ -48,10 +56,16 @@ public class STEM
         //Initialize item, blocks, textures/models and configs here
 
         StemFluids.regFluids();
+        StemItems.regItems();
+        StemBlocks.regBlocks();
+
+        WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
 
         if(event.getSide() == Side.CLIENT)
         {
             StemFluids.regModels();
+            StemItems.regModels();
+            StemBlocks.regModels();
         }
     }
 
@@ -60,6 +74,10 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
+        StemBlocks.regTileEntities();
+
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+        MinecraftForge.EVENT_BUS.register(new WrenchHandler());
     }
 
     @Mod.EventHandler

@@ -1,4 +1,4 @@
-package brightspark.stem;
+package brightspark.stem.energy;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
