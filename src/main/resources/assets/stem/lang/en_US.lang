@@ -1,12 +1,22 @@
 //Items
 
-item.itemWrench.name=Wrench
+item.wrench.name=Wand
+item.wrench.tooltip=Tools can come in many forms...
 wrenchMode.mode=Mode:
 wrenchMode.turn=Turn
 wrenchMode.config_side=Configure
 wrenchMode.overlay.mode=Current Wrench Mode:
 wrenchMode.overlay.side=Side %s Permission:
 
+item.basic.ingotBlusteel.name=Blusteel Ingot
+item.basic.machineProcessor.name=Machine Processor
+item.basic.internalTank.name=Internal Tank
+item.basic.memChip.name=Memory Chip
+item.basic.memBank.name=Memory Bank
+item.basic.largeMemBank.name=Large Memory Bank
+item.basic.energyCircuit.name=Energy Input Circuit
+item.basic.infDevice.name=Infusing Device
+item.basic.scanDevice.name=Scanning Device
 
 //Blocks
 
@@ -16,10 +26,6 @@ tile.liquidEnergiser.name=Liquid Energiser
 
 tile.stem.name=S.T.E.M
 fluid.stem=S.T.E.M
-
-//Entiies
-
-
 
 //Generic
 

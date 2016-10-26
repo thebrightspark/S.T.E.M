@@ -1,6 +1,8 @@
 package brightspark.stem.block;
 
+import brightspark.stem.gui.ContainerLiquidEnergiser;
 import brightspark.stem.gui.GuiEnergyStorage;
+import brightspark.stem.tileentity.TileLiquidEnergiser;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.ClientUtils;
@@ -14,6 +16,8 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -53,13 +57,19 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
         return (T) world.getTileEntity(pos);
     }
 
-    public GuiScreen getGui(TileEntity te)
+    public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {
         if(!hasGui || te == null) return null;
         else if(te instanceof TileMachine)
             return new GuiEnergyStorage((TileMachine) te);
-        else if(te instanceof TileMachineWithFluid)
-            return new GuiEnergyStorage((TileMachineWithFluid) te);
+        return null;
+    }
+
+    public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
+    {
+        if(!hasGui || te == null) return null;
+        else if(te instanceof TileMachine)
+            return null;
         return null;
     }
 

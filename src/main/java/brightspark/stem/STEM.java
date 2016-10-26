@@ -74,6 +74,7 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
+        StemBlocks.regColours();
         StemBlocks.regTileEntities();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());

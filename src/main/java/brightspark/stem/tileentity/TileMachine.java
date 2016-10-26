@@ -20,7 +20,7 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 
-public class TileMachine extends TileEntity implements IEnergyReceiver, ITickable
+public class TileMachine extends TileEntity implements IEnergyReceiver, ITickable, ISidedInventory
 {
     public enum EnumSidePerm
     {
@@ -75,9 +75,10 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     protected StemEnergyStorage energy;
     //This is used in block.getDrops() so that the energy is only saved to the ItemStack when a wrench is used.
     public boolean usedWrenchToBreak = false;
-    //protected ItemStack[] slots;
+    //The ItemStacks stored in this tile
+    protected ItemStack[] slots;
     //This is used by getSlotsForFace
-    //protected int[] slotsForFaces;
+    protected int[] slotsForFaces;
     //Dependant on redstone input. Redstone signal = machine off //TODO: Make a button to change redstone interactivity
     public boolean active = true;
 
@@ -87,17 +88,21 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
 
     public TileMachine()
     {
-        //Machine default energy
         this(new StemEnergyStorage(100000, 1000)); //TODO: Later use configs
     }
 
     public TileMachine(StemEnergyStorage energy)
     {
+        this(energy, 0);
+    }
+
+    public TileMachine(StemEnergyStorage energy, int numSlots)
+    {
         this.energy = energy;
-        //slots = new ItemStack[numSlots];
+        slots = new ItemStack[numSlots];
+        slotsForFaces = CommonUtils.createAscIntArray(numSlots);
         //for(EnumFacing side : EnumFacing.VALUES)
         //    sideConfigs.put(side, EnumSidePerm.ALL);
-        //slotsForFaces = CommonUtils.createAscIntArray(numSlots);
     }
 
     public boolean hasEnergy()
@@ -158,8 +163,8 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         //for(EnumFacing side : EnumFacing.VALUES)
         //    sideConfigs.put(side, machine.getPermForSide(side));
         //Copy inventory
-        //for(int i = 0; i < machine.slots.length; ++i)
-        //    slots[i] = machine.slots[i];
+        for(int i = 0; i < machine.slots.length; ++i)
+            slots[i] = machine.slots[i];
     }
 
     /**
@@ -258,7 +263,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         */
 
         //Write inventory
-        /*
         NBTTagList stackList = new NBTTagList();
         for(int i = 0; i < slots.length; ++i)
         {
@@ -269,7 +273,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             stackList.appendTag(tag);
         }
         NBTHelper.setList(stack, KEY_INVENTORY, stackList);
-        */
     }
 
     /**
@@ -292,14 +295,12 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         */
 
         //Read inventory
-        /*
         NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
         for(int i = 0; i < stackList.tagCount(); ++i)
         {
             NBTTagCompound tag = stackList.getCompoundTagAt(i);
             slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
         }
-        */
     }
 
     /**
@@ -329,14 +330,12 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         */
 
         //Read inventory
-        /*
         NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
         for(int i = 0; i < stackList.tagCount(); ++i)
         {
             NBTTagCompound tag = stackList.getCompoundTagAt(i);
             slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
         }
-        */
     }
 
     @Override
@@ -359,7 +358,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         */
 
         //Write inventory
-        /*
         NBTTagList stackList = new NBTTagList();
         for(int i = 0; i < slots.length; ++i)
         {
@@ -370,7 +368,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             stackList.appendTag(tag);
         }
         nbt.setTag(KEY_INVENTORY, stackList);
-        */
         return super.writeToNBT(nbt);
     }
 
@@ -425,7 +422,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
                     if(fluidTE != null && te instanceof IFluidHandler && fluidTE.getFluidAmount() > 0)
                     {
                         FluidStack extracted = ((IFluidHandler) te).drain(new FluidStack(fluidTE.getFluidType(), fluidTE.getFluidTransferRate()), true);
-                        //TODO: Finish!
+                        //TO-DO: Finish!
                     }
             }
         }
@@ -458,12 +455,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     {
         return true; //sideConfigs.get(from) != EnumSidePerm.NONE;
     }
-
-    //
-    // The following was all for ISidedInventory, which I don't need in this class.
-    // Instead I'll copy to any class I might need items in.
-    //
-    /*
 
     private boolean isValidSlot(int index)
     {
@@ -586,5 +577,4 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     {
         return isValidSlot(index);
     }
-    */
 }

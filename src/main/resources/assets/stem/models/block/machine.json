@@ -1,0 +1,9 @@
+{
+	"parent": "block/cube",
+	"textures": {
+		"particle": "#bottom",
+		"up": "stem:blocks/machine_top",
+        "down": "stem:blocks/machineBlock",
+        "south": "stem:blocks/machineBlock"
+	}
+}

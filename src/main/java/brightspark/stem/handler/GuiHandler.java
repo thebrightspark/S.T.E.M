@@ -1,6 +1,7 @@
 package brightspark.stem.handler;
 
 import brightspark.stem.block.AbstractBlockMachine;
+import brightspark.stem.block.BlockLiquidEnergiser;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -12,6 +13,10 @@ public class GuiHandler implements IGuiHandler
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
     {
+        BlockPos pos = new BlockPos(x, y, z);
+        Block block = world.getBlockState(pos).getBlock();
+        if(block instanceof AbstractBlockMachine)
+            return ((AbstractBlockMachine) block).getContainer(player.inventory, world.getTileEntity(pos));
         return null;
     }
 
@@ -21,7 +26,7 @@ public class GuiHandler implements IGuiHandler
         BlockPos pos = new BlockPos(x, y, z);
         Block block = world.getBlockState(pos).getBlock();
         if(block instanceof AbstractBlockMachine)
-            return ((AbstractBlockMachine) block).getGui(world.getTileEntity(pos));
+            return ((AbstractBlockMachine) block).getGui(player.inventory, world.getTileEntity(pos));
         return null;
     }
 }

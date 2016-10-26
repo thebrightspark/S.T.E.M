@@ -9,6 +9,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -38,7 +40,12 @@ public abstract class AbstractBlockContainer extends BlockContainer
         hasGui = true;
     }
 
-    public GuiScreen getGui(TileEntity te)
+    public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
+    {
+        return null;
+    }
+
+    public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
     {
         return null;
     }

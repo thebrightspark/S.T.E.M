@@ -1,5 +1,6 @@
 package brightspark.stem.util;
 
+import brightspark.stem.ISubTypes;
 import brightspark.stem.STEM;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -19,17 +20,28 @@ public class ClientUtils
     private static Minecraft mc = Minecraft.getMinecraft();
     private static int chatMessageId = 1;
 
-    //Register a model
     public static void regModel(Item item)
     {
-        regModel(item, 0);
-    }
-    public static void regModel(Block block)
-    {
-        regModel(Item.getItemFromBlock(block), 0);
+        if(item instanceof ISubTypes && item.getHasSubtypes())
+            for(int meta = 0; meta < ((ISubTypes) item).getSubNames().length; meta++)
+                ModelLoader.setCustomModelResourceLocation(item, meta,
+                        new ModelResourceLocation(item.getRegistryName().toString() + "/" + ((ISubTypes) item).getSubNames()[meta], "inventory"));
+        else
+            regModel(item, 0);
     }
 
-    //Register a model with meta
+    public static void regModel(Block block)
+    {
+        Item item = Item.getItemFromBlock(block);
+        assert item != null : "Block has no Item!";
+        if(block instanceof ISubTypes)
+            for(int meta = 0; meta < ((ISubTypes) block).getSubNames().length; meta++)
+                ModelLoader.setCustomModelResourceLocation(item, meta,
+                        new ModelResourceLocation(item.getRegistryName().toString() + "/" + ((ISubTypes) block).getSubNames()[meta], "inventory"));
+        else
+            regModel(item);
+    }
+
     public static void regModel(Item item, int meta)
     {
         ModelLoader.setCustomModelResourceLocation(item, meta, new ModelResourceLocation(item.getRegistryName(), "inventory"));
