@@ -19,6 +19,8 @@ public class ContainerMachineBase extends Container
     protected int invStartX = 8;
     protected int invStartY = 93;
 
+    protected int slotI = 0;
+
     public ContainerMachineBase(InventoryPlayer invPlayer, TileMachine machine)
     {
         inventory = machine;
