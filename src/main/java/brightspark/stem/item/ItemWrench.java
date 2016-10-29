@@ -15,8 +15,8 @@ import net.minecraft.world.World;
 
 public class ItemWrench extends ItemBasic
 {
-    private static final String KEY_MODE = "mode";
-    private final int chatIdWrenchMode = ClientUtils.getNewChatMessageId();
+    //private static final String KEY_MODE = "mode";
+    //private final int chatIdWrenchMode = ClientUtils.getNewChatMessageId();
 
     public ItemWrench()
     {
@@ -24,6 +24,13 @@ public class ItemWrench extends ItemBasic
         setMaxStackSize(1);
     }
 
+    //TEMP
+    public static EnumWrenchMode getMode(ItemStack stack)
+    {
+        return EnumWrenchMode.TURN;
+    }
+
+    /*
     private static void setMode(ItemStack stack, EnumWrenchMode mode)
     {
         NBTHelper.setInteger(stack, KEY_MODE, mode.id);
@@ -59,6 +66,8 @@ public class ItemWrench extends ItemBasic
         return super.onItemRightClick(stack, world, player, hand);
     }
 
+    */
+
     /**
      * Allow the item one last chance to modify its name used for the
      * tool highlight useful for adding something extra that can't be removed
@@ -67,8 +76,10 @@ public class ItemWrench extends ItemBasic
      * @param stack the ItemStack for the item.
      * @param displayName the name that will be displayed unless it is changed in this method.
      */
+    /*
     public String getHighlightTip(ItemStack stack, String displayName)
     {
         return getMode(stack).getDisplayPrefix() + displayName;
     }
+    */
 }

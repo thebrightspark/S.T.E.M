@@ -1,8 +1,7 @@
 package brightspark.stem.block;
 
-import brightspark.stem.gui.ContainerLiquidEnergiser;
 import brightspark.stem.gui.GuiEnergyStorage;
-import brightspark.stem.tileentity.TileLiquidEnergiser;
+import brightspark.stem.gui.GuiMachineBase;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.ClientUtils;
@@ -23,7 +22,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
@@ -54,23 +52,7 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
             LogHelper.error("Tile entity for block at position " + pos.toString() + " is not a TileMachine!");
             return null;
         }
-        return (T) world.getTileEntity(pos);
-    }
-
-    public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
-    {
-        if(!hasGui || te == null) return null;
-        else if(te instanceof TileMachine)
-            return new GuiEnergyStorage((TileMachine) te);
-        return null;
-    }
-
-    public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
-    {
-        if(!hasGui || te == null) return null;
-        else if(te instanceof TileMachine)
-            return null;
-        return null;
+        return (T) te;
     }
 
     @Override
@@ -158,47 +140,34 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
     {
         //Actions for wrench
         WrenchHelper.EnumWrenchMode mode = WrenchHelper.getWrenchMode(heldItem);
-        if(mode != null)
+        if(mode != null && !player.isSneaking())
         {
-            if(player.isSneaking())
+            TileMachine te = getTileEntity(world, pos);
+            switch(mode)
             {
-                //Break block
-                //TODO: This doesn't break the block! Oh yeah... this method won't get called when sneaking... FIX IT!
-                getTileEntity(world, pos).usedWrenchToBreak = true;
-                Block block = state.getBlock();
-                if(block.removedByPlayer(state, world, pos, player, true))
-                    block.harvestBlock(world, player, pos, state, world.getTileEntity(pos), heldItem);
-                return true;
-            }
-            else
-            {
-                TileMachine te = getTileEntity(world, pos);
-                switch(mode)
-                {
-                    /*
-                    case CONFIG_SIDE:
-                        //Change side permissions
-                        te.nextSidePerm(state, side);
-                        if(world.isRemote)
-                            ClientUtils.addClientChatMessage(new TextComponentString(te.getPermForSide(state, side).getChatDisplay(side)), chatIdMachineSide);
-                        return true;
-                    */
-                    case TURN:
-                        //Set block facing
-                        if(!world.isRemote && world.getBlockState(pos).getBlock() instanceof AbstractBlockMachineDirectional && side != EnumFacing.UP && side != EnumFacing.DOWN)
-                        {
-                            if(side == state.getValue(AbstractBlockMachineDirectional.FACING))
-                                world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side.getOpposite()));
-                            else
-                                world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side));
-                            TileMachine newTE = getTileEntity(world, pos);
-                            if(newTE != null)
-                                newTE.copyDataFrom(te);
-                            else
-                                LogHelper.error("Block machine at " + pos.toString() + " was unable to copy tile entity data from previous state!");
-                        }
-                        return true;
-                }
+                /*
+                case CONFIG_SIDE:
+                    //Change side permissions
+                    te.nextSidePerm(state, side);
+                    if(world.isRemote)
+                        ClientUtils.addClientChatMessage(new TextComponentString(te.getPermForSide(state, side).getChatDisplay(side)), chatIdMachineSide);
+                    return true;
+                */
+                case TURN:
+                    //Set block facing
+                    if(!world.isRemote && world.getBlockState(pos).getBlock() instanceof AbstractBlockMachineDirectional && side != EnumFacing.UP && side != EnumFacing.DOWN)
+                    {
+                        if(side == state.getValue(AbstractBlockMachineDirectional.FACING))
+                            world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side.getOpposite()));
+                        else
+                            world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side));
+                        TileMachine newTE = getTileEntity(world, pos);
+                        if(newTE != null)
+                            newTE.copyDataFrom(te);
+                        else
+                            LogHelper.error("Block machine at " + pos.toString() + " was unable to copy tile entity data from previous state!");
+                    }
+                    return true;
             }
         }
         return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);

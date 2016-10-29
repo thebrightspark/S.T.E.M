@@ -7,7 +7,7 @@ import net.minecraftforge.fluids.FluidTank;
 
 /**
  * This tank will get locked to only accept the given liquid once created.
- * Also adds some helpfull methods and adds a transfer limit.
+ * Also adds some helpful methods and adds a transfer limit.
  */
 public class LockedFluidTank extends FluidTank
 {

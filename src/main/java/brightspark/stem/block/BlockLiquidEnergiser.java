@@ -25,6 +25,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLi
         return new TileLiquidEnergiser();
     }
 
+    @Override
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {
         return new GuiLiquidEnergiser(invPlayer, (TileLiquidEnergiser) te);

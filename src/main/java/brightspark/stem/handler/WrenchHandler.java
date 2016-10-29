@@ -24,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class WrenchHandler
 {
+    /*
     private static final int fontColour = 0xFFFFFF;
 
     @SubscribeEvent
@@ -46,7 +47,6 @@ public class WrenchHandler
             fontRenderer.drawStringWithShadow(text, xMid - (fontRenderer.getStringWidth(text) / 2), yMid, fontColour);
 
             //Render side permission for machine being looked at
-            /*
             RayTraceResult ray = ((ItemWrench)heldItem.getItem()).rayTrace(mc.theWorld, player, false);
             if(ray == null || ray.typeOfHit != RayTraceResult.Type.BLOCK)
                 return;
@@ -60,9 +60,9 @@ public class WrenchHandler
             if(blockState.getBlock() instanceof AbstractBlockMachineDirectional && blockState.getValue(AbstractBlockMachineDirectional.FACING) == ray.sideHit)
                 text += " (Front)";
             fontRenderer.drawStringWithShadow(text, xMid - (fontRenderer.getStringWidth(text) / 2), yMid + 10, fontColour);
-            */
         }
     }
+    */
 
     @SubscribeEvent
     public void doWrenchBreak(PlayerInteractEvent.RightClickBlock event)

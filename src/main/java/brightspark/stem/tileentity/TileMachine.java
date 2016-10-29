@@ -341,6 +341,8 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
+        super.writeToNBT(nbt);
+
         //Write energy
         energy.writeToNBT(nbt);
 
@@ -368,7 +370,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             stackList.appendTag(tag);
         }
         nbt.setTag(KEY_INVENTORY, stackList);
-        return super.writeToNBT(nbt);
+        return nbt;
     }
 
     /* Overrides */
@@ -542,16 +544,20 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public int getField(int id)
     {
-        return 0;
+        return id == 0 ? energy.getEnergyStored() : 0;
     }
 
     @Override
-    public void setField(int id, int value) {}
+    public void setField(int id, int value)
+    {
+        if(id == 0)
+            energy.setEnergyStored(value);
+    }
 
     @Override
     public int getFieldCount()
     {
-        return 0;
+        return 1;
     }
 
     @Override

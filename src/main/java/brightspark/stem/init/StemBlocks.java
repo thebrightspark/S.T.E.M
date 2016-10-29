@@ -4,12 +4,14 @@ import brightspark.stem.block.BlockBasic;
 import brightspark.stem.block.BlockLiquidEnergiser;
 import brightspark.stem.tileentity.TileLiquidEnergiser;
 import brightspark.stem.util.ClientUtils;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -39,6 +41,11 @@ public class StemBlocks
         GameRegistry.registerTileEntity(te, block.getRegistryName().getResourcePath());
     }
 
+    public static void regOreDic(Block block)
+    {
+        OreDictionary.registerOre(block.getRegistryName().getResourcePath(), block);
+    }
+
 
 
     public static void regBlocks()
@@ -46,7 +53,7 @@ public class StemBlocks
         registerBlock(blockBasic = new BlockBasic("machineBlock", Material.IRON));
         registerBlock(liquidEnergiser = new BlockLiquidEnergiser());
 
-        OreDictionary.registerOre("machineBlock", blockBasic);
+        regOreDic(blockBasic);
     }
 
     public static void regModels()

@@ -1,12 +1,8 @@
 package brightspark.stem.tileentity;
 
 import brightspark.stem.init.StemFluids;
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
+import brightspark.stem.util.LogHelper;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
@@ -25,7 +21,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
 
     public float getProgressPercentFloat()
     {
-        return progress / maxProgress;
+        return (float) progress / (float) maxProgress;
     }
 
     public String getProgressPercentString()
@@ -44,20 +40,23 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     @Override
     public void update()
     {
-        //TODO: Something's going on... the GUI is showing that the client TE isn't being updated, but the server one is.
         super.update();
         if(active && tank.hasSpace() && energy.getEnergyStored() >= energyPerTick)
         {
-            //Increase progress
-            progress++;
-            if(progress >= maxProgress)
+            if(!worldObj.isRemote)
             {
-                //Create STEM
-                tank.fill(1);
-                progress = 0;
+                //Increase progress
+                progress++;
+                if(progress >= maxProgress)
+                {
+                    //Create STEM
+                    tank.fill(1);
+                    progress = 0;
+                }
+                energy.modifyEnergyStored(- energyPerTick);
             }
-            energy.modifyEnergyStored(-energyPerTick);
             markDirty();
+            worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
         }
     }
 
@@ -73,5 +72,26 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     {
         nbt.setInteger(KEY_PROGRESS, progress);
         return super.writeToNBT(nbt);
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return id == 2 ? progress : super.getField(id);
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+        if(id == 2)
+            progress = value;
+        else
+            super.setField(id, value);
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 3;
     }
 }

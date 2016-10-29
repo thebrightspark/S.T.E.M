@@ -3,8 +3,6 @@ package brightspark.stem.tileentity;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.fluid.IHaveFluid;
 import brightspark.stem.fluid.LockedFluidTank;
-import brightspark.stem.init.StemFluids;
-import brightspark.stem.util.NBTHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.Fluid;
@@ -157,5 +155,26 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
     public int getFluidMaxOutput()
     {
         return Math.min(getFluidTransferRate(), getFluidAmount());
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return id == 1 ? tank.getFluidAmount() : super.getField(id);
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+        if(id == 1)
+            tank.setAmount(value);
+        else
+            super.setField(id, value);
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 2;
     }
 }

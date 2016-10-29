@@ -34,7 +34,7 @@ public class STEM
         @Override
         public Item getTabIconItem()
         {
-            return Items.ENDER_EYE;
+            return Item.getItemFromBlock(StemFluids.fluidStem.getBlock());
         }
 
         @Override

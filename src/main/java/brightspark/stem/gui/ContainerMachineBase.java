@@ -1,19 +1,23 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.tileentity.TileMachine;
+import brightspark.stem.util.LogHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerMachineBase extends Container
 {
     protected TileMachine inventory;
+    protected int[] cachedFields;
     protected int slotInvStart = 1;
     protected int invStartX = 8;
-    protected int invStartY = 84;
+    protected int invStartY = 93;
 
     public ContainerMachineBase(InventoryPlayer invPlayer, TileMachine machine)
     {
@@ -39,11 +43,28 @@ public class ContainerMachineBase extends Container
         return inventory.isUseableByPlayer(playerIn);
     }
 
+    /**
+     * Looks for changes made in the container, sends them to every listener.
+     */
     @Override
-    public void addListener(IContainerListener listener)
+    public void detectAndSendChanges()
     {
-        super.addListener(listener);
-        listener.sendAllWindowProperties(this, inventory);
+        super.detectAndSendChanges();
+
+        if(cachedFields == null)
+            cachedFields = new int[inventory.getFieldCount()];
+
+        for(IContainerListener listener : listeners)
+            for(int i = 0; i < inventory.getFieldCount(); i++)
+                if(cachedFields[i] != inventory.getField(i))
+                    listener.sendProgressBarUpdate(this, i, cachedFields[i] = inventory.getField(i));
+    }
+
+    @Override
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data)
+    {
+        inventory.setField(id, data);
     }
 
     /**
