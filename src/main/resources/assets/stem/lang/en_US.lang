@@ -1,6 +1,6 @@
 //Items
 
-item.wrench.name=Wand
+item.wrench.name=Configuration Wand
 item.wrench.tooltip=Tools can come in many forms...
 wrenchMode.mode=Mode:
 wrenchMode.turn=Turn
@@ -8,6 +8,7 @@ wrenchMode.config_side=Configure
 wrenchMode.overlay.mode=Current Wrench Mode:
 wrenchMode.overlay.side=Side %s Permission:
 
+item.basic.blusteelCompound.name=Blusteel Compound
 item.basic.ingotBlusteel.name=Blusteel Ingot
 item.basic.machineProcessor.name=Machine Processor
 item.basic.internalTank.name=Internal Tank
@@ -20,6 +21,7 @@ item.basic.scanDevice.name=Scanning Device
 
 //Blocks
 
+tile.machineBlock.name=Machine Block
 tile.liquidEnergiser.name=Liquid Energiser
 
 //Fluids

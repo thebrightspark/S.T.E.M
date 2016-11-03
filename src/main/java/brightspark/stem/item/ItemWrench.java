@@ -20,7 +20,7 @@ public class ItemWrench extends ItemBasic
 
     public ItemWrench()
     {
-        super("itemWrench");
+        super("wrench");
         setMaxStackSize(1);
     }
 

@@ -26,7 +26,7 @@ public class StemItems
 
     public static void regItems()
     {
-        registerItem(itemBasic = new ItemBasic("basicItem",
+        registerItem(itemBasic = new ItemBasic("basic",
                 "blusteelCompound", "ingotBlusteel", "machineProcessor", "internalTank", "memChip", "memBank",
                 "largeMemBank", "energyCircuit", "infDevice", "scanDevice"));
         registerItem(itemWrench = new ItemWrench());
