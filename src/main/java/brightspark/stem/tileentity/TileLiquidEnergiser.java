@@ -7,6 +7,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
@@ -57,7 +58,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 {
                     //Create STEM
                     tank.fillInternal(1);
-                    tank.fillInternal(1000);
+                    //tank.fillInternal(4000);
                     progress = 0;
                 }
                 energy.modifyEnergyStored(- energyPerTick);
@@ -79,9 +80,9 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                         ((IEnergyContainerItem) stack.getItem()).extractEnergy(stack, getMaxReceieve(null), false);
                     break;
                 case 1: //Bucket input
-                    if(stack.getItem().equals(Items.BUCKET) && getFluidAmount() >= 1000 && slots[2] == null)
+                    if(stack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[2] == null)
                     {
-                        tank.drainInternal(1000);
+                        tank.drainInternal(Fluid.BUCKET_VOLUME);
                         stack.stackSize--;
                         setInventorySlotContents(2, CommonUtils.createFilledBucket(StemFluids.fluidStem));
                     }

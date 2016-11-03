@@ -47,7 +47,7 @@ public class LockedFluidTank extends FluidTank
     @Override
     public boolean canDrainFluidType(FluidStack fluid)
     {
-        return fluid.getFluid().equals(this.liquid) && canDrain();
+        return fluid != null && fluid.getFluid().equals(this.liquid) && canDrain();
     }
 
     public boolean hasSpace()

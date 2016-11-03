@@ -16,6 +16,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.Fluid;
 
 import javax.annotation.Nullable;
 
@@ -51,9 +52,9 @@ public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLi
         if(heldItem != null && heldItem.getItem().equals(Items.BUCKET))
         {
             TileLiquidEnergiser machine = getTileEntity(world, pos);
-            if(machine.getFluidAmount() >= 1000)
+            if(machine.getFluidAmount() >= Fluid.BUCKET_VOLUME)
             {
-                machine.drainInternal(1000);
+                machine.drainInternal(Fluid.BUCKET_VOLUME);
                 heldItem.stackSize--;
                 ItemStack filledBucket = CommonUtils.createFilledBucket(machine.getFluidType());
                 if(!player.inventory.addItemStackToInventory(filledBucket))

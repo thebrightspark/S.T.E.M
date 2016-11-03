@@ -1,12 +1,13 @@
 package brightspark.stem.gui;
 
-import brightspark.stem.init.StemFluids;
 import brightspark.stem.tileentity.TileLiquidEnergiser;
-import brightspark.stem.tileentity.TileMachine;
+import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraftforge.fluids.Fluid;
 
 import java.awt.*;
 import java.util.List;
@@ -26,13 +27,15 @@ public class GuiLiquidEnergiser extends GuiMachineBase
         super.drawGuiContainerBackgroundLayer(partialTicks, mouseX, mouseY);
 
         //Draw fluid
-        //TODO: Need to find out how to do this properly
-        //https://github.com/SleepyTrousers/EnderIO/blob/1.10/src/main/java/crazypants/enderio/machine/tank/GuiTank.java#L103
-        //https://github.com/SleepyTrousers/EnderCore/blob/master/src/main/java/com/enderio/core/client/render/RenderUtil.java#L565
-        TextureAtlasSprite fluid = mc.getTextureMapBlocks().getTextureExtry(StemFluids.fluidStem.getStill().toString());
-        drawTexturedModalRect(fluidBar.x, fluidBar.y, fluid, fluidBar.width, fluidBar.height);
+        Fluid fluid = ((TileMachineWithFluid) te).getFluidType();
+        TextureAtlasSprite fluidTexture = mc.getTextureMapBlocks().getTextureExtry(fluid.getStill().toString());
+        mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        int fluidHeight = ((TileMachineWithFluid) te).getFluidGuiHeight(fluidBar.height);
+        drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop + (fluidBar.height - fluidHeight), fluidTexture, fluidBar.width, fluidHeight);
+
         //Draw lines over fluid
-        //drawTexturedModalRect(fluidBar.x, fluidBar.y, 186, 0, fluidBar.width, fluidBar.height);
+        mc.renderEngine.bindTexture(guiImage);
+        drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop, 186, 0, fluidBar.width, fluidBar.height);
     }
 
     @Override
@@ -41,7 +44,7 @@ public class GuiLiquidEnergiser extends GuiMachineBase
         super.drawText();
         fontRendererObj.drawString("Progress:", 42, 30, textColour);
         fontRendererObj.drawString(((TileLiquidEnergiser) te).getProgressPercentString(), 42, 40, textColour);
-        fontRendererObj.drawString(((TileLiquidEnergiser) te).getFluidAmount() + "mb", 42, 50, textColour);
+        //fontRendererObj.drawString(((TileLiquidEnergiser) te).getFluidAmount() + "mb", 42, 50, textColour);
     }
 
     @Override

@@ -1,17 +1,16 @@
 package brightspark.stem.tileentity;
 
 import brightspark.stem.energy.StemEnergyStorage;
-import brightspark.stem.fluid.IHaveFluid;
 import brightspark.stem.fluid.LockedFluidTank;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
-import javax.annotation.Nullable;
-
-public class TileMachineWithFluid extends TileMachine implements IHaveFluid
+public class TileMachineWithFluid extends TileMachine
 {
     protected LockedFluidTank tank;
 
@@ -101,13 +100,6 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         return tank.drainInternal(amount);
     }
 
-    @Override
-    public IFluidTankProperties[] getTankProperties()
-    {
-        return new IFluidTankProperties[0];
-    }
-
-    @Override
     public int fill(FluidStack resource, boolean doFill)
     {
         if(!isFluidEqual(resource))
@@ -117,8 +109,6 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         return tank.fill(resource.amount);
     }
 
-    @Nullable
-    @Override
     public FluidStack drain(FluidStack resource, boolean doDrain)
     {
         if(!isFluidEqual(resource))
@@ -131,38 +121,41 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         return tank.drain(resource.amount);
     }
 
-    @Nullable
-    @Override
     public FluidStack drain(int maxDrain, boolean doDrain)
     {
         return drain(new FluidStack(tank.liquid, maxDrain), doDrain);
     }
 
-    @Override
     public Fluid getFluidType()
     {
         return tank.liquid;
     }
 
-    @Override
     public int getFluidAmount()
     {
         return tank.getFluidAmount();
     }
 
-    @Override
     public int getFluidSpace()
     {
         return tank.getCapacity() - tank.getFluidAmount();
     }
 
-    @Override
+    public float getFluidPercentage()
+    {
+        return (float) tank.getFluidAmount() / (float) tank.getCapacity();
+    }
+
+    public int getFluidGuiHeight(int maxHeight)
+    {
+        return (int) Math.ceil(getFluidPercentage() * (float) maxHeight);
+    }
+
     public int getFluidTransferRate()
     {
         return tank.transferRate;
     }
 
-    @Override
     public int getFluidMaxOutput()
     {
         return Math.min(getFluidTransferRate(), getFluidAmount());
@@ -187,5 +180,22 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
     public int getFieldCount()
     {
         return 2;
+    }
+
+    //Capability
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+    {
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY || super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+    {
+        if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return (T) tank;
+        return super.getCapability(capability, facing);
     }
 }
