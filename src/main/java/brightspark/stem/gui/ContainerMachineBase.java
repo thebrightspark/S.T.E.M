@@ -15,11 +15,9 @@ public class ContainerMachineBase extends Container
 {
     protected TileMachine inventory;
     protected int[] cachedFields;
-    protected int slotInvStart = 1;
+    protected int slotI = 0;
     protected int invStartX = 8;
     protected int invStartY = 93;
-
-    protected int slotI = 0;
 
     public ContainerMachineBase(InventoryPlayer invPlayer, TileMachine machine)
     {
@@ -74,8 +72,6 @@ public class ContainerMachineBase extends Container
      */
     protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
     {
-        slotInvStart = inventorySlots.size();
-
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 9; j++)
@@ -105,19 +101,31 @@ public class ContainerMachineBase extends Container
             ItemStack stackInSlot = slotObject.getStack();
             stack = stackInSlot.copy();
 
-            //TODO: Gonna need to do something with this and the way slots are used
-            //If slot 0 (input)
-            if (slot == 0)
+            //If GUI slot
+            if (slot < slotI)
             {
-                if (!this.mergeItemStack(stackInSlot, slotInvStart, slotInvStart+36, true))
+                if (!mergeItemStack(stackInSlot, slotI, slotI + 36, true))
                     return null;
 
                 slotObject.onSlotChange(stackInSlot, stack);
             }
             //If slot Inventory
-            else if (slot >= slotInvStart && slot <= slotInvStart+36 && inventory.isItemValidForSlot(slot, stackInSlot))
+            else if (slot >= slotI && slot <= slotI + 36)
             {
-                if (!this.mergeItemStack(stackInSlot, 0, 1, false))
+                //TODO: This new bit is causing the GUI to leave empty stacks in the bucket input.
+                boolean success = false;
+                for(int i = 0; i < slotI; i++)
+                {
+                    if(inventorySlots.get(i).isItemValid(stackInSlot))
+                    {
+                        if(mergeItemStack(stackInSlot, i, i + 1, false))
+                        {
+                            success = true;
+                            break;
+                        }
+                    }
+                }
+                if(!success)
                     return null;
             }
 

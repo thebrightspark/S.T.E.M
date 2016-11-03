@@ -8,6 +8,7 @@ import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -492,23 +493,29 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public ItemStack decrStackSize(int index, int count)
     {
+        return ItemStackHelper.getAndSplit(slots, index, count);
+        /*
         ItemStack stack = getStackInSlot(index);
         if(stack == null) return null;
         if(count >= stack.stackSize) return removeStackFromSlot(index);
         ItemStack split = stack.splitStack(count);
         slots[index] = stack;
         return split;
+        */
     }
 
     @Nullable
     @Override
     public ItemStack removeStackFromSlot(int index)
     {
+        return ItemStackHelper.getAndRemove(slots, index);
+        /*
         ItemStack stack = getStackInSlot(index);
         if(stack == null) return null;
         stack = stack.copy();
         slots[index] = null;
         return stack;
+        */
     }
 
     @Override

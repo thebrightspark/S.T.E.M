@@ -9,6 +9,8 @@ public interface IHaveFluid extends IFluidHandler
 
     int getFluidAmount();
 
+    int getFluidSpace();
+
     int getFluidTransferRate();
 
     /**

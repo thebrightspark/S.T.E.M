@@ -22,11 +22,11 @@ public class GuiMachineBase extends GuiContainer
     protected TileMachine te;
     protected Rectangle energyBar = new Rectangle(29, 18, 10, 42);
 
-    public GuiMachineBase(InventoryPlayer invPlayer, TileMachine machine, String guiImageName)
+    public GuiMachineBase(ContainerMachineBase container, String guiImageName)
     {
-        super(new ContainerMachineBase(invPlayer, machine));
+        super(container);
         guiImage = new ResourceLocation(STEM.MOD_ID, STEM.GUI_TEXTURE_DIR + guiImageName + ".png");
-        te = machine;
+        te = container.inventory;
         xSize = 176;
         ySize = 175;
     }

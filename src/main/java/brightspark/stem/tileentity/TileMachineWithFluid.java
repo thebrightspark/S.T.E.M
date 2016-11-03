@@ -23,9 +23,9 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         initTank(fluid);
     }
 
-    public TileMachineWithFluid(StemEnergyStorage energy, FluidStack fluid)
+    public TileMachineWithFluid(StemEnergyStorage energy, FluidStack fluid, int numSlots)
     {
-        super(energy);
+        super(energy, numSlots);
         initTank(fluid);
     }
 
@@ -34,12 +34,12 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         tank = new LockedFluidTank(fluid.getFluid(), fluid.amount, this);
     }
 
-    private boolean isFluidEqual(FluidStack fluid)
+    protected boolean isFluidEqual(FluidStack fluid)
     {
         return isFluidEqual(fluid.getFluid());
     }
 
-    private boolean isFluidEqual(Fluid fluid)
+    protected boolean isFluidEqual(Fluid fluid)
     {
         return tank.liquid.equals(fluid);
     }
@@ -96,6 +96,11 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
         return super.writeToNBT(nbt);
     }
 
+    public FluidStack drainInternal(int amount)
+    {
+        return tank.drainInternal(amount);
+    }
+
     @Override
     public IFluidTankProperties[] getTankProperties()
     {
@@ -143,6 +148,12 @@ public class TileMachineWithFluid extends TileMachine implements IHaveFluid
     public int getFluidAmount()
     {
         return tank.getFluidAmount();
+    }
+
+    @Override
+    public int getFluidSpace()
+    {
+        return tank.getCapacity() - tank.getFluidAmount();
     }
 
     @Override

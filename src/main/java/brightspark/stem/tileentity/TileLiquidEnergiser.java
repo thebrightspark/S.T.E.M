@@ -1,7 +1,11 @@
 package brightspark.stem.tileentity;
 
+import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.init.StemFluids;
-import brightspark.stem.util.LogHelper;
+import brightspark.stem.util.CommonUtils;
+import cofh.api.energy.IEnergyContainerItem;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -16,7 +20,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
 
     public TileLiquidEnergiser()
     {
-        super(new FluidStack(StemFluids.fluidStem, 8000));
+        super(new StemEnergyStorage(1000000, -1), new FluidStack(StemFluids.fluidStem, 8000), 3);
     }
 
     public float getProgressPercentFloat()
@@ -41,6 +45,8 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     public void update()
     {
         super.update();
+
+        //Liquid progress
         if(active && tank.hasSpace() && energy.getEnergyStored() >= energyPerTick)
         {
             if(!worldObj.isRemote)
@@ -50,13 +56,37 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 if(progress >= maxProgress)
                 {
                     //Create STEM
-                    tank.fill(1);
+                    tank.fillInternal(1);
+                    tank.fillInternal(1000);
                     progress = 0;
                 }
                 energy.modifyEnergyStored(- energyPerTick);
             }
             markDirty();
             worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
+        }
+
+        //Handle slots
+        for(int i = 0; i < slots.length; i++)
+        {
+            ItemStack stack = slots[i];
+            if(stack == null)
+                continue;
+            switch(i)
+            {
+                case 0: //Energy input
+                    if(stack.getItem() instanceof IEnergyContainerItem)
+                        ((IEnergyContainerItem) stack.getItem()).extractEnergy(stack, getMaxReceieve(null), false);
+                    break;
+                case 1: //Bucket input
+                    if(stack.getItem().equals(Items.BUCKET) && getFluidAmount() >= 1000 && slots[2] == null)
+                    {
+                        tank.drainInternal(1000);
+                        stack.stackSize--;
+                        setInventorySlotContents(2, CommonUtils.createFilledBucket(StemFluids.fluidStem));
+                    }
+                    break;
+            }
         }
     }
 

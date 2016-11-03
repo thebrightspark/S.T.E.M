@@ -1,7 +1,11 @@
 package brightspark.stem.util;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
+import net.minecraftforge.common.ForgeModContainer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.UniversalBucket;
 
 public class CommonUtils
 {
@@ -45,6 +49,14 @@ public class CommonUtils
         for(int i = 0; i < size; ++i)
             array[i] = i;
         return array;
+    }
+
+    /**
+     * Creates an ItemStack for a Universal Bucket filled with the given fluid.
+     */
+    public static ItemStack createFilledBucket(Fluid fluid)
+    {
+        return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
     }
 
     /**

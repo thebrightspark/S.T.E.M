@@ -17,7 +17,7 @@ public class GuiLiquidEnergiser extends GuiMachineBase
 
     public GuiLiquidEnergiser(InventoryPlayer invPlayer, TileLiquidEnergiser machine)
     {
-        super(invPlayer, machine, "liquidEnergiser");
+        super(new ContainerLiquidEnergiser(invPlayer, machine), "liquidEnergiser");
     }
 
     @Override

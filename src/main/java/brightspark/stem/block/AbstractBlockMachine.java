@@ -1,7 +1,5 @@
 package brightspark.stem.block;
 
-import brightspark.stem.gui.GuiEnergyStorage;
-import brightspark.stem.gui.GuiMachineBase;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.ClientUtils;
@@ -12,11 +10,8 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -155,7 +150,7 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
                 */
                 case TURN:
                     //Set block facing
-                    if(!world.isRemote && world.getBlockState(pos).getBlock() instanceof AbstractBlockMachineDirectional && side != EnumFacing.UP && side != EnumFacing.DOWN)
+                    if(!world.isRemote && state.getBlock() instanceof AbstractBlockMachineDirectional && side != EnumFacing.UP && side != EnumFacing.DOWN)
                     {
                         if(side == state.getValue(AbstractBlockMachineDirectional.FACING))
                             world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side.getOpposite()));

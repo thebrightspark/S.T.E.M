@@ -69,9 +69,19 @@ public class LockedFluidTank extends FluidTank
         return fillInternal(new FluidStack(liquid, Math.min(amount, transferRate)), true);
     }
 
+    public int fillInternal(int amount)
+    {
+        return fillInternal(new FluidStack(liquid, amount), true);
+    }
+
     public FluidStack drain(int amount)
     {
         return drainInternal(new FluidStack(liquid, Math.min(amount, transferRate)), true);
+    }
+
+    public FluidStack drainInternal(int amount)
+    {
+        return drainInternal(new FluidStack(liquid, amount), true);
     }
 
     /**

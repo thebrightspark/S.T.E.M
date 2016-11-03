@@ -1,14 +1,11 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.tileentity.TileMachine;
-import brightspark.stem.util.LogHelper;
 import cofh.api.energy.IEnergyProvider;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.IContainerListener;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -22,7 +19,6 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
     @Override
     protected void addSlots()
     {
-        //TODO: Add slots!
         //Energy Input Slot
         addSlotToContainer(new Slot(inventory, slotI++, 27, 65)
         {
@@ -36,6 +32,26 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
             public boolean isItemValid(@Nullable ItemStack stack)
             {
                 return stack != null && stack.getItem() instanceof IEnergyProvider;
+            }
+        });
+
+        //Bucket In Slot
+        addSlotToContainer(new Slot(inventory, slotI++, 134, 23)
+        {
+            @Override
+            public boolean isItemValid(@Nullable ItemStack stack)
+            {
+                return stack != null && stack.getItem().equals(Items.BUCKET);
+            }
+        });
+
+        //Bucket Out Slot
+        addSlotToContainer(new Slot(inventory, slotI++, 134, 54)
+        {
+            @Override
+            public boolean isItemValid(@Nullable ItemStack stack)
+            {
+                return false;
             }
         });
     }

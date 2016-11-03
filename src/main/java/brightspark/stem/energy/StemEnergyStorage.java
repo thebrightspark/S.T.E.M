@@ -12,7 +12,7 @@ public class StemEnergyStorage extends EnergyStorage
 
     public StemEnergyStorage(int capacity, int maxTransfer)
     {
-        super(capacity, maxTransfer);
+        super(capacity, maxTransfer < 0 ? Integer.MAX_VALUE : maxTransfer);
     }
 
     public StemEnergyStorage(int capacity, int maxReceive, int maxExtract)

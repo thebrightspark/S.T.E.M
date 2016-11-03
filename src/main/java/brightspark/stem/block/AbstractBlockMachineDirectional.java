@@ -1,9 +1,7 @@
 package brightspark.stem.block;
 
 import brightspark.stem.tileentity.TileMachine;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.BlockPistonBase;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
