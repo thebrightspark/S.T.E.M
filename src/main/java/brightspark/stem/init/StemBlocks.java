@@ -16,6 +16,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
@@ -56,12 +58,14 @@ public class StemBlocks
         regOreDic(blockBasic);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void regModels()
     {
         for(Block block : BLOCKS)
             ClientUtils.regModel(block);
     }
 
+    @SideOnly(Side.CLIENT)
     public static void regColours()
     {
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()

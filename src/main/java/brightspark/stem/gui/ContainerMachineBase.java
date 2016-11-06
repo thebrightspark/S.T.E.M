@@ -112,7 +112,6 @@ public class ContainerMachineBase extends Container
             //If slot Inventory
             else if (slot >= slotI && slot <= slotI + 36)
             {
-                //TODO: This new bit is causing the GUI to leave empty stacks in the bucket input.
                 boolean success = false;
                 for(int i = 0; i < slotI; i++)
                 {

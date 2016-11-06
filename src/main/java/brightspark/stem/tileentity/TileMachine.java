@@ -2,7 +2,6 @@ package brightspark.stem.tileentity;
 
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.util.CommonUtils;
-import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.NBTHelper;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.client.resources.I18n;
@@ -247,7 +246,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     public void writeDataToStack(ItemStack stack)
     {
         //Write energy
-        LogHelper.info("Machine Energy (write): " + energy.getEnergyStored());
+        //LogHelper.info("Machine Energy (write): " + energy.getEnergyStored());
         NBTHelper.setInteger(stack, KEY_STACK_ENERGY, energy.getEnergyStored());
 
         //Write side permissions
@@ -283,7 +282,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     {
         //Read energy
         energy.setEnergyStored(NBTHelper.getInt(stack, KEY_STACK_ENERGY));
-        LogHelper.info("Machine Energy (read): " + energy.getEnergyStored());
+        //LogHelper.info("Machine Energy (read): " + energy.getEnergyStored());
 
         //Read side permissions
         /*

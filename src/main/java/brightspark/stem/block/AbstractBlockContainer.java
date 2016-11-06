@@ -18,6 +18,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -40,6 +42,7 @@ public abstract class AbstractBlockContainer extends BlockContainer
         hasGui = true;
     }
 
+    @SideOnly(Side.CLIENT)
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {
         return null;

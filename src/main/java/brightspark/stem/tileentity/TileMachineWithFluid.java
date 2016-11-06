@@ -14,8 +14,6 @@ public class TileMachineWithFluid extends TileMachine
 {
     protected LockedFluidTank tank;
 
-    public static final String KEY_FLUID = "fluid";
-
     public TileMachineWithFluid(FluidStack fluid)
     {
         super();

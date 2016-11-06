@@ -20,13 +20,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractBlockMachine<T extends TileMachine> extends AbstractBlockContainer
 {
-    private final int chatIdMachineSide = ClientUtils.getNewChatMessageId();
+    //@SideOnly(Side.CLIENT)
+    //private final int chatIdMachineSide = ClientUtils.getNewChatMessageId();
 
     public AbstractBlockMachine(String name)
     {
@@ -76,7 +79,7 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune)
     {
         TileMachine machine = getTileEntity(world, pos);
-        LogHelper.info("Getting Machine Drops - Used Wrench: " + machine.usedWrenchToBreak);
+        //LogHelper.info("Getting Machine Drops - Used Wrench: " + machine.usedWrenchToBreak);
         if(machine.usedWrenchToBreak)
         {
             //Write data to ItemStack
@@ -92,7 +95,7 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
      */
     protected void writeNbtToDroppedStack(IBlockAccess world, BlockPos pos, IBlockState state, TileMachine machine, ItemStack drop)
     {
-        LogHelper.info("Is Machine Null: " + (machine == null));
+        //LogHelper.info("Is Machine Null: " + (machine == null));
         if(machine != null)
             machine.writeDataToStack(drop);
     }
@@ -101,10 +104,10 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
     {
         super.onBlockPlacedBy(world, pos, state, player, stack);
-        LogHelper.info("Block Placed");
+        //LogHelper.info("Block Placed");
         if(world == null || pos == null) return;
         TileMachine machine = getTileEntity(world, pos);
-        LogHelper.info("Block Placed - TE: " + (machine != null));
+        //LogHelper.info("Block Placed - TE: " + (machine != null));
         if(machine == null) return;
         machine.readDataFromStack(stack);
         //if(!world.isRemote)

@@ -6,6 +6,8 @@ import brightspark.stem.util.ClientUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ public class StemItems
             OreDictionary.registerOre(itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
     }
 
+    @SideOnly(Side.CLIENT)
     public static void regModels()
     {
         for(Item item : ITEMS)

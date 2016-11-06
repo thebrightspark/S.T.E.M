@@ -7,7 +7,6 @@ import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -54,6 +53,7 @@ public class STEM
     public void preInit(FMLPreInitializationEvent event)
     {
         //Initialize item, blocks, textures/models and configs here
+        //TODO: Add a config file!
 
         StemFluids.regFluids();
         StemItems.regItems();
@@ -74,7 +74,8 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
-        StemBlocks.regColours();
+        if(event.getSide() == Side.CLIENT)
+            StemBlocks.regColours();
         StemBlocks.regTileEntities();
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());

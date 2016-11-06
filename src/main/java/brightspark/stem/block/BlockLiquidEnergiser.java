@@ -17,6 +17,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -33,6 +35,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLi
         return new TileLiquidEnergiser();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {

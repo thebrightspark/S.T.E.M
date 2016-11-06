@@ -30,7 +30,9 @@ public class GuiLiquidEnergiser extends GuiMachineBase
         Fluid fluid = ((TileMachineWithFluid) te).getFluidType();
         TextureAtlasSprite fluidTexture = mc.getTextureMapBlocks().getTextureExtry(fluid.getStill().toString());
         mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        //mc.renderEngine.bindTexture(fluid.getStill());
         int fluidHeight = ((TileMachineWithFluid) te).getFluidGuiHeight(fluidBar.height);
+        //drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop + (fluidBar.height - fluidHeight), 0, 0, fluidBar.width, fluidHeight);
         drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop + (fluidBar.height - fluidHeight), fluidTexture, fluidBar.width, fluidHeight);
 
         //Draw lines over fluid
