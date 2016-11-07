@@ -20,6 +20,7 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
     protected void addSlots()
     {
         //Energy Input Slot
+        /*
         addSlotToContainer(new Slot(inventory, slotI++, 27, 65)
         {
             @Override
@@ -34,6 +35,7 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
                 return stack != null && stack.getItem() instanceof IEnergyProvider;
             }
         });
+        */
 
         //Bucket In Slot
         addSlotToContainer(new Slot(inventory, slotI++, 134, 23)

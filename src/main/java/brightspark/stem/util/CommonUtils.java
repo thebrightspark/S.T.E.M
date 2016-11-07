@@ -52,6 +52,17 @@ public class CommonUtils
     }
 
     /**
+     * Gets the rounded average of all the integer values given
+     */
+    public static int average(int... values)
+    {
+        int total = 0;
+        for(int v : values)
+            total += v;
+        return Math.round((float) total / (float) values.length);
+    }
+
+    /**
      * Creates an ItemStack for a Universal Bucket filled with the given fluid.
      */
     public static ItemStack createFilledBucket(Fluid fluid)

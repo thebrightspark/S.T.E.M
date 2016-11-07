@@ -44,15 +44,15 @@ public class GuiLiquidEnergiser extends GuiMachineBase
     protected void drawText()
     {
         super.drawText();
-        fontRendererObj.drawString("Progress:", 42, 30, textColour);
-        fontRendererObj.drawString(((TileLiquidEnergiser) te).getProgressPercentString(), 42, 40, textColour);
-        //fontRendererObj.drawString(((TileLiquidEnergiser) te).getFluidAmount() + "mb", 42, 50, textColour);
+        fontRendererObj.drawString("Progress:", 8, 30, textColour);
+        fontRendererObj.drawString(te.getEnergyPercentString(), 8, 40, textColour);
+        fontRendererObj.drawString("Average Input:", 8, 55, textColour);
+        fontRendererObj.drawString(((TileLiquidEnergiser) te).getAverageInputString(), 8, 65, textColour);
     }
 
     @Override
     protected void drawTooltips(List<String> tooltip, int mouseX, int mouseY)
     {
-        super.drawTooltips(tooltip, mouseX, mouseY);
         if(fluidBar.contains(mouseX, mouseY))
         {
             tooltip.add(I18n.format(((TileLiquidEnergiser) te).getFluidType().getUnlocalizedName()));

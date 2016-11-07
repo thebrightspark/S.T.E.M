@@ -1,45 +1,27 @@
 package brightspark.stem.tileentity;
 
+import brightspark.stem.Config;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.util.CommonUtils;
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.Arrays;
+
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {
-    private int energyPerTick = 100; //TODO: Won't need this once power use has been rewritten
-    //This is the creation progress in ticks
-    private int progress;
-    private static int maxProgress = 200; //TODO: Won't need this once power use has been rewritten
-
-    public static final String KEY_PROGRESS = "progress";
+    public int[] pastEnergyInput = new int[40];
+    public int lastEnergyAmount = 0;
 
     public TileLiquidEnergiser()
     {
-        super(new StemEnergyStorage(1000000, -1), new FluidStack(StemFluids.fluidStem, 8000), 3);
-    }
-
-    public float getProgressPercentFloat()
-    {
-        return (float) progress / (float) maxProgress;
-    }
-
-    public String getProgressPercentString()
-    {
-        return Math.round(getProgressPercentFloat() * 100) + "%";
-    }
-
-    @Override
-    public void copyDataFrom(TileMachine machine)
-    {
-        super.copyDataFrom(machine);
-        if(machine instanceof TileLiquidEnergiser)
-            progress = ((TileLiquidEnergiser) machine).progress;
+        super(new StemEnergyStorage(Config.energyPerMb, Config.maxEnergyInput), new FluidStack(StemFluids.fluidStem, 8000), 3);
+        Arrays.fill(pastEnergyInput, 0);
     }
 
     @Override
@@ -48,20 +30,18 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         super.update();
 
         //Liquid progress
-        if(active && tank.hasSpace() && energy.getEnergyStored() >= energyPerTick)
+        if(active && tank.hasSpace())
         {
             if(!worldObj.isRemote)
             {
-                //Increase progress
-                progress++;
-                if(progress >= maxProgress)
+                //Check energy
+                if(isEnergyFull())
                 {
                     //Create STEM
                     tank.fillInternal(1);
                     //tank.fillInternal(4000);
-                    progress = 0;
+                    energy.setEnergyStored(0);
                 }
-                energy.modifyEnergyStored(- energyPerTick);
             }
             markDirty();
             worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
@@ -91,40 +71,22 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                     break;
             }
         }
+
+        //Average input
+        for(int i = 0; i < pastEnergyInput.length - 1; i++)
+            pastEnergyInput[i] = pastEnergyInput[i + 1];
+        int lastDiff = energy.getEnergyStored() - lastEnergyAmount;
+        pastEnergyInput[pastEnergyInput.length - 1] = lastDiff < 0 ? 0 : lastDiff;
+        lastEnergyAmount = energy.getEnergyStored();
     }
 
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
+    public int getAverageInput()
     {
-        super.readFromNBT(nbt);
-        progress = nbt.getInteger(KEY_PROGRESS);
+        return CommonUtils.average(pastEnergyInput);
     }
 
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    public String getAverageInputString()
     {
-        nbt.setInteger(KEY_PROGRESS, progress);
-        return super.writeToNBT(nbt);
-    }
-
-    @Override
-    public int getField(int id)
-    {
-        return id == 2 ? progress : super.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value)
-    {
-        if(id == 2)
-            progress = value;
-        else
-            super.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount()
-    {
-        return 3;
+        return getAverageInput() + " RF/t";
     }
 }
