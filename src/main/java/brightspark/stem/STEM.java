@@ -1,5 +1,6 @@
 package brightspark.stem;
 
+import brightspark.stem.handler.ConfigHandler;
 import brightspark.stem.handler.GuiHandler;
 import brightspark.stem.handler.WrenchHandler;
 import brightspark.stem.init.StemBlocks;
@@ -53,7 +54,9 @@ public class STEM
     public void preInit(FMLPreInitializationEvent event)
     {
         //Initialize item, blocks, textures/models and configs here
-        //TODO: Add a config file!
+
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        MinecraftForge.EVENT_BUS.register(new ConfigHandler());
 
         StemFluids.regFluids();
         StemItems.regItems();

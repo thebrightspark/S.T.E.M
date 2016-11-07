@@ -12,10 +12,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {
-    private int energyPerTick = 100; //TODO: add config for energy consumption rate
+    private int energyPerTick = 100; //TODO: Won't need this once power use has been rewritten
     //This is the creation progress in ticks
     private int progress;
-    private static int maxProgress = 200; //TODO: add config for max progress
+    private static int maxProgress = 200; //TODO: Won't need this once power use has been rewritten
 
     public static final String KEY_PROGRESS = "progress";
 
@@ -58,7 +58,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 {
                     //Create STEM
                     tank.fillInternal(1);
-                    tank.fillInternal(4000);
+                    //tank.fillInternal(4000);
                     progress = 0;
                 }
                 energy.modifyEnergyStored(- energyPerTick);
