@@ -14,7 +14,7 @@ public class StemRecipes
         //Wand (wrench)
         GameRegistry.addRecipe(new ShapedOreRecipe(StemItems.itemWrench, " bg", " pb", "b  ", 'b', "ingotBlusteel", 'g', Items.GLOWSTONE_DUST, 'p', "machineProcessor"));
         //Blusteel Compound
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(StemItems.itemBasic, 1, 0), "ingotIron", "gemLapis", new ItemStack(Items.COAL, 2, 0)));
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(StemItems.itemBasic, 1, 0), "ingotIron", "gemLapis", new ItemStack(Items.COAL, 1, 0), new ItemStack(Items.COAL, 1, 0)));
         //Blusteel Ingot
         GameRegistry.addSmelting(new ItemStack(StemItems.itemBasic, 1, 0), new ItemStack(StemItems.itemBasic, 1, 1), 1f);
         //Machine Processor
