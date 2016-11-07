@@ -6,6 +6,7 @@ import brightspark.stem.handler.WrenchHandler;
 import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
+import brightspark.stem.init.StemRecipes;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -76,6 +77,8 @@ public class STEM
     public void init(FMLInitializationEvent event)
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
+
+        StemRecipes.init();
 
         if(event.getSide() == Side.CLIENT)
             StemBlocks.regColours();
