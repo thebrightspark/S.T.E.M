@@ -17,6 +17,8 @@ public class StemRecipes
         GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(StemItems.itemBasic, 1, 0), "ingotIron", "gemLapis", new ItemStack(Items.COAL, 1, 0), new ItemStack(Items.COAL, 1, 0)));
         //Blusteel Ingot
         GameRegistry.addSmelting(new ItemStack(StemItems.itemBasic, 1, 0), new ItemStack(StemItems.itemBasic, 1, 1), 1f);
+        //Machine Block
+        GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.machineBlock, "ioi", "o o", "ioi", 'i', new ItemStack(StemItems.itemBasic, 1, 1), 'o', Blocks.IRON_BARS));
         //Machine Processor
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 2), "rgr", "qdq", "rgr", 'r', "dustRedstone", 'g', "ingotGold", 'q', "gemQuartz", 'd', "gemDiamond"));
         //Internal Tank
