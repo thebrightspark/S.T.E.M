@@ -3,11 +3,8 @@ package brightspark.stem.gui;
 import brightspark.stem.STEM;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.util.CommonUtils;
-import brightspark.stem.util.LogHelper;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

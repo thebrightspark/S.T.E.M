@@ -137,7 +137,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     }
 
     /**
-     * Gets a float between 0 and 1 of how full the energy energy is (1 being full and 0 empty).
+     * Gets a float between 0 and 1 of how full the energy is (1 being full and 0 empty).
      * @return Value between 0 and 1.
      */
     public float getEnergyPercentFloat()

@@ -55,8 +55,9 @@ public class GuiLiquidEnergiser extends GuiMachineBase
     {
         if(fluidBar.contains(mouseX, mouseY))
         {
-            tooltip.add(I18n.format(((TileLiquidEnergiser) te).getFluidType().getUnlocalizedName()));
-            tooltip.add(CommonUtils.addDigitGrouping(((TileLiquidEnergiser) te).getFluidAmount()) + "mb");
+            TileLiquidEnergiser machine = (TileLiquidEnergiser) te;
+            tooltip.add(I18n.format(machine.getFluidType().getUnlocalizedName()));
+            tooltip.add(CommonUtils.addDigitGrouping(machine.getFluidAmount()) + "mb");
         }
     }
 }

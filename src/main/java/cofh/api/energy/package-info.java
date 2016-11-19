@@ -2,7 +2,7 @@
  * (C) 2014-2016 Team CoFH / CoFH / Cult of the Full Hub
  * http://www.teamcofh.com
  */
-@API(apiVersion = CoFHAPIProps.VERSION, owner = "CoFHAPI", provides = "CoFHAPI|energy")
+@API(apiVersion = CoFHAPIProps.VERSION, owner = "CoFHAPI", provides = "CoFHAPI|value")
 package cofh.api.energy;
 
 import cofh.api.CoFHAPIProps;

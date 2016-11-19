@@ -1,14 +1,27 @@
 package brightspark.stem.util;
 
+import brightspark.stem.STEM;
+import brightspark.stem.message.MessageUpdateTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Rotation;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
 public class CommonUtils
 {
+    public static SimpleNetworkWrapper NETWORK;
+
+    public static void regNetwork()
+    {
+        NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(STEM.MOD_ID);
+        NETWORK.registerMessage(MessageUpdateTile.Handler.class, MessageUpdateTile.class, 0, Side.CLIENT);
+    }
+
     /**
      * Returns a string of the inputted number with commas added to group the digits.
      */

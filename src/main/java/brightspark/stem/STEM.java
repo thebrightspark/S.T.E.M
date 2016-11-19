@@ -7,6 +7,7 @@ import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
 import brightspark.stem.init.StemRecipes;
+import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -58,6 +59,7 @@ public class STEM
 
         ConfigHandler.init(event.getSuggestedConfigurationFile());
         MinecraftForge.EVENT_BUS.register(new ConfigHandler());
+        CommonUtils.regNetwork();
 
         StemFluids.regFluids();
         StemItems.regItems();

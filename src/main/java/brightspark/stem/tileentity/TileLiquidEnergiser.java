@@ -7,7 +7,6 @@ import brightspark.stem.util.CommonUtils;
 import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 

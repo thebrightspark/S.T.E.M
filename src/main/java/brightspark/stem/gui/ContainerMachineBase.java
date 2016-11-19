@@ -1,8 +1,10 @@
 package brightspark.stem.gui;
 
+import brightspark.stem.message.MessageUpdateTile;
 import brightspark.stem.tileentity.TileMachine;
-import brightspark.stem.util.LogHelper;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
@@ -57,7 +59,14 @@ public class ContainerMachineBase extends Container
         for(IContainerListener listener : listeners)
             for(int i = 0; i < inventory.getFieldCount(); i++)
                 if(cachedFields[i] != inventory.getField(i))
-                    listener.sendProgressBarUpdate(this, i, cachedFields[i] = inventory.getField(i));
+                {
+                    cachedFields[i] = inventory.getField(i);
+                    //If the data is bigger than a short, then send over a custom, larger packet.
+                    if(cachedFields[i] > Short.MAX_VALUE || cachedFields[i] < Short.MIN_VALUE)
+                        CommonUtils.NETWORK.sendTo(new MessageUpdateTile(inventory.getPos(), i, cachedFields[i]), (EntityPlayerMP) listener);
+                    else
+                        listener.sendProgressBarUpdate(this, i, cachedFields[i]);
+                }
     }
 
     @Override
@@ -73,17 +82,11 @@ public class ContainerMachineBase extends Container
     protected void bindPlayerInventory(InventoryPlayer inventoryPlayer)
     {
         for (int i = 0; i < 3; i++)
-        {
             for (int j = 0; j < 9; j++)
-            {
                 addSlotToContainer(new Slot(inventoryPlayer, j + i * 9 + 9, invStartX + j * 18, invStartY + i * 18));
-            }
-        }
 
         for (int i = 0; i < 9; i++)
-        {
             addSlotToContainer(new Slot(inventoryPlayer, i, invStartX + i * 18, invStartY + 18 * 3 + 4));
-        }
     }
 
     /**
