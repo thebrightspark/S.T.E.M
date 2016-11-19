@@ -1,8 +1,11 @@
 package brightspark.stem.block;
 
+import brightspark.stem.Config;
 import brightspark.stem.gui.ContainerLiquidEnergiser;
 import brightspark.stem.gui.GuiLiquidEnergiser;
 import brightspark.stem.tileentity.TileLiquidEnergiser;
+import brightspark.stem.tileentity.TileMachine;
+import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
@@ -17,10 +20,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLiquidEnergiser>
 {
@@ -67,5 +72,14 @@ public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLi
         }
 
         return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    {
+        tooltip.add("Progress: " + Math.round(((float) TileMachine.readEnergyFromStack(stack) / (float) Config.energyPerMb) * 100) + "%");
+        FluidStack fluid = TileMachineWithFluid.readFluidFromStack(stack);
+        if(fluid != null)
+            tooltip.add(fluid.getLocalizedName() + ": " + CommonUtils.addDigitGrouping(fluid.amount) + "mb");
     }
 }

@@ -121,7 +121,6 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
         FluidStack fluid = TileMachineWithFluid.readFluidFromStack(stack);
         if(fluid != null)
             tooltip.add(fluid.getLocalizedName() + ": " + CommonUtils.addDigitGrouping(fluid.amount) + "mb");
-        super.addInformation(stack, playerIn, tooltip, advanced);
     }
 
     /**
