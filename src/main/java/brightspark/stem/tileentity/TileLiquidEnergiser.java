@@ -19,7 +19,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
 
     public TileLiquidEnergiser()
     {
-        super(new StemEnergyStorage(Config.energyPerMb, Config.maxEnergyInput), new FluidStack(StemFluids.fluidStem, 8000), 3);
+        super(new StemEnergyStorage(-1, Config.maxEnergyInput), new FluidStack(StemFluids.fluidStem, 8000), 3);
         Arrays.fill(pastEnergyInput, 0);
     }
 
@@ -33,13 +33,11 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         {
             if(!worldObj.isRemote)
             {
-                //Check energy
-                if(isEnergyFull())
+                //Create STEM
+                while(energy.getEnergyStored() >= Config.energyPerMb)
                 {
-                    //Create STEM
                     tank.fillInternal(1);
-                    //tank.fillInternal(4000);
-                    energy.setEnergyStored(0);
+                    energy.modifyEnergyStored(-Config.energyPerMb);
                 }
             }
             markDirty();
