@@ -8,11 +8,12 @@ wrenchMode.config_side=Configure
 wrenchMode.overlay.mode=Current Wrench Mode:
 wrenchMode.overlay.side=Side %s Permission:
 
+item.memChip.name=Memory Chip
+
 item.basic.blusteelCompound.name=Blusteel Compound
 item.basic.ingotBlusteel.name=Blusteel Ingot
 item.basic.machineProcessor.name=Machine Processor
 item.basic.internalTank.name=Internal Tank
-item.basic.memChip.name=Memory Chip
 item.basic.memBank.name=Memory Bank
 item.basic.largeMemBank.name=Large Memory Bank
 item.basic.energyCircuit.name=Energy Input Circuit

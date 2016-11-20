@@ -14,8 +14,8 @@ import java.util.Arrays;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {
-    public int[] pastEnergyInput = new int[40];
-    public int lastEnergyAmount = 0;
+    private int[] pastEnergyInput = new int[40];
+    private int lastEnergyAmount = 0;
 
     public TileLiquidEnergiser()
     {
@@ -41,7 +41,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 }
             }
             markDirty();
-            worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
+            //worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
         }
 
         //Handle slots

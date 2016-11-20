@@ -1,5 +1,41 @@
 package brightspark.stem.block;
 
-public class BlockMatterScanner
+import brightspark.stem.tileentity.TileMatterScanner;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+public class BlockMatterScanner extends AbstractBlockMachineDirectional<TileMatterScanner>
 {
+    public BlockMatterScanner()
+    {
+        super("matterScanner");
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta)
+    {
+        return new TileMatterScanner();
+    }
+
+    /*
+    @SideOnly(Side.CLIENT)
+    @Override
+    public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
+    {
+        return new GuiLiquidEnergiser(invPlayer, (TileLiquidEnergiser) te);
+    }
+
+    @Override
+    public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
+    {
+        return new ContainerLiquidEnergiser(invPlayer, (TileLiquidEnergiser) te);
+    }
+    */
+
+
 }

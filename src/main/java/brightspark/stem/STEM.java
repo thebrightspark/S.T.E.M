@@ -7,6 +7,7 @@ import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
 import brightspark.stem.init.StemRecipes;
+import brightspark.stem.recipe.RecipeManager;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
@@ -19,6 +20,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+
+import java.io.File;
 
 @Mod(modid = STEM.MOD_ID, name = STEM.MOD_NAME, version = STEM.VERSION)
 public class STEM
@@ -57,7 +60,8 @@ public class STEM
     {
         //Initialize item, blocks, textures/models and configs here
 
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+        RecipeManager.init(event);
+        ConfigHandler.init(new File(RecipeManager.stemFolder, "config.cfg"));
         MinecraftForge.EVENT_BUS.register(new ConfigHandler());
         CommonUtils.regNetwork();
 
@@ -95,5 +99,6 @@ public class STEM
     {
         //Run stuff after mods have initialized here
 
+        RecipeManager.postInit();
     }
 }

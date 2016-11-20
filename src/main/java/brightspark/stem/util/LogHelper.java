@@ -10,7 +10,7 @@ public class LogHelper
 {
     public static void log(Level logLevel, Object object)
     {
-        FMLLog.log(STEM.MOD_NAME, logLevel, String.valueOf(object));
+        FMLLog.log(STEM.MOD_NAME, logLevel, STEM.MOD_NAME + ": " + String.valueOf(object));
     }
 
     public static void all(Object object)

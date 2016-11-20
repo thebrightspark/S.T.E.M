@@ -1,5 +1,7 @@
 package brightspark.stem.init;
 
+import brightspark.stem.recipe.RecipeManager;
+import brightspark.stem.recipe.StemRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -24,7 +26,7 @@ public class StemRecipes
         //Internal Tank
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 3), "igi", "g g", "igi", 'i', "ingotBlusteel", 'g', "blockGlass"));
         //Memory Chip
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 4), "iqi", "idi", "igi", 'i', "ingotBlusteel", 'q', "gemQuartz", 'd', "gemDiamond", 'g', "ingotGold"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(StemItems.itemMemoryChip, "iqi", "idi", "igi", 'i', "ingotBlusteel", 'q', "gemQuartz", 'd', "gemDiamond", 'g', "ingotGold"));
         //Memory Bank
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 5), "ici", "ccc", "ici", 'i', "ingotBlusteel", 'c', "memChip"));
         //Large Memory Bank
@@ -38,5 +40,10 @@ public class StemRecipes
 
         //Liquid Energiser
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.liquidEnergiser, " c ", "tbt", " i ", 'c', "energyCircuit", 't', "internalTank", 'b', "machineBlock", 'i', "infDevice"));
+
+
+
+        //Register S.T.E.M fluid recipes
+        RecipeManager.addRecipe(new StemRecipe(Items.DIAMOND, 10));
     }
 }

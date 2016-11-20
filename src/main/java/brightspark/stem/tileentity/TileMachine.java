@@ -1,5 +1,6 @@
 package brightspark.stem.tileentity;
 
+import brightspark.stem.Config;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.NBTHelper;
@@ -88,17 +89,19 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
 
     public TileMachine()
     {
-        this(new StemEnergyStorage(100000, 1000)); //TODO: Later use configs
+        this(null);
     }
-
+    public TileMachine(int numSlots)
+    {
+        this(null, numSlots);
+    }
     public TileMachine(StemEnergyStorage energy)
     {
         this(energy, 0);
     }
-
     public TileMachine(StemEnergyStorage energy, int numSlots)
     {
-        this.energy = energy;
+        this.energy = energy == null ? new StemEnergyStorage(Config.machineEnergyCapacity, Config.machineEnergyMaxTransfer) : energy;
         slots = new ItemStack[numSlots];
         slotsForFaces = CommonUtils.createAscIntArray(numSlots);
         //for(EnumFacing side : EnumFacing.VALUES)
@@ -341,8 +344,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
-        super.writeToNBT(nbt);
-
         //Write energy
         energy.writeToNBT(nbt);
 
@@ -370,7 +371,7 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             stackList.appendTag(tag);
         }
         nbt.setTag(KEY_INVENTORY, stackList);
-        return nbt;
+        return super.writeToNBT(nbt);
     }
 
     /* Overrides */

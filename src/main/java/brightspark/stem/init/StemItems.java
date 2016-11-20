@@ -1,6 +1,7 @@
 package brightspark.stem.init;
 
-import brightspark.stem.item.ItemBasic;
+import brightspark.stem.item.ItemBasicSubTypes;
+import brightspark.stem.item.ItemMemoryChip;
 import brightspark.stem.item.ItemWrench;
 import brightspark.stem.util.ClientUtils;
 import net.minecraft.item.Item;
@@ -17,7 +18,8 @@ public class StemItems
 {
     public static List<Item> ITEMS = new ArrayList<Item>();
 
-    public static ItemBasic itemBasic;
+    public static ItemBasicSubTypes itemBasic;
+    public static ItemMemoryChip itemMemoryChip;
     public static ItemWrench itemWrench;
 
     public static void registerItem(Item item)
@@ -28,13 +30,15 @@ public class StemItems
 
     public static void regItems()
     {
-        registerItem(itemBasic = new ItemBasic("basic",
-                "blusteelCompound", "ingotBlusteel", "machineProcessor", "internalTank", "memChip", "memBank",
+        registerItem(itemBasic = new ItemBasicSubTypes("basic",
+                "blusteelCompound", "ingotBlusteel", "machineProcessor", "internalTank", "memBank",
                 "largeMemBank", "energyCircuit", "infDevice", "scanDevice"));
+        registerItem(itemMemoryChip = new ItemMemoryChip());
         registerItem(itemWrench = new ItemWrench());
 
         for(int i = 0; i < itemBasic.getSubNames().length; i++)
             OreDictionary.registerOre(itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
+        OreDictionary.registerOre("memChip", itemMemoryChip);
     }
 
     @SideOnly(Side.CLIENT)
