@@ -17,6 +17,7 @@ public class ConfigHandler
     {
         public static final String GENERAL = Configuration.CATEGORY_GENERAL;
         public static final String LIQUID_ENERGISER = "liquid_energiser";
+        public static final String MATTER_SCANNER = "matter_scanner";
     }
 
     public static Configuration configuration;
@@ -33,11 +34,16 @@ public class ConfigHandler
 
     private static void loadConfiguration()
     {
+        //General
         Config.machineEnergyMaxTransfer = configuration.getInt("machineEnergyMaxTransfer", Categories.GENERAL, Config.machineEnergyMaxTransfer, 1, Integer.MAX_VALUE, "This will be the default machine energy transfer rate unless it has a custom value.");
         Config.machineEnergyCapacity = configuration.getInt("machineEnergyCapacity", Categories.GENERAL, Config.machineEnergyCapacity, 1, Integer.MAX_VALUE, "This will be the default machine energy capacity unless it has a custom value.");
 
-        Config.maxEnergyInput = configuration.getInt("maxEnergyInput", Categories.LIQUID_ENERGISER, Config.maxEnergyInput, -1, Integer.MAX_VALUE, "Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla)");
-        Config.energyPerMb = configuration.getInt("energyPerMb", Categories.LIQUID_ENERGISER, Config.energyPerMb, 1, Integer.MAX_VALUE, "This is how much energy is needed per milli bucket of STEM fluid");
+        //Liquid Energiser
+        Config.liquidEnergiserMaxEnergyInput = configuration.getInt("liquidEnergiserMaxEnergyInput", Categories.LIQUID_ENERGISER, Config.liquidEnergiserMaxEnergyInput, -1, Integer.MAX_VALUE, "Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla)");
+        Config.liquidEnergiserEnergyPerMb = configuration.getInt("liquidEnergiserEnergyPerMb", Categories.LIQUID_ENERGISER, Config.liquidEnergiserEnergyPerMb, 1, Integer.MAX_VALUE, "This is how much energy is needed per milli bucket of STEM fluid");
+
+        //Matter Scanner
+        Config.matterScannerEnergyPerTick = configuration.getInt("matterScannerEnergyPerTick", Categories.MATTER_SCANNER, Config.matterScannerEnergyPerTick, 1, Integer.MAX_VALUE, "Amount of energy used per tick");
 
         if(configuration.hasChanged())
             configuration.save();

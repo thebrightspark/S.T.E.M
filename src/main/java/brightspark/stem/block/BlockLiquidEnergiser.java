@@ -77,7 +77,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLi
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        tooltip.add("Progress: " + Math.round(((float) TileMachine.readEnergyFromStack(stack) / (float) Config.energyPerMb) * 100) + "%");
+        tooltip.add("Progress: " + Math.round(((float) TileMachine.readEnergyFromStack(stack) / (float) Config.liquidEnergiserEnergyPerMb) * 100) + "%");
         FluidStack fluid = TileMachineWithFluid.readFluidFromStack(stack);
         if(fluid != null)
             tooltip.add(fluid.getLocalizedName() + ": " + CommonUtils.addDigitGrouping(fluid.amount) + "mb");

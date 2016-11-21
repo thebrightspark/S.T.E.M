@@ -15,7 +15,12 @@ public class Config
     //Liquid Energiser
 
     /** Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla). */
-    public static int maxEnergyInput = -1;
+    public static int liquidEnergiserMaxEnergyInput = -1;
     /** This is how much energy is needed per milli bucket of STEM fluid. */
-    public static int energyPerMb = 1000000;
+    public static int liquidEnergiserEnergyPerMb = 1000000;
+
+    //Matter Scanner
+
+    /** Amount of energy used per tick */
+    public static int matterScannerEnergyPerTick = 1000;
 }

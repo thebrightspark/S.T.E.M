@@ -4,6 +4,7 @@ import brightspark.stem.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class StemRecipe
 {
@@ -22,6 +23,14 @@ public class StemRecipe
     {
         fluidInput = fluid;
         output = result.copy();
+    }
+
+    /**
+     * Checks if the given stack is equal to the output of this recipe.
+     */
+    public boolean isStackEqual(ItemStack stack)
+    {
+        return OreDictionary.itemMatches(output, stack, false);
     }
 
     public int getFluidInput()

@@ -4,6 +4,7 @@ import brightspark.stem.STEM;
 import brightspark.stem.util.LogHelper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
@@ -23,6 +24,29 @@ public class RecipeManager
     public static void addRecipe(StemRecipe recipe)
     {
         recipes.add(recipe);
+    }
+
+    /**
+     * Get the amount of S.T.E.M needed to make the item.
+     * Returns -1 if there's no recipe for the item.
+     */
+    public static int getStemNeeded(ItemStack stack)
+    {
+        for(StemRecipe recipe : recipes)
+            if(recipe.isStackEqual(stack))
+                return recipe.getFluidInput();
+        return -1;
+    }
+
+    /**
+     * Checks if a recipe exists for the given item.
+     */
+    public static boolean hasRecipeForStack(ItemStack stack)
+    {
+        for(StemRecipe recipe : recipes)
+            if(recipe.isStackEqual(stack))
+                return true;
+        return false;
     }
 
     public static void init(FMLPreInitializationEvent event)

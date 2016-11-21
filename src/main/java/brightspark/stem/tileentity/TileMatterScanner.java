@@ -1,6 +1,8 @@
 package brightspark.stem.tileentity;
 
+import brightspark.stem.Config;
 import brightspark.stem.item.ItemMemoryChip;
+import brightspark.stem.recipe.RecipeManager;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class TileMatterScanner extends TileMachine
@@ -21,14 +23,16 @@ public class TileMatterScanner extends TileMachine
     {
         super.update();
 
+        //TODO: Check for Scanner Storage adjacent and save to it if one exists
+
         //Scan item
-        if(slots[0] != null && slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[1]))
+        if(scanProgress > 0 || (slots[0] != null && slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[1]) && RecipeManager.hasRecipeForStack(slots[0]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick))
         {
             if(!worldObj.isRemote)
             {
                 scanProgress++;
-                //TODO: Get max scan progress for item
-                if(scanProgress >= 100) //TEMP
+                energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
+                if(scanProgress >= 100) //TEMP?
                 {
                     scanProgress = 0;
                     ItemMemoryChip.setItemInMemory(slots[1], slots[0]);
