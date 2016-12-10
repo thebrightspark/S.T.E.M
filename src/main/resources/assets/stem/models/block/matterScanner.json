@@ -1,0 +1,8 @@
+{
+	"parent": "stem:block/machine",
+	"textures": {
+		"north": "stem:blocks/matterScanner_side",
+		"east": "stem:blocks/machineBlock",
+		"west": "stem:blocks/machineBlock"
+	}
+}

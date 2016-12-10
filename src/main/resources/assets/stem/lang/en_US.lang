@@ -24,6 +24,9 @@ item.basic.scanDevice.name=Scanning Device
 
 tile.machineBlock.name=Machine Block
 tile.liquidEnergiser.name=Liquid Energiser
+tile.matterScanner.name=Matter Scanner
+tile.scannerStorage.name=Scanner Storage
+tile.matterCreator.name=Matter Creator
 
 //Fluids
 

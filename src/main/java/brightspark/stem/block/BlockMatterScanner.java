@@ -1,5 +1,7 @@
 package brightspark.stem.block;
 
+import brightspark.stem.gui.ContainerMatterScanner;
+import brightspark.stem.gui.GuiMatterScanner;
 import brightspark.stem.tileentity.TileMatterScanner;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,20 +24,16 @@ public class BlockMatterScanner extends AbstractBlockMachineDirectional<TileMatt
         return new TileMatterScanner();
     }
 
-    /*
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {
-        return new GuiLiquidEnergiser(invPlayer, (TileLiquidEnergiser) te);
+        return new GuiMatterScanner(invPlayer, (TileMatterScanner) te);
     }
 
     @Override
     public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
     {
-        return new ContainerLiquidEnergiser(invPlayer, (TileLiquidEnergiser) te);
+        return new ContainerMatterScanner(invPlayer, (TileMatterScanner) te);
     }
-    */
-
-
 }

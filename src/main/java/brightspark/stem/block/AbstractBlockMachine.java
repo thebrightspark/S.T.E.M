@@ -128,11 +128,13 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
      * change. Cases may include when redstone power is updated, cactus blocks popping off due to a neighboring solid
      * block, etc.
      */
+    @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
     {
         getTileEntity(world, pos).active = !world.isBlockPowered(pos);
     }
 
+    @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         //Actions for wrench

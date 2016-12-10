@@ -1,8 +1,8 @@
 package brightspark.stem.init;
 
-import brightspark.stem.block.BlockBasic;
-import brightspark.stem.block.BlockLiquidEnergiser;
+import brightspark.stem.block.*;
 import brightspark.stem.tileentity.TileLiquidEnergiser;
+import brightspark.stem.tileentity.TileMatterScanner;
 import brightspark.stem.util.ClientUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -28,6 +28,9 @@ public class StemBlocks
 
     public static BlockBasic machineBlock;
     public static BlockLiquidEnergiser liquidEnergiser;
+    public static BlockMatterScanner matterScanner;
+    public static BlockScannerStorage scannerStorage;
+    public static BlockMatterCreator matterCreator;
 
     public static void registerBlock(Block block)
     {
@@ -51,9 +54,17 @@ public class StemBlocks
     public static void regBlocks()
     {
         registerBlock(machineBlock = new BlockBasic("machineBlock", Material.IRON));
+
         registerBlock(liquidEnergiser = new BlockLiquidEnergiser());
+        registerBlock(matterScanner = new BlockMatterScanner());
 
         regOreDic(machineBlock);
+    }
+
+    public static void regTileEntities()
+    {
+        registerTE(TileLiquidEnergiser.class, liquidEnergiser);
+        registerTE(TileMatterScanner.class, matterScanner);
     }
 
     @SideOnly(Side.CLIENT)
@@ -74,10 +85,5 @@ public class StemBlocks
                 return tintIndex == 0 ? (int) Math.round(Math.random() * 0xFFFFFF) : -1;
             }
         });
-    }
-
-    public static void regTileEntities()
-    {
-        registerTE(TileLiquidEnergiser.class, liquidEnergiser);
     }
 }

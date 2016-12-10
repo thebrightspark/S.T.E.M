@@ -27,6 +27,7 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
      * Called by ItemBlocks just before a block is actually set in the world, to allow for adjustments to the
      * IBlockstate
      */
+    @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
         return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
@@ -35,6 +36,7 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
     /**
      * Called by ItemBlocks after a block is set in the world, to allow post-place logic
      */
+    @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
     {
         worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
@@ -44,6 +46,7 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
     /**
      * Convert the given metadata into a BlockState for this Block
      */
+    @Override
     public IBlockState getStateFromMeta(int meta)
     {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
@@ -52,6 +55,7 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
     /**
      * Convert the BlockState into the correct metadata value
      */
+    @Override
     public int getMetaFromState(IBlockState state)
     {
         return state.getValue(FACING).getIndex();
@@ -61,6 +65,7 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
      * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      */
+    @Override
     public IBlockState withRotation(IBlockState state, Rotation rot)
     {
         return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
@@ -70,11 +75,13 @@ public abstract class AbstractBlockMachineDirectional<T extends TileMachine> ext
      * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
      * blockstate.
      */
+    @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
     {
         return state.withRotation(mirrorIn.toRotation(state.getValue(FACING)));
     }
 
+    @Override
     protected BlockStateContainer createBlockState()
     {
         return new BlockStateContainer(this, FACING);

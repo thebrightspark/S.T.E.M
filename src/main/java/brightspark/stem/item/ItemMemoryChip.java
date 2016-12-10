@@ -26,7 +26,7 @@ public class ItemMemoryChip extends ItemBasic
         return memChipStack == null || NBTHelper.getString(memChipStack, KEY_ITEM_ID).equals("");
     }
 
-    public static void setItemInMemory(ItemStack memChipStack, ItemStack stack)
+    public static void setMemory(ItemStack memChipStack, ItemStack stack)
     {
         if(stack == null)
         {
@@ -35,13 +35,13 @@ public class ItemMemoryChip extends ItemBasic
         }
         else
         {
-            NBTHelper.setString(memChipStack, KEY_ITEM_ID, stack.getUnlocalizedName());
+            NBTHelper.setString(memChipStack, KEY_ITEM_ID, stack.getItem().getRegistryName().toString());
             int meta = stack.isItemStackDamageable() ? 0 : stack.getMetadata();
             NBTHelper.setInteger(memChipStack, KEY_ITEM_META, meta);
         }
     }
 
-    public static ItemStack getItemFromMemory(ItemStack memChipStack)
+    public static ItemStack getMemory(ItemStack memChipStack)
     {
         String itemId = NBTHelper.getString(memChipStack, KEY_ITEM_ID);
         if(itemId.equals(""))
@@ -49,7 +49,7 @@ public class ItemMemoryChip extends ItemBasic
         Item item = Item.getByNameOrId(itemId);
         if(item == null)
             return null;
-        return new ItemStack(item, NBTHelper.getInt(memChipStack, KEY_ITEM_ID));
+        return new ItemStack(item, 1, NBTHelper.getInt(memChipStack, KEY_ITEM_META));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ItemMemoryChip extends ItemBasic
         //Clear memory on item
         if(player.isSneaking() && isMemoryEmpty(stack))
         {
-            setItemInMemory(stack, null);
+            setMemory(stack, null);
             if(world.isRemote) player.addChatMessage(new TextComponentString("Memory Cleared!"));
         }
         return super.onItemRightClick(stack, world, player, hand);
@@ -67,7 +67,7 @@ public class ItemMemoryChip extends ItemBasic
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
-        ItemStack stackInMem = getItemFromMemory(stack);
+        ItemStack stackInMem = getMemory(stack);
         if(stackInMem != null)
         {
             tooltip.add(stackInMem.getDisplayName());
@@ -86,7 +86,7 @@ public class ItemMemoryChip extends ItemBasic
     @Override
     public String getHighlightTip(ItemStack stack, String displayName)
     {
-        ItemStack stackInMem = getItemFromMemory(stack);
+        ItemStack stackInMem = getMemory(stack);
         if(stackInMem != null)
             return displayName + " (" + stackInMem.getDisplayName() + ")";
         return super.getHighlightTip(stack, displayName);
