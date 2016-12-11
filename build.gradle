@@ -42,7 +42,15 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+//Add "embedded" configuration
+configurations {
+    embed
+    compile.extendsFrom(embed)
+}
+
 dependencies {
+    embed "com.opencsv:opencsv:3.8"
+
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
@@ -64,6 +72,15 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
+}
+
+//Add dependencies to the JAR
+jar {
+    from configurations.embed.collect {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        it.isDirectory() ? it : zipTree(it)
+    }
 }
 
 processResources
