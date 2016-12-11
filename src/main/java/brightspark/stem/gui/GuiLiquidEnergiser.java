@@ -44,9 +44,9 @@ public class GuiLiquidEnergiser extends GuiMachineBase
     protected void drawText()
     {
         super.drawText();
-        fontRendererObj.drawString("Progress:", 8, 30, textColour);
+        fontRendererObj.drawString(I18n.format("gui.progress"), 8, 30, textColour);
         fontRendererObj.drawString(te.getEnergyPercentString(), 8, 40, textColour);
-        fontRendererObj.drawString("Average Input:", 8, 55, textColour);
+        fontRendererObj.drawString(I18n.format("gui.averageInput"), 8, 55, textColour);
         fontRendererObj.drawString(((TileLiquidEnergiser) te).getAverageInputString(), 8, 65, textColour);
     }
 

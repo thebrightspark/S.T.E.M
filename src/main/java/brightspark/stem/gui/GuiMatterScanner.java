@@ -1,15 +1,13 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.tileentity.TileMatterScanner;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import java.awt.*;
 
 public class GuiMatterScanner extends GuiMachineBase
 {
-    private static final int colourRed = 14509670; //DD6666
-    private static final int colourGold = 16766720; //FFD700
-    private static final int colourGreen = 6741350; //66DD66
     protected Rectangle arrow = new Rectangle(95, 34, 24, 17);
 
     public GuiMatterScanner(InventoryPlayer invPlayer, TileMatterScanner machine)
@@ -32,12 +30,10 @@ public class GuiMatterScanner extends GuiMachineBase
     {
         super.drawText();
 
-        //TODO: Put the strings in the lang file instead
-
         TileMatterScanner scanner = (TileMatterScanner) te;
-        fontRendererObj.drawString("Progress: " + scanner.getScanProgressString(), 70, 20, textColour);
-        int progress = scanner.getScanProgress();
-        int colour = progress == 0 ? colourRed : progress >= 100 ? colourGreen : colourGold;
-        fontRendererObj.drawString("Status: " + scanner.getScanStatus(), 70, 58, colour);
+        fontRendererObj.drawString(I18n.format("gui.progress") + " " + scanner.getScanProgressString(), 55, 20, textColour);
+        int colour = scanner.getScanStatusColour();
+        fontRendererObj.drawString(I18n.format("gui.status"), 55, 58, colour);
+        fontRendererObj.drawString(scanner.getScanStatus(), 65, 70, colour);
     }
 }

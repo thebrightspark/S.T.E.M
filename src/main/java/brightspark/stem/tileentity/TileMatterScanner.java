@@ -5,9 +5,11 @@ import brightspark.stem.block.BlockScannerStorage;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.item.ItemMemoryChip;
 import brightspark.stem.recipe.RecipeManager;
-import brightspark.stem.util.LogHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileMatterScanner extends TileMachine
 {
@@ -33,29 +35,41 @@ public class TileMatterScanner extends TileMachine
         return getScanProgress() + "%";
     }
 
+    @SideOnly(Side.CLIENT)
     public String getScanStatus()
     {
         if(scanProgress == 0)
         {
             if(slots[1] != null && !RecipeManager.hasRecipeForStack(slots[1]))
-                return "No Recipe";
+                return I18n.format("gui.scan.recipe");
+            else if(slots[1] != null && !hasStorageDestination())
+                return I18n.format("gui.scan.storage");
+            else if(!ItemMemoryChip.isMemoryEmpty(slots[2]))
+                return I18n.format("gui.scan.complete");
             else
-                return "Inactive";
+                return I18n.format("gui.scan.inactive");
         }
         else if(scanProgress >= 100)
-            return "Scan Complete";
-        else if(hasStorageDestination())
-            return "Waiting For Storage";
+            return I18n.format("gui.scan.complete");
+        else if(!hasStorageDestination())
+            return I18n.format("gui.scan.storage");
         else
-            return "Scanning...";
+            return I18n.format("gui.scan.active");
     }
 
-    /**
-     * Used to set the progress to 0 when the output item is picked up.
-     */
-    public void resetScanProgress()
+    public int getScanStatusColour()
     {
-        scanProgress = 0;
+        if(slots[2] != null && !ItemMemoryChip.isMemoryEmpty(slots[2]))
+            return 0x28AA00; //Green
+        else if(scanProgress <= 0)
+            return 0xD20000; //Red
+        else
+            return 0xFF8200; //Gold
+    }
+
+    public boolean isScanning()
+    {
+        return scanProgress > 0 && scanProgress < 100;
     }
 
     @Override
@@ -64,7 +78,7 @@ public class TileMatterScanner extends TileMachine
         super.update();
 
         //Scan item
-        if(scanProgress > 0 && scanProgress < 100 && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(isScanning() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
             if(!worldObj.isRemote)
             {
@@ -90,7 +104,6 @@ public class TileMatterScanner extends TileMachine
         //Check if item can be scanned
         if(!worldObj.isRemote && scanProgress <= 0 && slots[1] != null && hasStorageDestination() && RecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
-            LogHelper.info("Starting scan!");
             scanProgress++;
             energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
         }
@@ -106,7 +119,7 @@ public class TileMatterScanner extends TileMachine
 
     private boolean hasMemoryChip()
     {
-        return slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[1]);
+        return slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[2]);
     }
 
     private boolean hasAdjacentStorage()
@@ -145,5 +158,26 @@ public class TileMatterScanner extends TileMachine
         nbt.setInteger(KEY_PROGRESS, scanProgress);
 
         return super.writeToNBT(nbt);
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return id == 1 ? scanProgress : super.getField(id);
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+        if(id == 1)
+            scanProgress = value;
+        else
+            super.setField(id, value);
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 2;
     }
 }

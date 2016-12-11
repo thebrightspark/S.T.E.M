@@ -118,13 +118,19 @@ public class ContainerMachineBase extends Container
                 boolean success = false;
                 for(int i = 0; i < slotI; i++)
                 {
-                    if(inventorySlots.get(i).isItemValid(stackInSlot))
+                    Slot guiSlot = inventorySlots.get(i);
+                    if(guiSlot.isItemValid(stackInSlot))
                     {
-                        if(mergeItemStack(stackInSlot, i, i + 1, false))
+                        int slotStackSpace = guiSlot.getStack() == null ? guiSlot.getSlotStackLimit() : guiSlot.getSlotStackLimit() - guiSlot.getStack().stackSize;
+                        ItemStack splitStack = stackInSlot.splitStack(slotStackSpace);
+                        if(mergeItemStack(splitStack, i, i + 1, false))
                         {
                             success = true;
-                            break;
+                            if(splitStack.stackSize <= 0)
+                                break;
                         }
+                        else
+                            stackInSlot.stackSize += splitStack.stackSize;
                     }
                 }
                 if(!success)

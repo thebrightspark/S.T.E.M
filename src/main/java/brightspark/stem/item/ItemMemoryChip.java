@@ -1,9 +1,8 @@
 package brightspark.stem.item;
 
-import brightspark.stem.util.NBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
@@ -23,33 +22,29 @@ public class ItemMemoryChip extends ItemBasic
 
     public static boolean isMemoryEmpty(ItemStack memChipStack)
     {
-        return memChipStack == null || NBTHelper.getString(memChipStack, KEY_ITEM_ID).equals("");
+        return memChipStack == null || getMemory(memChipStack) == null;
     }
 
     public static void setMemory(ItemStack memChipStack, ItemStack stack)
     {
         if(stack == null)
-        {
-            NBTHelper.setString(memChipStack, KEY_ITEM_ID, "");
-            NBTHelper.setInteger(memChipStack, KEY_ITEM_META, 0);
-        }
-        else
-        {
-            NBTHelper.setString(memChipStack, KEY_ITEM_ID, stack.getItem().getRegistryName().toString());
-            int meta = stack.isItemStackDamageable() ? 0 : stack.getMetadata();
-            NBTHelper.setInteger(memChipStack, KEY_ITEM_META, meta);
-        }
+            return;
+        NBTTagCompound memTag = memChipStack.getTagCompound();
+        if(memTag == null)
+            memTag = new NBTTagCompound();
+        stack.writeToNBT(memTag);
+        memChipStack.setTagCompound(memTag);
     }
 
     public static ItemStack getMemory(ItemStack memChipStack)
     {
-        String itemId = NBTHelper.getString(memChipStack, KEY_ITEM_ID);
-        if(itemId.equals(""))
-            return null;
-        Item item = Item.getByNameOrId(itemId);
-        if(item == null)
-            return null;
-        return new ItemStack(item, 1, NBTHelper.getInt(memChipStack, KEY_ITEM_META));
+        NBTTagCompound memTag = memChipStack.getTagCompound();
+        return memTag == null ? null : ItemStack.loadItemStackFromNBT(memTag);
+    }
+
+    public static void clearMemory(ItemStack memChipStack)
+    {
+        memChipStack.setTagCompound(new NBTTagCompound());
     }
 
     @Override

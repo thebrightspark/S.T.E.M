@@ -46,6 +46,15 @@ sideEnergyPerm.none=None
 //GUIs
 
 gui.energyStorage.max=Max:
+gui.progress=Progress:
+gui.averageInput=Average Input:
+gui.status=Status:
+
+gui.scan.recipe=No Recipe
+gui.scan.storage=Waiting For Storage
+gui.scan.active=Scanning...
+gui.scan.inactive=Inactive
+gui.scan.complete=Scan Complete
 
 //Misc
 
