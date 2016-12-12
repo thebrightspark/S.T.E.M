@@ -1,6 +1,7 @@
 package brightspark.stem.util;
 
 import brightspark.stem.STEM;
+import brightspark.stem.message.MessageStemRecipe;
 import brightspark.stem.message.MessageUpdateTile;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -20,6 +21,7 @@ public class CommonUtils
     {
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(STEM.MOD_ID);
         NETWORK.registerMessage(MessageUpdateTile.Handler.class, MessageUpdateTile.class, 0, Side.CLIENT);
+        NETWORK.registerMessage(MessageStemRecipe.Handler.class, MessageStemRecipe.class, 1, Side.CLIENT);
     }
 
     /**

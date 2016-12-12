@@ -18,6 +18,7 @@ public class ConfigHandler
         public static final String GENERAL = Configuration.CATEGORY_GENERAL;
         public static final String LIQUID_ENERGISER = "liquid_energiser";
         public static final String MATTER_SCANNER = "matter_scanner";
+        public static final String MATTER_CREATOR = "matter_creator";
     }
 
     public static Configuration configuration;
@@ -44,6 +45,9 @@ public class ConfigHandler
 
         //Matter Scanner
         Config.matterScannerEnergyPerTick = configuration.getInt("matterScannerEnergyPerTick", Categories.MATTER_SCANNER, Config.matterScannerEnergyPerTick, 1, Integer.MAX_VALUE, "Amount of energy used per tick");
+
+        //Matter Creator
+        Config.matterCreatorEnergyPerMb = configuration.getInt("matterCreatorEnergyPerMb", Categories.MATTER_CREATOR, Config.matterCreatorEnergyPerMb, 1, Integer.MAX_VALUE, "Amount of energy used per mb of STEM fluid to create an item");
 
         if(configuration.hasChanged())
             configuration.save();

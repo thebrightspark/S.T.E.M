@@ -43,10 +43,19 @@ public class RecipeManager
      */
     public static boolean hasRecipeForStack(ItemStack stack)
     {
+        return getRecipeForStack(stack) != null;
+    }
+
+    /**
+     * Gets the recipe for the given item stack.
+     * Returns null if no recipe is found.
+     */
+    public static StemRecipe getRecipeForStack(ItemStack stack)
+    {
         for(StemRecipe recipe : recipes)
             if(recipe.isStackEqual(stack))
-                return true;
-        return false;
+                return recipe;
+        return null;
     }
 
     public static void init(FMLPreInitializationEvent event)

@@ -1,7 +1,7 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.message.MessageUpdateTile;
-import brightspark.stem.tileentity.TileMachine;
+import brightspark.stem.tileentity.StemTileEntity;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,13 +15,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerMachineBase extends Container
 {
-    protected TileMachine inventory;
+    protected StemTileEntity inventory;
     protected int[] cachedFields;
     protected int slotI = 0;
     protected int invStartX = 8;
     protected int invStartY = 93;
 
-    public ContainerMachineBase(InventoryPlayer invPlayer, TileMachine machine)
+    public ContainerMachineBase(InventoryPlayer invPlayer, StemTileEntity machine)
     {
         inventory = machine;
         init();

@@ -23,4 +23,9 @@ public class Config
 
     /** Amount of energy used per tick */
     public static int matterScannerEnergyPerTick = 1000;
+
+    //Matter Creator
+
+    /** Amount of energy used per mb of STEM fluid to create an item */
+    public static int matterCreatorEnergyPerMb = 10000;
 }

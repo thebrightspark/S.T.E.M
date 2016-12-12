@@ -1,5 +1,7 @@
 package brightspark.stem.block;
 
+import brightspark.stem.gui.ContainerScannerStorage;
+import brightspark.stem.gui.GuiScannerStorage;
 import brightspark.stem.tileentity.TileScannerStorage;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.GuiScreen;
@@ -12,9 +14,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class BlockScannerStorage extends AbstractBlockContainer
 {
-    public BlockScannerStorage(String name, Material mat)
+    public BlockScannerStorage()
     {
-        super(name, mat);
+        super("scannerStorage", Material.ROCK);
+        setHasGui();
     }
 
     @Override
@@ -23,18 +26,16 @@ public class BlockScannerStorage extends AbstractBlockContainer
         return new TileScannerStorage();
     }
 
-    /*
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
     {
-        return new GuiMatterScanner(invPlayer, (TileMatterScanner) te);
+        return new GuiScannerStorage(invPlayer, (TileScannerStorage) te);
     }
 
     @Override
     public Container getContainer(InventoryPlayer invPlayer, TileEntity te)
     {
-        return new ContainerMatterScanner(invPlayer, (TileMatterScanner) te);
+        return new ContainerScannerStorage(invPlayer, (TileScannerStorage) te);
     }
-    */
 }

@@ -23,7 +23,7 @@ public class GuiMachineBase extends GuiContainer
     {
         super(container);
         guiImage = new ResourceLocation(STEM.MOD_ID, STEM.GUI_TEXTURE_DIR + guiImageName + ".png");
-        te = container.inventory;
+        te = (TileMachine) container.inventory;
         xSize = 176;
         ySize = 175;
     }

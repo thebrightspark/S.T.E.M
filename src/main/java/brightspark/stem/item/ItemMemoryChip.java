@@ -18,6 +18,7 @@ public class ItemMemoryChip extends ItemBasic
     public ItemMemoryChip()
     {
         super("memChip");
+        setMaxStackSize(1);
     }
 
     public static boolean isMemoryEmpty(ItemStack memChipStack)
@@ -28,7 +29,10 @@ public class ItemMemoryChip extends ItemBasic
     public static void setMemory(ItemStack memChipStack, ItemStack stack)
     {
         if(stack == null)
+        {
+            clearMemory(memChipStack);
             return;
+        }
         NBTTagCompound memTag = memChipStack.getTagCompound();
         if(memTag == null)
             memTag = new NBTTagCompound();
@@ -45,6 +49,15 @@ public class ItemMemoryChip extends ItemBasic
     public static void clearMemory(ItemStack memChipStack)
     {
         memChipStack.setTagCompound(new NBTTagCompound());
+    }
+
+    /**
+     * Called when item is crafted/smelted. Used only by maps so far.
+     */
+    @Override
+    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+    {
+        stack.setTagCompound(new NBTTagCompound());
     }
 
     @Override

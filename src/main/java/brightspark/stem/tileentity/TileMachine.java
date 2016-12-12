@@ -6,22 +6,13 @@ import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.NBTHelper;
 import cofh.api.energy.IEnergyReceiver;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
-
-public class TileMachine extends TileEntity implements IEnergyReceiver, ITickable, ISidedInventory
+public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITickable
 {
     public enum EnumSidePerm
     {
@@ -74,18 +65,11 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     //TODO: Uncomment machine side permissions!
     //protected HashMap<EnumFacing, EnumSidePerm> sideConfigs = new HashMap<EnumFacing, EnumSidePerm>(6);
     protected StemEnergyStorage energy;
-    //This is used in block.getDrops() so that the energy is only saved to the ItemStack when a wrench is used.
-    public boolean usedWrenchToBreak = false;
-    //The ItemStacks stored in this tile
-    protected ItemStack[] slots;
-    //This is used by getSlotsForFace
-    protected int[] slotsForFaces;
     //Dependant on redstone input. Redstone signal = machine off //TODO: Make a button to change redstone interactivity
     public boolean active = true;
 
     public static final String KEY_STACK_ENERGY = "stackEnergy";
     public static final String KEY_SIDE_PERMS = "sidePerms";
-    public static final String KEY_INVENTORY = "inventory";
 
     public TileMachine()
     {
@@ -101,9 +85,8 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     }
     public TileMachine(StemEnergyStorage energy, int numSlots)
     {
+        super(numSlots);
         this.energy = energy == null ? new StemEnergyStorage(Config.machineEnergyCapacity, Config.machineEnergyMaxTransfer) : energy;
-        slots = new ItemStack[numSlots];
-        slotsForFaces = CommonUtils.createAscIntArray(numSlots);
         //for(EnumFacing side : EnumFacing.VALUES)
         //    sideConfigs.put(side, EnumSidePerm.ALL);
     }
@@ -153,21 +136,21 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         return Math.round(getEnergyPercentFloat() * 100) + "%";
     }
 
-    public void copyDataFrom(TileMachine machine)
+    @Override
+    public void copyDataFrom(StemTileEntity machine)
     {
-        if(machine == null || machine.energy == null)
+        super.copyDataFrom(machine);
+        if(machine == null || !(machine instanceof TileMachine) || ((TileMachine) machine).energy == null)
             return;
+        TileMachine tileMachine = (TileMachine) machine;
         //Copy energy
-        energy.setCapacity(machine.getMaxEnergyStored(null));
-        energy.setMaxExtract(machine.getMaxExtract(null));
-        energy.setMaxReceive(machine.getMaxReceieve(null));
-        energy.setEnergyStored(machine.getEnergyStored(null));
+        energy.setCapacity(tileMachine.getMaxEnergyStored(null));
+        energy.setMaxExtract(tileMachine.getMaxExtract(null));
+        energy.setMaxReceive(tileMachine.getMaxReceieve(null));
+        energy.setEnergyStored(tileMachine.getEnergyStored(null));
         //Copy side permissions
         //for(EnumFacing side : EnumFacing.VALUES)
-        //    sideConfigs.put(side, machine.getPermForSide(side));
-        //Copy inventory
-        for(int i = 0; i < machine.slots.length; ++i)
-            slots[i] = machine.slots[i];
+        //    sideConfigs.put(side, tileMachine.getPermForSide(side));
     }
 
     /**
@@ -246,8 +229,11 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     /**
      * Writes the tile's data to the ItemStack.
      */
+    @Override
     public void writeDataToStack(ItemStack stack)
     {
+        super.writeDataToStack(stack);
+
         //Write energy
         //LogHelper.info("Machine Energy (write): " + energy.getEnergyStored());
         NBTHelper.setInteger(stack, KEY_STACK_ENERGY, energy.getEnergyStored());
@@ -264,25 +250,16 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         }
         NBTHelper.setList(stack, KEY_SIDE_PERMS, sideList);
         */
-
-        //Write inventory
-        NBTTagList stackList = new NBTTagList();
-        for(int i = 0; i < slots.length; ++i)
-        {
-            if(slots[i] == null) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setByte("slot", (byte) i);
-            slots[i].writeToNBT(tag);
-            stackList.appendTag(tag);
-        }
-        NBTHelper.setList(stack, KEY_INVENTORY, stackList);
     }
 
     /**
      * Reads and set the energy saved to the ItemStack to the energy for this TileMachine.
      */
+    @Override
     public void readDataFromStack(ItemStack stack)
     {
+        super.readDataFromStack(stack);
+
         //Read energy
         energy.setEnergyStored(NBTHelper.getInt(stack, KEY_STACK_ENERGY));
         //LogHelper.info("Machine Energy (read): " + energy.getEnergyStored());
@@ -296,14 +273,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             sideConfigs.put(EnumFacing.getFront(tag.getByte("side")), EnumSidePerm.getById(tag.getByte("perm")));
         }
         */
-
-        //Read inventory
-        NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
-        for(int i = 0; i < stackList.tagCount(); ++i)
-        {
-            NBTTagCompound tag = stackList.getCompoundTagAt(i);
-            slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
-        }
     }
 
     /**
@@ -331,14 +300,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
             sideConfigs.put(EnumFacing.getFront(tag.getByte("side")), EnumSidePerm.getById(tag.getByte("perm")));
         }
         */
-
-        //Read inventory
-        NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
-        for(int i = 0; i < stackList.tagCount(); ++i)
-        {
-            NBTTagCompound tag = stackList.getCompoundTagAt(i);
-            slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
-        }
     }
 
     @Override
@@ -360,46 +321,10 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         nbt.setTag(KEY_SIDE_PERMS, sideList);
         */
 
-        //Write inventory
-        NBTTagList stackList = new NBTTagList();
-        for(int i = 0; i < slots.length; ++i)
-        {
-            if(slots[i] == null) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setByte("slot", (byte) i);
-            slots[i].writeToNBT(tag);
-            stackList.appendTag(tag);
-        }
-        nbt.setTag(KEY_INVENTORY, stackList);
         return super.writeToNBT(nbt);
     }
 
     /* Overrides */
-
-    @Override
-    public NBTTagCompound getUpdateTag()
-    {
-        return writeToNBT(new NBTTagCompound());
-    }
-
-    /**
-     * Use this to send data about the block. In this case, the NBTTagCompound.
-     */
-    @Override
-    @Nullable
-    public SPacketUpdateTileEntity getUpdatePacket()
-    {
-        return new SPacketUpdateTileEntity(pos, 0, getUpdateTag());
-    }
-
-    /**
-     * Use this to update the block when a packet is received.
-     */
-    @Override
-    public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SPacketUpdateTileEntity pkt)
-    {
-        readFromNBT(pkt.getNbtCompound());
-    }
 
     @Override
     public void update()
@@ -459,95 +384,6 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
         return true; //sideConfigs.get(from) != EnumSidePerm.NONE;
     }
 
-    private boolean isValidSlot(int index)
-    {
-        return index >= 0 && index < slots.length;
-    }
-
-    @Override
-    public String getName()
-    {
-        return blockType.getRegistryName().getResourcePath();
-    }
-
-    @Override
-    public boolean hasCustomName()
-    {
-        return false;
-    }
-
-    @Override
-    public int getSizeInventory()
-    {
-        return slots.length;
-    }
-
-    @Nullable
-    @Override
-    public ItemStack getStackInSlot(int index)
-    {
-        return isValidSlot(index) ? slots[index] : null;
-    }
-
-    @Nullable
-    @Override
-    public ItemStack decrStackSize(int index, int count)
-    {
-        return ItemStackHelper.getAndSplit(slots, index, count);
-        /*
-        ItemStack stack = getStackInSlot(index);
-        if(stack == null) return null;
-        if(count >= stack.stackSize) return removeStackFromSlot(index);
-        ItemStack split = stack.splitStack(count);
-        slots[index] = stack;
-        return split;
-        */
-    }
-
-    @Nullable
-    @Override
-    public ItemStack removeStackFromSlot(int index)
-    {
-        return ItemStackHelper.getAndRemove(slots, index);
-        /*
-        ItemStack stack = getStackInSlot(index);
-        if(stack == null) return null;
-        stack = stack.copy();
-        slots[index] = null;
-        return stack;
-        */
-    }
-
-    @Override
-    public void setInventorySlotContents(int index, @Nullable ItemStack stack)
-    {
-        if(isValidSlot(index)) slots[index] = stack;
-    }
-
-    @Override
-    public int getInventoryStackLimit()
-    {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer player)
-    {
-        return worldObj.getTileEntity(pos) == this && player.getDistanceSq((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D) <= 64.0D;
-    }
-
-    @Override
-    public void openInventory(EntityPlayer player) {}
-
-    @Override
-    public void closeInventory(EntityPlayer player) {}
-
-    @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack)
-    {
-        return isValidSlot(index) && stack != null;
-    }
-
     @Override
     public int getField(int id)
     {
@@ -565,29 +401,5 @@ public class TileMachine extends TileEntity implements IEnergyReceiver, ITickabl
     public int getFieldCount()
     {
         return 1;
-    }
-
-    @Override
-    public void clear()
-    {
-        slots = new ItemStack[slots.length];
-    }
-
-    @Override
-    public int[] getSlotsForFace(EnumFacing side)
-    {
-        return slotsForFaces;
-    }
-
-    @Override
-    public boolean canInsertItem(int index, ItemStack stack, EnumFacing direction)
-    {
-        return isValidSlot(index);
-    }
-
-    @Override
-    public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
-    {
-        return isValidSlot(index);
     }
 }

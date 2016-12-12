@@ -14,7 +14,39 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileMatterScanner extends TileMachine
 {
     private int scanProgress = 0;
+    private EnumScanStatus scanStatus = EnumScanStatus.INACTIVE;
     private static final String KEY_PROGRESS = "scanProgress";
+
+    private static final int colourRed = 0xD20000;
+    private static final int colourGold = 0xFF8200;
+    private static final int colourGreen = 0x28AA00;
+
+    private enum EnumScanStatus
+    {
+        INACTIVE("gui.scan.inactive", colourRed),
+        NO_RECIPE("gui.scan.recipe", colourRed),
+        NO_STORAGE("gui.scan.storage", colourRed),
+        ACTIVE("gui.scan.active", colourGold),
+        COMPLETE("gui.scan.complete", colourGreen);
+
+        public String unlocText;
+        public String locText;
+        public int colour;
+
+        EnumScanStatus(String unlocText, int colour)
+        {
+            this.unlocText = unlocText;
+            this.colour = colour;
+        }
+
+        @SideOnly(Side.CLIENT)
+        public String getText()
+        {
+            if(locText == null)
+                locText = I18n.format(unlocText);
+            return locText;
+        }
+    }
 
     //Slot 0 -> Energy Input Stack
     //Slot 1 -> Input Stack
@@ -38,33 +70,12 @@ public class TileMatterScanner extends TileMachine
     @SideOnly(Side.CLIENT)
     public String getScanStatus()
     {
-        if(scanProgress == 0)
-        {
-            if(slots[1] != null && !RecipeManager.hasRecipeForStack(slots[1]))
-                return I18n.format("gui.scan.recipe");
-            else if(slots[1] != null && !hasStorageDestination())
-                return I18n.format("gui.scan.storage");
-            else if(!ItemMemoryChip.isMemoryEmpty(slots[2]))
-                return I18n.format("gui.scan.complete");
-            else
-                return I18n.format("gui.scan.inactive");
-        }
-        else if(scanProgress >= 100)
-            return I18n.format("gui.scan.complete");
-        else if(!hasStorageDestination())
-            return I18n.format("gui.scan.storage");
-        else
-            return I18n.format("gui.scan.active");
+        return scanStatus.getText();
     }
 
     public int getScanStatusColour()
     {
-        if(slots[2] != null && !ItemMemoryChip.isMemoryEmpty(slots[2]))
-            return 0x28AA00; //Green
-        else if(scanProgress <= 0)
-            return 0xD20000; //Red
-        else
-            return 0xFF8200; //Gold
+        return scanStatus.colour;
     }
 
     public boolean isScanning()
@@ -92,7 +103,8 @@ public class TileMatterScanner extends TileMachine
                     else
                     {
                         TileScannerStorage storage = getAdjacentStorage();
-                        //TODO: Add to scanner storage
+                        if(storage != null)
+                            storage.storeRecipe(slots[1]);
                     }
                     slots[1] = null;
                     scanProgress = 0;
@@ -107,6 +119,25 @@ public class TileMatterScanner extends TileMachine
             scanProgress++;
             energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
         }
+
+        //Update scan status
+        if(scanProgress == 0)
+        {
+            if(slots[1] != null && !RecipeManager.hasRecipeForStack(slots[1]))
+                scanStatus = EnumScanStatus.NO_RECIPE;
+            else if(slots[1] != null && !hasStorageDestination())
+                scanStatus = EnumScanStatus.NO_STORAGE;
+            else if(!ItemMemoryChip.isMemoryEmpty(slots[2]))
+                scanStatus = EnumScanStatus.COMPLETE;
+            else
+                scanStatus = EnumScanStatus.INACTIVE;
+        }
+        else if(scanProgress >= 100)
+            scanStatus = EnumScanStatus.COMPLETE;
+        else if(!hasStorageDestination())
+            scanStatus = EnumScanStatus.NO_STORAGE;
+        else
+            scanStatus = EnumScanStatus.ACTIVE;
     }
 
     /**
