@@ -2,6 +2,7 @@ package brightspark.stem.tileentity;
 
 import brightspark.stem.recipe.RecipeManager;
 import brightspark.stem.recipe.StemRecipe;
+import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.NBTHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+//TODO: Fix recipes not persisting between world reloading (NBT seems to work though...)
 public class TileScannerStorage extends StemTileEntity
 {
     private List<ItemStack> storedRecipes = new ArrayList<ItemStack>();
@@ -24,6 +26,24 @@ public class TileScannerStorage extends StemTileEntity
         super(2);
     }
 
+    /**
+     * Checks for any stored ItemStacks which don't have recipes and removes them
+     */
+    public void removeMissingRecipes()
+    {
+        //Check for missing recipes
+        List<ItemStack> toRemove = new ArrayList<ItemStack>();
+        for(ItemStack stack : storedRecipes)
+            if(!RecipeManager.hasRecipeForStack(stack))
+                toRemove.add(stack);
+        //Remove missing recipes
+        storedRecipes.removeAll(toRemove);
+        markDirty();
+    }
+
+    /**
+     * Sorts the stored recipes alphabetically
+     */
     private void sortRecipes()
     {
         Collections.sort(storedRecipes, new Comparator<ItemStack>()
@@ -34,8 +54,12 @@ public class TileScannerStorage extends StemTileEntity
                 return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
             }
         });
+        markDirty();
     }
 
+    /**
+     * Checks if the given ItemStack is stored
+     */
     private boolean containsRecipe(ItemStack stack)
     {
         if(stack == null)
@@ -48,9 +72,6 @@ public class TileScannerStorage extends StemTileEntity
 
     public void setRecipeAtIndex(int index, ItemStack recipeStack)
     {
-        if(storedRecipes == null || storedRecipes.isEmpty())
-            storedRecipes = new ArrayList<ItemStack>();
-
         if(storedRecipes.size() <= index)
             storedRecipes.add(recipeStack);
         else
@@ -64,19 +85,27 @@ public class TileScannerStorage extends StemTileEntity
         return storedRecipes;
     }
 
+    /**
+     * Adds the ItemStack to the stored recipes
+     */
     public void storeRecipe(ItemStack recipeStack)
     {
-        if(!containsRecipe(recipeStack))
+        if(!containsRecipe(recipeStack) && RecipeManager.hasRecipeForStack(recipeStack))
         {
             storedRecipes.add(recipeStack);
             sortRecipes();
         }
     }
 
+    /**
+     * Adds the ItemStack to the stored recipes
+     * This is an internal method which doesn't auto-sort the recipes after adding
+     */
     private void addRecipe(ItemStack recipeStack)
     {
-        if(!containsRecipe(recipeStack))
+        if(!containsRecipe(recipeStack) && RecipeManager.hasRecipeForStack(recipeStack))
             storedRecipes.add(recipeStack);
+        markDirty();
     }
 
     public StemRecipe getRecipeAtIndex(int index)
@@ -142,6 +171,8 @@ public class TileScannerStorage extends StemTileEntity
             NBTTagCompound tag = recipeList.getCompoundTagAt(i);
             addRecipe(ItemStack.loadItemStackFromNBT(tag));
         }
+        LogHelper.info("Read " + recipeList.tagCount() + " recipes from NBT");
+        LogHelper.info(storedRecipes.size() + " recipes in storage");
         sortRecipes();
 
         super.readFromNBT(nbt);
@@ -152,12 +183,13 @@ public class TileScannerStorage extends StemTileEntity
     {
         //Write recipes
         NBTTagList recipeList = new NBTTagList();
-        for(int i = 0; i < storedRecipes.size(); i++)
+        for(ItemStack stack : storedRecipes)
         {
             NBTTagCompound tag = new NBTTagCompound();
-            storedRecipes.get(i).writeToNBT(tag);
+            stack.writeToNBT(tag);
             recipeList.appendTag(tag);
         }
+        LogHelper.info("Written " + recipeList.tagCount() + " recipes to NBT");
         nbt.setTag(KEY_RECIPES, recipeList);
 
         return super.writeToNBT(nbt);

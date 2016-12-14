@@ -20,19 +20,23 @@ import java.util.List;
 
 public class ContainerScannerStorage extends ContainerMachineBase
 {
-    protected List<ItemStack> cachedRecipes;
-    protected TileScannerStorage machine;
+    protected List<ItemStack> cachedRecipes = new ArrayList<ItemStack>();
     public int recipeSelected = 0;
 
     public ContainerScannerStorage(InventoryPlayer invPlayer, TileScannerStorage machine)
     {
         super(invPlayer, machine);
-        this.machine = machine;
+        machine.removeMissingRecipes();
+    }
+
+    private TileScannerStorage getMachine()
+    {
+        return (TileScannerStorage) inventory;
     }
 
     public StemRecipe getCurrentRecipe()
     {
-        return machine.getRecipeAtIndex(recipeSelected);
+        return getMachine().getRecipeAtIndex(recipeSelected);
     }
 
     /**
@@ -48,14 +52,14 @@ public class ContainerScannerStorage extends ContainerMachineBase
         if(chipSavedStack == null)
         {
             //Save current recipe to item
-            if(machine.getStoredRecipes() == null || machine.getStoredRecipes().isEmpty())
+            if(getMachine().getStoredRecipes() == null || getMachine().getStoredRecipes().isEmpty())
                 return;
             ItemMemoryChip.setMemory(newItem, getCurrentRecipe().getOutput());
         }
         else
         {
             //Save recipe on item to storage
-            machine.storeRecipe(chipSavedStack);
+            getMachine().storeRecipe(chipSavedStack);
             ItemMemoryChip.clearMemory(newItem);
         }
 
@@ -112,11 +116,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
 
         //Sends changes with the recipes
 
-        if(cachedRecipes == null)
-            cachedRecipes = new ArrayList<ItemStack>();
-
-        TileScannerStorage te = (TileScannerStorage) inventory;
-        List<ItemStack> scannerRecipes = te.getStoredRecipes();
+        List<ItemStack> scannerRecipes = getMachine().getStoredRecipes();
 
         for(IContainerListener listener : listeners)
             for(int i = 0; i < scannerRecipes.size(); i++)
@@ -133,7 +133,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
                     flag = true;
                 }
                 if(flag)
-                    CommonUtils.NETWORK.sendTo(new MessageStemRecipe(te.getPos(), i, cachedRecipes.get(i)), (EntityPlayerMP) listener);
+                    CommonUtils.NETWORK.sendTo(new MessageStemRecipe(getMachine().getPos(), i, scannerRecipes.get(i)), (EntityPlayerMP) listener);
             }
     }
 
@@ -165,7 +165,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
                 return true;
             case 1: //Right Arrow
                 recipeSelected++;
-                if(recipeSelected >= machine.getStoredRecipes().size())
+                if(recipeSelected >= getMachine().getStoredRecipes().size())
                     recipeSelected--;
                 return true;
             default:

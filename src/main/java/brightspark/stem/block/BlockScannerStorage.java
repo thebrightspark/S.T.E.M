@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockScannerStorage extends AbstractBlockContainer
+public class BlockScannerStorage extends AbstractBlockContainerDirectional
 {
     public BlockScannerStorage()
     {

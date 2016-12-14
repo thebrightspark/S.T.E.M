@@ -12,6 +12,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -73,15 +74,26 @@ public class GuiScannerStorage extends GuiContainer
             //Display recipe
             StemRecipe currentRecipe = RecipeManager.getRecipeForStack(recipes.get(container.recipeSelected));
 
-            //Draw item
-            itemRender.renderItemAndEffectIntoGUI(currentRecipe.getOutput(), recipeBox.x, recipeBox.y + 16);
-
             //Draw index
             String numText = (container.recipeSelected + 1) + "/" + te.getStoredRecipes().size();
             int textWidth = fontRendererObj.getStringWidth(numText);
             int x = (recipeBox.width / 2) - (textWidth / 2) + recipeBox.x;
             fontRendererObj.drawString(numText, x, recipeBox.y + 2, colourBlue);
 
+            if(currentRecipe == null)
+            {
+                //If the recipe has been removed while the GUI is open
+                //Draw barrier for an "X"
+                itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.BARRIER), recipeBox.x, recipeBox.y + 16);
+                //Draw error text
+                fontRendererObj.drawString("ERROR:", recipeBox.x + 18, recipeBox.y + 12, colourRed);
+                fontRendererObj.drawString("Recipe removed", recipeBox.x + 18, recipeBox.y + 22, colourRed);
+                fontRendererObj.drawString("Re-open GUI to fix", recipeBox.x + 18, recipeBox.y + 32, colourRed);
+                return;
+            }
+
+            //Draw item
+            itemRender.renderItemAndEffectIntoGUI(currentRecipe.getOutput(), recipeBox.x, recipeBox.y + 16);
             //Draw item name
             fontRendererObj.drawString(currentRecipe.getOutput().getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
             //Draw fluid needed
@@ -101,22 +113,27 @@ public class GuiScannerStorage extends GuiContainer
         mc.playerController.sendEnchantPacket(inventorySlots.windowId, button.id);
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
+    public void updateScreen()
+    {
+        super.updateScreen();
+
+        //Update arrows
+        buttonList.get(0).enabled = container.recipeSelected > 0;
+        buttonList.get(1).enabled = container.recipeSelected < te.getStoredRecipes().size() - 1;
+    }
+
     @SideOnly(Side.CLIENT)
     private class ArrowButton extends GuiButton
     {
-        private boolean isLeft;
         private int iconX = 176;
 
         public ArrowButton(int buttonId, int x, int y, boolean isLeftArrow)
         {
             super(buttonId, guiLeft + x, guiTop + y, 17, 11, "");
-            isLeft = isLeftArrow;
             iconX = isLeftArrow ? iconX : iconX + width;
-        }
-
-        public boolean isLeftArrow()
-        {
-            return isLeft;
         }
 
         @Override
@@ -127,7 +144,7 @@ public class GuiScannerStorage extends GuiContainer
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
             //Draw icon
-            drawTexturedModalRect(xPosition, yPosition, iconX, 0, width, height);
+            drawTexturedModalRect(xPosition, yPosition, iconX, enabled ? 0 : height, width, height);
         }
     }
 }

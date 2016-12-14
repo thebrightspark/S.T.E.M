@@ -32,7 +32,7 @@ public class StemItems
     {
         registerItem(itemBasic = new ItemBasicSubTypes("basic",
                 "blusteelCompound", "ingotBlusteel", "machineProcessor", "internalTank", "memBank",
-                "largeMemBank", "energyCircuit", "infDevice", "scanDevice"));
+                "largeMemBank", "energyCircuit", "infDevice", "scanDevice", "memReader", "memWriter"));
         registerItem(itemMemoryChip = new ItemMemoryChip());
         registerItem(itemWrench = new ItemWrench());
 

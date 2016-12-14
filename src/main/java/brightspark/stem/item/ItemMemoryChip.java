@@ -1,5 +1,7 @@
 package brightspark.stem.item;
 
+import brightspark.stem.init.StemBlocks;
+import brightspark.stem.recipe.RecipeManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -64,9 +66,9 @@ public class ItemMemoryChip extends ItemBasic
     public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
     {
         //Clear memory on item
-        if(player.isSneaking() && isMemoryEmpty(stack))
+        if(player.isSneaking() && !isMemoryEmpty(stack))
         {
-            setMemory(stack, null);
+            clearMemory(stack);
             if(world.isRemote) player.addChatMessage(new TextComponentString("Memory Cleared!"));
         }
         return super.onItemRightClick(stack, world, player, hand);
@@ -79,7 +81,14 @@ public class ItemMemoryChip extends ItemBasic
         if(stackInMem != null)
         {
             tooltip.add(stackInMem.getDisplayName());
-            //TODO: Get fluid needed for item
+            int fluid = RecipeManager.getStemNeeded(stackInMem);
+            if(fluid < 0)
+            {
+                tooltip.add("ERROR: Recipe not found for item");
+                tooltip.add("Shift right click this item to clear the memory");
+            }
+            else
+                tooltip.add(fluid + "mb");
         }
     }
 

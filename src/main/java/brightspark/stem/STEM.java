@@ -7,6 +7,7 @@ import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
 import brightspark.stem.init.StemRecipes;
+import brightspark.stem.recipe.CommandStem;
 import brightspark.stem.recipe.RecipeManager;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.WrenchHelper;
@@ -15,9 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -98,7 +97,20 @@ public class STEM
     public void postInit(FMLPostInitializationEvent event)
     {
         //Run stuff after mods have initialized here
+        RecipeManager.readRecipeFile();
+    }
 
-        RecipeManager.postInit();
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        //Register commands
+        event.registerServerCommand(new CommandStem());
+    }
+
+    @Mod.EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+        //Save recipes to file
+        RecipeManager.saveRecipes();
     }
 }

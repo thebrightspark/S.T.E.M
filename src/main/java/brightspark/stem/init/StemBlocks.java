@@ -80,6 +80,8 @@ public class StemBlocks
     @SideOnly(Side.CLIENT)
     public static void regColours()
     {
+        //Was gonna try use this to make blocks constantly change colour as a test
+        /*
         Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor()
         {
             @Override
@@ -88,5 +90,6 @@ public class StemBlocks
                 return tintIndex == 0 ? (int) Math.round(Math.random() * 0xFFFFFF) : -1;
             }
         });
+        */
     }
 }
