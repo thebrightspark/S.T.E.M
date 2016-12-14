@@ -1,12 +1,8 @@
 package brightspark.stem.message;
 
-import brightspark.stem.tileentity.TileMachine;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IThreadListener;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -15,17 +11,14 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * This message will send an integer from the server to the client.
  * This is needed since using the progress bar method in the container truncates the values to a short.
  */
-public class MessageUpdateTile implements IMessage
+public class MessageUpdateClientContainer implements IMessage
 {
-    public int x, y, z, id, value;
+    public int id, value;
 
-    public MessageUpdateTile() {}
+    public MessageUpdateClientContainer() {}
 
-    public MessageUpdateTile(BlockPos pos, int fieldId, int value)
+    public MessageUpdateClientContainer(int fieldId, int value)
     {
-        x = pos.getX();
-        y = pos.getY();
-        z = pos.getZ();
         id = fieldId;
         this.value = value;
     }
@@ -33,9 +26,6 @@ public class MessageUpdateTile implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        x = buf.readInt();
-        y = buf.readInt();
-        z = buf.readInt();
         id = buf.readInt();
         value = buf.readInt();
     }
@@ -43,22 +33,14 @@ public class MessageUpdateTile implements IMessage
     @Override
     public void toBytes(ByteBuf buf)
     {
-        buf.writeInt(x);
-        buf.writeInt(y);
-        buf.writeInt(z);
         buf.writeInt(id);
         buf.writeInt(value);
     }
 
-    public BlockPos getPos()
-    {
-        return new BlockPos(x, y, z);
-    }
-
-    public static class Handler implements IMessageHandler<MessageUpdateTile, IMessage>
+    public static class Handler implements IMessageHandler<MessageUpdateClientContainer, IMessage>
     {
         @Override
-        public IMessage onMessage(final MessageUpdateTile message, MessageContext ctx)
+        public IMessage onMessage(final MessageUpdateClientContainer message, MessageContext ctx)
         {
             final IThreadListener mainThread = Minecraft.getMinecraft();
             mainThread.addScheduledTask(new Runnable()
@@ -66,10 +48,7 @@ public class MessageUpdateTile implements IMessage
                 @Override
                 public void run()
                 {
-                    World world = Minecraft.getMinecraft().theWorld;
-                    TileEntity te = world.getTileEntity(message.getPos());
-                    if(te instanceof TileMachine)
-                        ((TileMachine) te).setField(message.id, message.value);
+                    Minecraft.getMinecraft().thePlayer.openContainer.updateProgressBar(message.id, message.value);
                 }
             });
             return null;

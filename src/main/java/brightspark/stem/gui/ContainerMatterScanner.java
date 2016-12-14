@@ -50,7 +50,7 @@ public class ContainerMatterScanner extends ContainerMachineBase
         });
     }
 
-    private class SlotLockable extends Slot
+    public class SlotLockable extends Slot
     {
         private TileMatterScanner machine;
 

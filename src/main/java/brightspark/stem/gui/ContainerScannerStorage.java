@@ -1,7 +1,7 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.item.ItemMemoryChip;
-import brightspark.stem.message.MessageStemRecipe;
+import brightspark.stem.message.MessageUpdateTileRecipe;
 import brightspark.stem.recipe.StemRecipe;
 import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.CommonUtils;
@@ -26,7 +26,8 @@ public class ContainerScannerStorage extends ContainerMachineBase
     public ContainerScannerStorage(InventoryPlayer invPlayer, TileScannerStorage machine)
     {
         super(invPlayer, machine);
-        machine.removeMissingRecipes();
+        if(!machine.getWorld().isRemote)
+            machine.removeMissingRecipes();
     }
 
     private TileScannerStorage getMachine()
@@ -75,9 +76,12 @@ public class ContainerScannerStorage extends ContainerMachineBase
     {
         ItemStack returnStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 
-        ItemStack inputStack = inventory.getStackInSlot(0);
-        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
-            inputSlotChanged(inputStack);
+        if(!player.worldObj.isRemote)
+        {
+            ItemStack inputStack = inventory.getStackInSlot(0);
+            if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
+                inputSlotChanged(inputStack);
+        }
 
         return returnStack;
     }
@@ -115,10 +119,10 @@ public class ContainerScannerStorage extends ContainerMachineBase
         super.detectAndSendChanges();
 
         //Sends changes with the recipes
-
         List<ItemStack> scannerRecipes = getMachine().getStoredRecipes();
 
         for(IContainerListener listener : listeners)
+        {
             for(int i = 0; i < scannerRecipes.size(); i++)
             {
                 boolean flag = false;
@@ -133,8 +137,9 @@ public class ContainerScannerStorage extends ContainerMachineBase
                     flag = true;
                 }
                 if(flag)
-                    CommonUtils.NETWORK.sendTo(new MessageStemRecipe(getMachine().getPos(), i, scannerRecipes.get(i)), (EntityPlayerMP) listener);
+                    CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipe(getMachine().getPos(), i, scannerRecipes.get(i)), (EntityPlayerMP) listener);
             }
+        }
     }
 
     /**
@@ -151,7 +156,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
 
     /**
      * Handles the given Button-click on the server, currently only used by enchanting. Name is for legacy.
-     * I am using this to upgrade the item (i.e. remove old item and create new one)
+     * I am using this to handle arrow button presses
      */
     @Override
     public boolean enchantItem(EntityPlayer playerIn, int id)

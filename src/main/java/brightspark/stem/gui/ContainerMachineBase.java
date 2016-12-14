@@ -1,6 +1,6 @@
 package brightspark.stem.gui;
 
-import brightspark.stem.message.MessageUpdateTile;
+import brightspark.stem.message.MessageUpdateClientContainer;
 import brightspark.stem.tileentity.StemTileEntity;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,6 +12,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Arrays;
 
 public class ContainerMachineBase extends Container
 {
@@ -54,7 +56,11 @@ public class ContainerMachineBase extends Container
         super.detectAndSendChanges();
 
         if(cachedFields == null)
+        {
             cachedFields = new int[inventory.getFieldCount()];
+            //Fill the array with -1s rather than 0s so that a field value of 0 can be detected when the container is opened
+            Arrays.fill(cachedFields, -1);
+        }
 
         for(IContainerListener listener : listeners)
             for(int i = 0; i < inventory.getFieldCount(); i++)
@@ -63,7 +69,7 @@ public class ContainerMachineBase extends Container
                     cachedFields[i] = inventory.getField(i);
                     //If the data is bigger than a short, then send over a custom, larger packet.
                     if(cachedFields[i] > Short.MAX_VALUE || cachedFields[i] < Short.MIN_VALUE)
-                        CommonUtils.NETWORK.sendTo(new MessageUpdateTile(inventory.getPos(), i, cachedFields[i]), (EntityPlayerMP) listener);
+                        CommonUtils.NETWORK.sendTo(new MessageUpdateClientContainer(i, cachedFields[i]), (EntityPlayerMP) listener);
                     else
                         listener.sendProgressBarUpdate(this, i, cachedFields[i]);
                 }

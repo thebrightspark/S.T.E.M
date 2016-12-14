@@ -48,6 +48,8 @@ public class GuiScannerStorage extends GuiContainer
         //Add the buttons to the gui
         buttonList.add(new ArrowButton(0, 81, 76, true));
         buttonList.add(new ArrowButton(1, 109, 76, false));
+        buttonList.get(0).enabled = container.recipeSelected > 0;
+        buttonList.get(1).enabled = container.recipeSelected < te.getStoredRecipes().size() - 1;
     }
 
     @Override
@@ -72,6 +74,7 @@ public class GuiScannerStorage extends GuiContainer
         else
         {
             //Display recipe
+            //TODO: I think I need that client cache...
             StemRecipe currentRecipe = RecipeManager.getRecipeForStack(recipes.get(container.recipeSelected));
 
             //Draw index

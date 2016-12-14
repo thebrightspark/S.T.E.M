@@ -1,11 +1,9 @@
 package brightspark.stem.util;
 
 import brightspark.stem.STEM;
-import brightspark.stem.message.MessageStemRecipe;
-import brightspark.stem.message.MessageUpdateTile;
+import brightspark.stem.message.MessageUpdateTileRecipe;
+import brightspark.stem.message.MessageUpdateClientContainer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Rotation;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.UniversalBucket;
@@ -20,8 +18,8 @@ public class CommonUtils
     public static void regNetwork()
     {
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(STEM.MOD_ID);
-        NETWORK.registerMessage(MessageUpdateTile.Handler.class, MessageUpdateTile.class, 0, Side.CLIENT);
-        NETWORK.registerMessage(MessageStemRecipe.Handler.class, MessageStemRecipe.class, 1, Side.CLIENT);
+        NETWORK.registerMessage(MessageUpdateClientContainer.Handler.class, MessageUpdateClientContainer.class, 0, Side.CLIENT);
+        NETWORK.registerMessage(MessageUpdateTileRecipe.Handler.class, MessageUpdateTileRecipe.class, 1, Side.CLIENT);
     }
 
     /**

@@ -11,7 +11,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-//TODO: Need to fix bug with progress staying the same amount if you exit the GUI while processing and return when it's finished.
 public class TileMatterScanner extends TileMachine
 {
     private int scanProgress = 0;

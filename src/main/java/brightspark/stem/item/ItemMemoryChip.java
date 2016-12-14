@@ -81,6 +81,11 @@ public class ItemMemoryChip extends ItemBasic
         if(stackInMem != null)
         {
             tooltip.add(stackInMem.getDisplayName());
+            //TODO: Implement client recipe cache?
+            //To do the following, I'd need a client recipe cache to check against, which when it receives a request to
+            // check for a recipe, it will ask the server for the recipe and then cache it.
+            //That way, items like this can then check with the client cache.
+            /*
             int fluid = RecipeManager.getStemNeeded(stackInMem);
             if(fluid < 0)
             {
@@ -89,6 +94,7 @@ public class ItemMemoryChip extends ItemBasic
             }
             else
                 tooltip.add(fluid + "mb");
+            */
         }
     }
 

@@ -13,15 +13,15 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageStemRecipe implements IMessage
+public class MessageUpdateTileRecipe implements IMessage
 {
     public int x, y, z;
     public int index;
     public ItemStack recipeStack;
 
-    public MessageStemRecipe() {}
+    public MessageUpdateTileRecipe() {}
 
-    public MessageStemRecipe(BlockPos pos, int index, ItemStack recipeStack)
+    public MessageUpdateTileRecipe(BlockPos pos, int index, ItemStack recipeStack)
     {
         x = pos.getX();
         y = pos.getY();
@@ -58,10 +58,10 @@ public class MessageStemRecipe implements IMessage
         return new BlockPos(x, y, z);
     }
 
-    public static class Handler implements IMessageHandler<MessageStemRecipe, IMessage>
+    public static class Handler implements IMessageHandler<MessageUpdateTileRecipe, IMessage>
     {
         @Override
-        public IMessage onMessage(final MessageStemRecipe message, MessageContext ctx)
+        public IMessage onMessage(final MessageUpdateTileRecipe message, MessageContext ctx)
         {
             final IThreadListener mainThread = Minecraft.getMinecraft();
             mainThread.addScheduledTask(new Runnable()
