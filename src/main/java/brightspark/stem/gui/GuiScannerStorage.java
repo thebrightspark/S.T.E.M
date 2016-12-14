@@ -2,8 +2,7 @@ package brightspark.stem.gui;
 
 import brightspark.stem.Config;
 import brightspark.stem.STEM;
-import brightspark.stem.recipe.RecipeManager;
-import brightspark.stem.recipe.StemRecipe;
+import brightspark.stem.recipe.ClientRecipeCache;
 import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -74,8 +72,8 @@ public class GuiScannerStorage extends GuiContainer
         else
         {
             //Display recipe
-            //TODO: I think I need that client cache...
-            StemRecipe currentRecipe = RecipeManager.getRecipeForStack(recipes.get(container.recipeSelected));
+            ItemStack recipeStack = recipes.get(container.recipeSelected);
+            int fluidAmount = ClientRecipeCache.getFluidAmount(recipeStack);
 
             //Draw index
             String numText = (container.recipeSelected + 1) + "/" + te.getStoredRecipes().size();
@@ -83,26 +81,25 @@ public class GuiScannerStorage extends GuiContainer
             int x = (recipeBox.width / 2) - (textWidth / 2) + recipeBox.x;
             fontRendererObj.drawString(numText, x, recipeBox.y + 2, colourBlue);
 
-            if(currentRecipe == null)
-            {
-                //If the recipe has been removed while the GUI is open
-                //Draw barrier for an "X"
-                itemRender.renderItemAndEffectIntoGUI(new ItemStack(Blocks.BARRIER), recipeBox.x, recipeBox.y + 16);
-                //Draw error text
-                fontRendererObj.drawString("ERROR:", recipeBox.x + 18, recipeBox.y + 12, colourRed);
-                fontRendererObj.drawString("Recipe removed", recipeBox.x + 18, recipeBox.y + 22, colourRed);
-                fontRendererObj.drawString("Re-open GUI to fix", recipeBox.x + 18, recipeBox.y + 32, colourRed);
-                return;
-            }
-
             //Draw item
-            itemRender.renderItemAndEffectIntoGUI(currentRecipe.getOutput(), recipeBox.x, recipeBox.y + 16);
+            itemRender.renderItemAndEffectIntoGUI(recipeStack, recipeBox.x, recipeBox.y + 16);
             //Draw item name
-            fontRendererObj.drawString(currentRecipe.getOutput().getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
-            //Draw fluid needed
-            fontRendererObj.drawString(currentRecipe.getFluidInput() + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
-            //Draw energy needed
-            fontRendererObj.drawString(CommonUtils.addDigitGrouping(currentRecipe.getFluidInput() * Config.matterCreatorEnergyPerMb) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
+            fontRendererObj.drawString(recipeStack.getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
+
+            if(fluidAmount < 0)
+            {
+                //If the recipe info is being requested from the server
+                //Draw error text
+                fontRendererObj.drawString("Waiting for recipe", recipeBox.x + 18, recipeBox.y + 12, colourRed);
+                fontRendererObj.drawString("info from server...", recipeBox.x + 18, recipeBox.y + 22, colourRed);
+            }
+            else
+            {
+                //Draw fluid needed
+                fontRendererObj.drawString(fluidAmount + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
+                //Draw energy needed
+                fontRendererObj.drawString(CommonUtils.addDigitGrouping(fluidAmount * Config.matterCreatorEnergyPerMb) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
+            }
         }
     }
 

@@ -4,7 +4,7 @@ import brightspark.stem.Config;
 import brightspark.stem.block.BlockScannerStorage;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.item.ItemMemoryChip;
-import brightspark.stem.recipe.RecipeManager;
+import brightspark.stem.recipe.ServerRecipeManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -114,7 +114,7 @@ public class TileMatterScanner extends TileMachine
         }
 
         //Check if item can be scanned
-        if(!worldObj.isRemote && scanProgress <= 0 && slots[1] != null && hasStorageDestination() && RecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(!worldObj.isRemote && scanProgress <= 0 && slots[1] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
             scanProgress++;
             energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
@@ -123,7 +123,7 @@ public class TileMatterScanner extends TileMachine
         //Update scan status
         if(scanProgress == 0)
         {
-            if(slots[1] != null && !RecipeManager.hasRecipeForStack(slots[1]))
+            if(slots[1] != null && ! ServerRecipeManager.hasRecipeForStack(slots[1]))
                 scanStatus = EnumScanStatus.NO_RECIPE;
             else if(slots[1] != null && !hasStorageDestination())
                 scanStatus = EnumScanStatus.NO_STORAGE;

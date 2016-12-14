@@ -1,6 +1,7 @@
 package brightspark.stem.message;
 
 import brightspark.stem.tileentity.TileScannerStorage;
+import brightspark.stem.util.CommonUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
@@ -37,9 +38,7 @@ public class MessageUpdateTileRecipe implements IMessage
         y = buf.readInt();
         z = buf.readInt();
         index = buf.readInt();
-        Item item = Item.getItemById(buf.readInt());
-        int itemMeta = buf.readInt();
-        recipeStack = new ItemStack(item, 1, itemMeta);
+        recipeStack = CommonUtils.readStackFromBuf(buf);
     }
 
     @Override
@@ -49,8 +48,7 @@ public class MessageUpdateTileRecipe implements IMessage
         buf.writeInt(y);
         buf.writeInt(z);
         buf.writeInt(index);
-        buf.writeInt(Item.getIdFromItem(recipeStack.getItem()));
-        buf.writeInt(recipeStack.getMetadata());
+        CommonUtils.writeStackToBuf(buf, recipeStack);
     }
 
     public BlockPos getPos()

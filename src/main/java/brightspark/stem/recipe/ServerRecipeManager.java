@@ -5,7 +5,6 @@ import brightspark.stem.util.LogHelper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
 import java.io.FileReader;
@@ -14,10 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeManager
+public class ServerRecipeManager
 {
     public static final char csvSeparator = ',';
-    public static File stemFolder;
     private static File stemRecipeFile;
     private static List<StemRecipe> recipes;
 
@@ -25,18 +23,14 @@ public class RecipeManager
     {
         StemRecipe existingRecipe = getRecipeForStack(recipe.getOutput());
         if(existingRecipe == null)
-        {
             recipes.add(recipe);
-            return true;
-        }
-        if(existingRecipe.isStackEqual(recipe.getOutput()))
+        else
         {
             if(existingRecipe.getFluidInput() == recipe.getFluidInput())
                 return false;
-            else if(!removeRecipe(existingRecipe.getOutput()))
-                LogHelper.error("Something went wrong! Couldn't remove a recipe that was here a minute ago!");
+            else
+                existingRecipe.setFluidInput(recipe.getFluidInput());
         }
-        recipes.add(recipe);
         return true;
     }
 
@@ -73,14 +67,14 @@ public class RecipeManager
 
     /**
      * Get the amount of S.T.E.M needed to make the item.
-     * Returns -1 if there's no recipe for the item.
+     * Returns 0 if there's no recipe for the item.
      */
     public static int getStemNeeded(ItemStack stack)
     {
         for(StemRecipe recipe : recipes)
             if(recipe.isStackEqual(stack))
                 return recipe.getFluidInput();
-        return -1;
+        return 0;
     }
 
     /**
@@ -120,13 +114,10 @@ public class RecipeManager
         LogHelper.info("Recipes saved successfully.");
     }
 
-    public static void init(FMLPreInitializationEvent event)
+    public static void init()
     {
         recipes = new ArrayList<StemRecipe>();
-        stemFolder = new File(event.getModConfigurationDirectory(), STEM.MOD_ID);
-        if(!stemFolder.mkdirs())
-            LogHelper.error("Config directory couldn't be created! This will probably cause things to break later!");
-        stemRecipeFile = new File(stemFolder, "recipes.csv");
+        stemRecipeFile = new File(STEM.CONFIG_DIR, "recipes.csv");
     }
 
     private static void closeReader(CSVReader reader)

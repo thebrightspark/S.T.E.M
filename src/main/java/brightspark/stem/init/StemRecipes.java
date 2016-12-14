@@ -1,11 +1,13 @@
 package brightspark.stem.init;
 
-import brightspark.stem.recipe.RecipeManager;
+import brightspark.stem.recipe.ServerRecipeManager;
 import brightspark.stem.recipe.StemRecipe;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -59,8 +61,11 @@ public class StemRecipes
         //GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.matterCreator, " c ", "ebf", " t ", 'c', "energyCircuit", 'e', "exciter", 'b', "machineBlock", 'f', "matterFormer"));
         //Liquid Compressor
 
+    }
 
+    public static void initServerRecipes()
+    {
         //Register S.T.E.M fluid recipes
-        RecipeManager.addRecipe(new StemRecipe(Items.DIAMOND, 10));
+        ServerRecipeManager.addRecipe(new StemRecipe(Items.DIAMOND, 10));
     }
 }

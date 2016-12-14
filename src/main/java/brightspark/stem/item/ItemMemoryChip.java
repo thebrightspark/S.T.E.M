@@ -1,7 +1,6 @@
 package brightspark.stem.item;
 
-import brightspark.stem.init.StemBlocks;
-import brightspark.stem.recipe.RecipeManager;
+import brightspark.stem.recipe.ClientRecipeCache;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,9 +13,6 @@ import java.util.List;
 
 public class ItemMemoryChip extends ItemBasic
 {
-    private static final String KEY_ITEM_ID = "itemId";
-    private static final String KEY_ITEM_META = "itemMeta";
-
     public ItemMemoryChip()
     {
         super("memChip");
@@ -81,20 +77,11 @@ public class ItemMemoryChip extends ItemBasic
         if(stackInMem != null)
         {
             tooltip.add(stackInMem.getDisplayName());
-            //TODO: Implement client recipe cache?
-            //To do the following, I'd need a client recipe cache to check against, which when it receives a request to
-            // check for a recipe, it will ask the server for the recipe and then cache it.
-            //That way, items like this can then check with the client cache.
-            /*
-            int fluid = RecipeManager.getStemNeeded(stackInMem);
+            int fluid = ClientRecipeCache.getFluidAmount(stackInMem);
             if(fluid < 0)
-            {
-                tooltip.add("ERROR: Recipe not found for item");
-                tooltip.add("Shift right click this item to clear the memory");
-            }
+                tooltip.add("Waiting for fluid data from server...");
             else
                 tooltip.add(fluid + "mb");
-            */
         }
     }
 

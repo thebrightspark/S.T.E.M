@@ -38,6 +38,11 @@ public class StemRecipe
         return fluidInput;
     }
 
+    public void setFluidInput(int fluid)
+    {
+        fluidInput = fluid;
+    }
+
     public ItemStack getOutput()
     {
         return output;

@@ -1,8 +1,9 @@
 package brightspark.stem.util;
 
 import brightspark.stem.STEM;
-import brightspark.stem.message.MessageUpdateTileRecipe;
-import brightspark.stem.message.MessageUpdateClientContainer;
+import brightspark.stem.message.*;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
@@ -20,6 +21,10 @@ public class CommonUtils
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(STEM.MOD_ID);
         NETWORK.registerMessage(MessageUpdateClientContainer.Handler.class, MessageUpdateClientContainer.class, 0, Side.CLIENT);
         NETWORK.registerMessage(MessageUpdateTileRecipe.Handler.class, MessageUpdateTileRecipe.class, 1, Side.CLIENT);
+        NETWORK.registerMessage(MessageRecipeRequest.Handler.class, MessageRecipeRequest.class, 2, Side.SERVER);
+        NETWORK.registerMessage(MessageRecipeReply.Handler.class, MessageRecipeReply.class, 3, Side.CLIENT);
+        NETWORK.registerMessage(MessageSyncConfigs.Handler.class, MessageSyncConfigs.class, 4, Side.CLIENT);
+        NETWORK.registerMessage(MessageRecipeMakeDirty.Handler.class, MessageRecipeMakeDirty.class, 5, Side.CLIENT);
     }
 
     /**
@@ -81,6 +86,19 @@ public class CommonUtils
     public static ItemStack createFilledBucket(Fluid fluid)
     {
         return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
+    }
+
+    public static ItemStack readStackFromBuf(ByteBuf buf)
+    {
+        Item item = Item.getItemById(buf.readInt());
+        int itemMeta = buf.readInt();
+        return new ItemStack(item, 1, itemMeta);
+    }
+
+    public static void writeStackToBuf(ByteBuf buf, ItemStack stack)
+    {
+        buf.writeInt(Item.getIdFromItem(stack.getItem()));
+        buf.writeInt(stack.getMetadata());
     }
 
     /**

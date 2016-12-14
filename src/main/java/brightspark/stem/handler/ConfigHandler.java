@@ -2,9 +2,13 @@ package brightspark.stem.handler;
 
 import brightspark.stem.Config;
 import brightspark.stem.STEM;
+import brightspark.stem.message.MessageSyncConfigs;
+import brightspark.stem.util.CommonUtils;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
 
@@ -59,5 +63,13 @@ public class ConfigHandler
         if(event.getModID().equalsIgnoreCase(STEM.MOD_ID))
             //Resync configs
             loadConfiguration();
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        //Send necessary server configs to clients when they login
+        if(!event.player.worldObj.isRemote && event.player instanceof EntityPlayerMP)
+            CommonUtils.NETWORK.sendTo(new MessageSyncConfigs(), (EntityPlayerMP) event.player);
     }
 }

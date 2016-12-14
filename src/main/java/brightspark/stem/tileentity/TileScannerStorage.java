@@ -1,6 +1,6 @@
 package brightspark.stem.tileentity;
 
-import brightspark.stem.recipe.RecipeManager;
+import brightspark.stem.recipe.ServerRecipeManager;
 import brightspark.stem.recipe.StemRecipe;
 import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.NBTHelper;
@@ -34,7 +34,7 @@ public class TileScannerStorage extends StemTileEntity
         //Check for missing recipes
         List<ItemStack> toRemove = new ArrayList<ItemStack>();
         for(ItemStack stack : storedRecipes)
-            if(!RecipeManager.hasRecipeForStack(stack))
+            if(! ServerRecipeManager.hasRecipeForStack(stack))
                 toRemove.add(stack);
         //Remove missing recipes
         storedRecipes.removeAll(toRemove);
@@ -90,7 +90,7 @@ public class TileScannerStorage extends StemTileEntity
      */
     public void storeRecipe(ItemStack recipeStack)
     {
-        if(!containsRecipe(recipeStack) && RecipeManager.hasRecipeForStack(recipeStack))
+        if(!containsRecipe(recipeStack) && ServerRecipeManager.hasRecipeForStack(recipeStack))
         {
             storedRecipes.add(recipeStack);
             sortRecipes();
@@ -103,14 +103,14 @@ public class TileScannerStorage extends StemTileEntity
      */
     private void addRecipe(ItemStack recipeStack)
     {
-        if(!containsRecipe(recipeStack) && RecipeManager.hasRecipeForStack(recipeStack))
+        if(!containsRecipe(recipeStack) && ServerRecipeManager.hasRecipeForStack(recipeStack))
             storedRecipes.add(recipeStack);
         markDirty();
     }
 
     public StemRecipe getRecipeAtIndex(int index)
     {
-        return index < 0 || index >= storedRecipes.size() ? null : RecipeManager.getRecipeForStack(storedRecipes.get(index));
+        return index < 0 || index >= storedRecipes.size() ? null : ServerRecipeManager.getRecipeForStack(storedRecipes.get(index));
     }
 
     @Override

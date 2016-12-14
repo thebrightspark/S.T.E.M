@@ -1,5 +1,7 @@
 package brightspark.stem.recipe;
 
+import brightspark.stem.message.MessageRecipeMakeDirty;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -25,7 +27,8 @@ public class CommandStem extends CommandBase
     {
         String text = "\nAdd Specific Item: stem add <itemId> [itemMeta] <fluidAmount>" +
                 "\n Remove Specific Item: stem remove <itemId> [itemMeta]" +
-                "\n Save Recipes To File: stem save";
+                "\n Save Recipes To File: stem save" +
+                "\n Reset Recipe File To Default : stem reset";
         if(sender instanceof EntityPlayer)
             text += "\nAdd Held Item: stem add <fluidAmount>" +
                     "\nRemove Held Item: stem remove";
@@ -61,8 +64,11 @@ public class CommandStem extends CommandBase
                     {
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
                         heldItem.stackSize = 1;
-                        if(RecipeManager.removeRecipe(heldItem))
+                        if(ServerRecipeManager.removeRecipe(heldItem))
+                        {
+                            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(heldItem));
                             sender.addChatMessage(new TextComponentString("Removed recipe for " + heldItem.getDisplayName()));
+                        }
                         else
                             sender.addChatMessage(new TextComponentString("No recipe found for " + heldItem.getDisplayName()));
                     }
@@ -92,8 +98,11 @@ public class CommandStem extends CommandBase
                     throw new CommandException("Item couldn't be found");
 
                 ItemStack stack = new ItemStack(item, 1, meta);
-                if(RecipeManager.removeRecipe(stack))
+                if(ServerRecipeManager.removeRecipe(stack))
+                {
+                    CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
                     sender.addChatMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
+                }
                 else
                     sender.addChatMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
             }
@@ -121,8 +130,11 @@ public class CommandStem extends CommandBase
                             throw new CommandException("Fluid amount must be a number greater than 0");
                         }
 
-                        if(RecipeManager.addRecipe(new StemRecipe(heldItem, fluidAmount)))
+                        if(ServerRecipeManager.addRecipe(new StemRecipe(heldItem, fluidAmount)))
+                        {
+                            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(heldItem));
                             sender.addChatMessage(new TextComponentString("Added recipe for " + heldItem.getDisplayName() + " with " + fluidAmount + "mb"));
+                        }
                         else
                             sender.addChatMessage(new TextComponentString("Recipe for " + heldItem.getDisplayName() + " already exists!"));
                     }
@@ -166,8 +178,11 @@ public class CommandStem extends CommandBase
                 }
 
                 ItemStack stack = new ItemStack(item, 1, meta);
-                if(RecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
+                if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
+                {
+                    CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
                     sender.addChatMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
+                }
                 else
                     sender.addChatMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
             }
@@ -178,8 +193,15 @@ public class CommandStem extends CommandBase
         else if(args[0].equals("save") || args[0].equals("s"))
         {
             //Save recipes
-            RecipeManager.saveRecipes();
+            ServerRecipeManager.saveRecipes();
             sender.addChatMessage(new TextComponentString("Recipes saved"));
+        }
+        else if(args[0].equals("reset"))
+        {
+            //Reset recipes to default
+            ServerRecipeManager.resetRecipeFile();
+            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(null));
+            sender.addChatMessage(new TextComponentString("Recipes reset to default"));
         }
         else
             //Incorrect command
@@ -200,7 +222,7 @@ public class CommandStem extends CommandBase
         switch(args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s");
+                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s", "reset");
             case 2:
                 return getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys());
             default:
