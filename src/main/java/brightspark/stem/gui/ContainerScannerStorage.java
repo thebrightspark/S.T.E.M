@@ -76,11 +76,13 @@ public class ContainerScannerStorage extends ContainerMachineBase
     {
         ItemStack returnStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 
-        if(!player.worldObj.isRemote)
+        ItemStack inputStack = inventory.getStackInSlot(0);
+        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
         {
-            ItemStack inputStack = inventory.getStackInSlot(0);
-            if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
+            if(!player.worldObj.isRemote)
                 inputSlotChanged(inputStack);
+            else
+                inventory.setInventorySlotContents(0, null);
         }
 
         return returnStack;
