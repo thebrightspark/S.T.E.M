@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-//TODO: Fix recipes not persisting between world reloading (NBT seems to work though...)
 public class TileScannerStorage extends StemTileEntity
 {
     private List<ItemStack> storedRecipes = new ArrayList<ItemStack>();
@@ -138,7 +137,7 @@ public class TileScannerStorage extends StemTileEntity
             storedRecipes.get(i).writeToNBT(tag);
             recipeList.appendTag(tag);
         }
-        NBTHelper.setList(stack, KEY_INVENTORY, recipeList);
+        NBTHelper.setList(stack, KEY_RECIPES, recipeList);
 
         super.writeDataToStack(stack);
     }
@@ -150,7 +149,7 @@ public class TileScannerStorage extends StemTileEntity
     public void readDataFromStack(ItemStack stack)
     {
         //Read recipes
-        NBTTagList recipeList = NBTHelper.getList(stack, KEY_INVENTORY);
+        NBTTagList recipeList = NBTHelper.getList(stack, KEY_RECIPES);
         for(int i = 0; i < recipeList.tagCount(); ++i)
         {
             NBTTagCompound tag = recipeList.getCompoundTagAt(i);

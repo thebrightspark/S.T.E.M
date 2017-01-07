@@ -84,6 +84,8 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
             NBTTagCompound tag = stackList.getCompoundTagAt(i);
             slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
         }
+
+        super.readFromNBT(nbt);
     }
 
     @Override
