@@ -16,6 +16,28 @@ import java.util.List;
 
 public class CommandStem extends CommandBase
 {
+    private void removeRecipe(ICommandSender sender, ItemStack stack)
+    {
+        if(ServerRecipeManager.removeRecipe(stack))
+        {
+            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
+            sender.addChatMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
+        }
+        else
+            sender.addChatMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
+    }
+
+    private void addRecipe(ICommandSender sender, ItemStack stack, int fluidAmount)
+    {
+        if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
+        {
+            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
+            sender.addChatMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
+        }
+        else
+            sender.addChatMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
+    }
+
     @Override
     public String getCommandName()
     {
@@ -62,15 +84,10 @@ public class CommandStem extends CommandBase
                         throw new CommandException("No item held");
                     else
                     {
+                        //Remove recipe
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
                         heldItem.stackSize = 1;
-                        if(ServerRecipeManager.removeRecipe(heldItem))
-                        {
-                            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(heldItem));
-                            sender.addChatMessage(new TextComponentString("Removed recipe for " + heldItem.getDisplayName()));
-                        }
-                        else
-                            sender.addChatMessage(new TextComponentString("No recipe found for " + heldItem.getDisplayName()));
+                        removeRecipe(sender, heldItem);
                     }
                 }
                 else
@@ -97,14 +114,9 @@ public class CommandStem extends CommandBase
                 if((item = Item.getByNameOrId(args[1])) == null)
                     throw new CommandException("Item couldn't be found");
 
+                //Remove recipe
                 ItemStack stack = new ItemStack(item, 1, meta);
-                if(ServerRecipeManager.removeRecipe(stack))
-                {
-                    CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-                    sender.addChatMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
-                }
-                else
-                    sender.addChatMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
+                removeRecipe(sender, stack);
             }
         }
         else if(args[0].equals("add") || args[0].equals("a"))
@@ -130,13 +142,8 @@ public class CommandStem extends CommandBase
                             throw new CommandException("Fluid amount must be a number greater than 0");
                         }
 
-                        if(ServerRecipeManager.addRecipe(new StemRecipe(heldItem, fluidAmount)))
-                        {
-                            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(heldItem));
-                            sender.addChatMessage(new TextComponentString("Added recipe for " + heldItem.getDisplayName() + " with " + fluidAmount + "mb"));
-                        }
-                        else
-                            sender.addChatMessage(new TextComponentString("Recipe for " + heldItem.getDisplayName() + " already exists!"));
+                        //Add recipe
+                        addRecipe(sender, heldItem, fluidAmount);
                     }
                 }
                 else
@@ -177,14 +184,9 @@ public class CommandStem extends CommandBase
                     throw new CommandException("Fluid amount must be a number greater than 0");
                 }
 
+                //Add recipe
                 ItemStack stack = new ItemStack(item, 1, meta);
-                if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
-                {
-                    CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-                    sender.addChatMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
-                }
-                else
-                    sender.addChatMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
+                addRecipe(sender, stack, fluidAmount);
             }
             else
                 //Incorrect command

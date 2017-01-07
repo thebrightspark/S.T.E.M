@@ -70,17 +70,20 @@ public class WrenchHandler
         World world = event.getWorld();
         BlockPos pos = event.getPos();
         EntityPlayer player = event.getEntityPlayer();
+        Block block = world.getBlockState(pos).getBlock();
         if(!WrenchHelper.isWrench(event.getItemStack()) || !player.isSneaking() ||
-                !(world.getBlockState(pos).getBlock() instanceof AbstractBlockMachine))
+                !(block instanceof AbstractBlockMachine) ||
+                !((AbstractBlockMachine) block).canPickupWithWrench())
             return;
         if(!world.isRemote)
         {
             //Break machine only on server
             IBlockState state = world.getBlockState(pos);
-            AbstractBlockMachine block = (AbstractBlockMachine) state.getBlock();
-            block.getTileEntity(world, pos).usedWrenchToBreak = true;
-            if(block.removedByPlayer(state, world, pos, player, true))
-                block.harvestBlock(world, player, pos, state, world.getTileEntity(pos), event.getItemStack());
+            AbstractBlockMachine machine = (AbstractBlockMachine) state.getBlock();
+            TileMachine te = machine.getTileEntity(world, pos);
+            te.usedWrenchToBreak = true;
+            if(machine.removedByPlayer(state, world, pos, player, true))
+                machine.harvestBlock(world, player, pos, state, te, event.getItemStack());
         }
         event.setCanceled(true);
     }

@@ -170,8 +170,6 @@ public class TileScannerStorage extends StemTileEntity
             NBTTagCompound tag = recipeList.getCompoundTagAt(i);
             addRecipe(ItemStack.loadItemStackFromNBT(tag));
         }
-        LogHelper.info("Read " + recipeList.tagCount() + " recipes from NBT");
-        LogHelper.info(storedRecipes.size() + " recipes in storage");
         sortRecipes();
 
         super.readFromNBT(nbt);
@@ -188,8 +186,6 @@ public class TileScannerStorage extends StemTileEntity
             stack.writeToNBT(tag);
             recipeList.appendTag(tag);
         }
-        LogHelper.info("Written " + recipeList.tagCount() + " recipes to NBT");
-        nbt.setTag(KEY_RECIPES, recipeList);
 
         return super.writeToNBT(nbt);
     }
