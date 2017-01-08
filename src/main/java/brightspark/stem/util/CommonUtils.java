@@ -1,6 +1,7 @@
 package brightspark.stem.util;
 
 import brightspark.stem.STEM;
+import brightspark.stem.init.StemFluids;
 import brightspark.stem.message.*;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
@@ -90,6 +91,11 @@ public class CommonUtils
     public static ItemStack createFilledBucket(Fluid fluid)
     {
         return UniversalBucket.getFilledBucket(ForgeModContainer.getInstance().universalBucket, fluid);
+    }
+
+    public static boolean isStemBucket(ItemStack stack)
+    {
+        return stack != null && stack.getItem() instanceof UniversalBucket && ((UniversalBucket) stack.getItem()).getFluid(stack).getFluid().equals(StemFluids.fluidStem);
     }
 
     public static ItemStack readStackFromBuf(ByteBuf buf)

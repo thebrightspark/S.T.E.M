@@ -248,8 +248,8 @@ public class TileMatterCreator extends TileMachineWithFluid
         if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
             ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
         //Bucket input
-        if((slotStack = slots[1]) != null && slotStack.isItemEqual(CommonUtils.createFilledBucket(StemFluids.fluidStem)) &&
-                getFluidSpace() > Fluid.BUCKET_VOLUME && (slots[2] == null || slots[2].getItem().equals(Items.BUCKET)))
+        if(CommonUtils.isStemBucket(slotStack = slots[1]) && getFluidSpace() > Fluid.BUCKET_VOLUME &&
+                (slots[2] == null || slots[2].getItem().equals(Items.BUCKET)))
         {
             tank.fillInternal(Fluid.BUCKET_VOLUME);
             slotStack.stackSize--;

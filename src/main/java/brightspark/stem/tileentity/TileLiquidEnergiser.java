@@ -55,7 +55,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
             slotStack.stackSize--;
             if(slotStack.stackSize <= 0)
                 setInventorySlotContents(1, null);
-            setInventorySlotContents(2, CommonUtils.createFilledBucket(StemFluids.fluidStem));
+            setInventorySlotContents(2, StemFluids.getStemBucket());
         }
 
         //Average input
