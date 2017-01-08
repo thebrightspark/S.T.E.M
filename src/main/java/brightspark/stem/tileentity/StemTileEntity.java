@@ -26,6 +26,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     protected int[] slotsForFaces;
     //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench is used.
     public boolean usedWrenchToBreak = false;
+    protected boolean shouldSaveInventoryToNBT = true;
 
     public static final String KEY_INVENTORY = "inventory";
 
@@ -38,8 +39,9 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void copyDataFrom(StemTileEntity machine)
     {
         //Copy inventory
-        for(int i = 0; i < machine.slots.length; ++i)
-            slots[i] = machine.slots[i];
+        if(shouldSaveInventoryToNBT)
+            for(int i = 0; i < machine.slots.length; ++ i)
+                slots[i] = machine.slots[i];
     }
 
     /**
@@ -48,16 +50,19 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void writeDataToStack(ItemStack stack)
     {
         //Write inventory
-        NBTTagList stackList = new NBTTagList();
-        for(int i = 0; i < slots.length; ++i)
+        if(shouldSaveInventoryToNBT)
         {
-            if(slots[i] == null) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setByte("slot", (byte) i);
-            slots[i].writeToNBT(tag);
-            stackList.appendTag(tag);
+            NBTTagList stackList = new NBTTagList();
+            for(int i = 0; i < slots.length; ++ i)
+            {
+                if(slots[i] == null) continue;
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setByte("slot", (byte) i);
+                slots[i].writeToNBT(tag);
+                stackList.appendTag(tag);
+            }
+            NBTHelper.setList(stack, KEY_INVENTORY, stackList);
         }
-        NBTHelper.setList(stack, KEY_INVENTORY, stackList);
     }
 
     /**
@@ -66,11 +71,14 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void readDataFromStack(ItemStack stack)
     {
         //Read inventory
-        NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
-        for(int i = 0; i < stackList.tagCount(); ++i)
+        if(shouldSaveInventoryToNBT)
         {
-            NBTTagCompound tag = stackList.getCompoundTagAt(i);
-            slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+            NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
+            for(int i = 0; i < stackList.tagCount(); ++ i)
+            {
+                NBTTagCompound tag = stackList.getCompoundTagAt(i);
+                slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+            }
         }
     }
 
@@ -78,11 +86,14 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void readFromNBT(NBTTagCompound nbt)
     {
         //Read inventory
-        NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
-        for(int i = 0; i < stackList.tagCount(); ++i)
+        if(shouldSaveInventoryToNBT)
         {
-            NBTTagCompound tag = stackList.getCompoundTagAt(i);
-            slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+            NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
+            for(int i = 0; i < stackList.tagCount(); ++ i)
+            {
+                NBTTagCompound tag = stackList.getCompoundTagAt(i);
+                slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+            }
         }
 
         super.readFromNBT(nbt);
@@ -92,16 +103,19 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
         //Write inventory
-        NBTTagList stackList = new NBTTagList();
-        for(int i = 0; i < slots.length; ++i)
+        if(shouldSaveInventoryToNBT)
         {
-            if(slots[i] == null) continue;
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setByte("slot", (byte) i);
-            slots[i].writeToNBT(tag);
-            stackList.appendTag(tag);
+            NBTTagList stackList = new NBTTagList();
+            for(int i = 0; i < slots.length; ++ i)
+            {
+                if(slots[i] == null) continue;
+                NBTTagCompound tag = new NBTTagCompound();
+                tag.setByte("slot", (byte) i);
+                slots[i].writeToNBT(tag);
+                stackList.appendTag(tag);
+            }
+            nbt.setTag(KEY_INVENTORY, stackList);
         }
-        nbt.setTag(KEY_INVENTORY, stackList);
 
         return super.writeToNBT(nbt);
     }

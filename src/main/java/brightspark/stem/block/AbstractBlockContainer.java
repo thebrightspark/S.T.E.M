@@ -3,6 +3,7 @@ package brightspark.stem.block;
 import brightspark.stem.STEM;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.util.CommonUtils;
+import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -17,13 +18,14 @@ import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public abstract class AbstractBlockContainer extends BlockContainer
+public abstract class AbstractBlockContainer<T extends TileEntity> extends BlockContainer
 {
     protected boolean hasGui = false;
 
@@ -35,6 +37,17 @@ public abstract class AbstractBlockContainer extends BlockContainer
         setRegistryName(name);
         setHardness(2f);
         setResistance(10f);
+    }
+
+    public T getTileEntity(IBlockAccess world, BlockPos pos)
+    {
+        TileEntity te = world.getTileEntity(pos);
+        if(!(te instanceof TileMachine))
+        {
+            LogHelper.error("Tile entity for block at position " + pos.toString() + " is not a TileMachine!");
+            return null;
+        }
+        return (T) te;
     }
 
     public void setHasGui()

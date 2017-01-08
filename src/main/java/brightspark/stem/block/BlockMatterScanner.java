@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockMatterScanner extends AbstractBlockMachineDirectional<TileMatterScanner>
+public class BlockMatterScanner extends AbstractBlockMachine<TileMatterScanner>
 {
     public BlockMatterScanner()
     {

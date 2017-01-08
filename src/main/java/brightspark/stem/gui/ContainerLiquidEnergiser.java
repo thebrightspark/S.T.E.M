@@ -20,25 +20,10 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
     protected void addSlots()
     {
         //Energy Input Slot
-        /*
-        addSlotToContainer(new Slot(inventory, slotI++, 27, 65)
-        {
-            @Override
-            public int getSlotStackLimit()
-            {
-                return 1;
-            }
-
-            @Override
-            public boolean isItemValid(@Nullable ItemStack stack)
-            {
-                return stack != null && stack.getItem() instanceof IEnergyProvider;
-            }
-        });
-        */
+        //addSlotToContainer(new SlotEnergyInput(inventory, 27, 65));
 
         //Bucket In Slot
-        addSlotToContainer(new Slot(inventory, slotI++, 134, 23)
+        addSlotToContainer(new SlotMachine(inventory, 134, 23)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)
@@ -48,13 +33,6 @@ public class ContainerLiquidEnergiser extends ContainerMachineBase
         });
 
         //Bucket Out Slot
-        addSlotToContainer(new Slot(inventory, slotI++, 134, 54)
-        {
-            @Override
-            public boolean isItemValid(@Nullable ItemStack stack)
-            {
-                return false;
-            }
-        });
+        addSlotToContainer(new SlotOutputOnly(inventory, 134, 54));
     }
 }

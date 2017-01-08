@@ -7,6 +7,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -16,7 +17,7 @@ import net.minecraft.world.World;
 /**
  * Created by Mark on 14/12/2016.
  */
-public abstract class AbstractBlockContainerDirectional extends AbstractBlockContainer
+public abstract class AbstractBlockContainerDirectional<T extends TileEntity> extends AbstractBlockContainer<T>
 {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;
 

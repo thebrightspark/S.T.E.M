@@ -3,16 +3,19 @@ package brightspark.stem.gui;
 import brightspark.stem.message.MessageUpdateClientContainer;
 import brightspark.stem.tileentity.StemTileEntity;
 import brightspark.stem.util.CommonUtils;
+import cofh.api.energy.IEnergyProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 
 public class ContainerMachineBase extends Container
@@ -155,5 +158,47 @@ public class ContainerMachineBase extends Container
         }
 
         return stack;
+    }
+
+    public class SlotMachine extends Slot
+    {
+        public SlotMachine(IInventory inventoryIn, int xPosition, int yPosition)
+        {
+            super(inventoryIn, slotI++, xPosition, yPosition);
+        }
+    }
+
+    public class SlotOutputOnly extends SlotMachine
+    {
+        public SlotOutputOnly(IInventory inventoryIn, int xPosition, int yPosition)
+        {
+            super(inventoryIn, xPosition, yPosition);
+        }
+
+        @Override
+        public boolean isItemValid(@Nullable ItemStack stack)
+        {
+            return false;
+        }
+    }
+
+    public class SlotEnergyInput extends SlotMachine
+    {
+        public SlotEnergyInput(IInventory inventoryIn, int xPosition, int yPosition)
+        {
+            super(inventoryIn, xPosition, yPosition);
+        }
+
+        @Override
+        public int getSlotStackLimit()
+        {
+            return 1;
+        }
+
+        @Override
+        public boolean isItemValid(@Nullable ItemStack stack)
+        {
+            return stack != null && stack.getItem() instanceof IEnergyProvider;
+        }
     }
 }

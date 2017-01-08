@@ -29,8 +29,7 @@ public class TileMatterScanner extends TileMachine
         ACTIVE("gui.scan.active", colourGold),
         COMPLETE("gui.scan.complete", colourGreen);
 
-        public String unlocText;
-        public String locText;
+        public String unlocText, locText;
         public int colour;
 
         EnumScanStatus(String unlocText, int colour)
@@ -89,7 +88,7 @@ public class TileMatterScanner extends TileMachine
         super.update();
 
         //Scan item
-        if(isScanning() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(active && isScanning() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
             if(!worldObj.isRemote)
             {
@@ -123,7 +122,7 @@ public class TileMatterScanner extends TileMachine
         //Update scan status
         if(scanProgress == 0)
         {
-            if(slots[1] != null && ! ServerRecipeManager.hasRecipeForStack(slots[1]))
+            if(slots[1] != null && !ServerRecipeManager.hasRecipeForStack(slots[1]))
                 scanStatus = EnumScanStatus.NO_RECIPE;
             else if(slots[1] != null && !hasStorageDestination())
                 scanStatus = EnumScanStatus.NO_STORAGE;
@@ -132,7 +131,7 @@ public class TileMatterScanner extends TileMachine
             else
                 scanStatus = EnumScanStatus.INACTIVE;
         }
-        else if(scanProgress >= 100)
+        else if(slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[2]))
             scanStatus = EnumScanStatus.COMPLETE;
         else if(!hasStorageDestination())
             scanStatus = EnumScanStatus.NO_STORAGE;

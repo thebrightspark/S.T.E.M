@@ -12,6 +12,10 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 public class CommonUtils
 {
     public static SimpleNetworkWrapper NETWORK;
@@ -99,6 +103,32 @@ public class CommonUtils
     {
         buf.writeInt(Item.getIdFromItem(stack.getItem()));
         buf.writeInt(stack.getMetadata());
+    }
+
+    /**
+     * Sorts the given ItemStack List alphabetically.
+     */
+    public static void sortItemStackList(List<ItemStack> list)
+    {
+        Collections.sort(list, new Comparator<ItemStack>()
+        {
+            @Override
+            public int compare(ItemStack o1, ItemStack o2)
+            {
+                return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
+            }
+        });
+    }
+
+    /**
+     * Checks if the given ItemStack List contains the given ItemStack.
+     */
+    public static boolean itemStackListContains(List<ItemStack> list, ItemStack stackToCheckFor)
+    {
+        for(ItemStack stored : list)
+            if(ItemStack.areItemStacksEqual(stored, stackToCheckFor))
+                return true;
+        return false;
     }
 
     /**

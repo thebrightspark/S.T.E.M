@@ -92,7 +92,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
     protected void addSlots()
     {
         //Memory Chip Input
-        addSlotToContainer(new Slot(inventory, slotI++, 17, 23)
+        addSlotToContainer(new SlotMachine(inventory, 17, 23)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)
@@ -102,14 +102,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
         });
 
         //Memory Chip Output
-        addSlotToContainer(new Slot(inventory, slotI++, 17, 54)
-        {
-            @Override
-            public boolean isItemValid(@Nullable ItemStack stack)
-            {
-                return false;
-            }
-        });
+        addSlotToContainer(new SlotOutputOnly(inventory, 17, 54));
     }
 
     /**

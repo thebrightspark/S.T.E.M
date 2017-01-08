@@ -2,6 +2,7 @@ package brightspark.stem.init;
 
 import brightspark.stem.block.*;
 import brightspark.stem.tileentity.TileLiquidEnergiser;
+import brightspark.stem.tileentity.TileMatterCreator;
 import brightspark.stem.tileentity.TileMatterScanner;
 import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.ClientUtils;
@@ -59,6 +60,7 @@ public class StemBlocks
         registerBlock(liquidEnergiser = new BlockLiquidEnergiser());
         registerBlock(matterScanner = new BlockMatterScanner());
         registerBlock(scannerStorage = new BlockScannerStorage());
+        registerBlock(matterCreator = new BlockMatterCreator());
 
         regOreDic(machineBlock);
     }
@@ -68,6 +70,7 @@ public class StemBlocks
         registerTE(TileLiquidEnergiser.class, liquidEnergiser);
         registerTE(TileMatterScanner.class, matterScanner);
         registerTE(TileScannerStorage.class, scannerStorage);
+        registerTE(TileMatterCreator.class, matterCreator);
     }
 
     @SideOnly(Side.CLIENT)

@@ -26,6 +26,8 @@ public class Config
 
     //Matter Creator
 
+    /** Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla). */
+    public static int matterCreatorMaxEnergyInput = -1;
     /** Amount of energy used per mb of STEM fluid to create an item */
     public static int matterCreatorEnergyPerMb = 10000;
 }

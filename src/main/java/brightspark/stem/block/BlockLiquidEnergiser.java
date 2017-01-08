@@ -27,7 +27,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BlockLiquidEnergiser extends AbstractBlockMachineDirectional<TileLiquidEnergiser>
+public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergiser>
 {
     public BlockLiquidEnergiser()
     {

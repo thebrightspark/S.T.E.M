@@ -2,7 +2,6 @@ package brightspark.stem.block;
 
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.tileentity.TileMachineWithFluid;
-import brightspark.stem.util.ClientUtils;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.WrenchHelper;
@@ -20,13 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public abstract class AbstractBlockMachine<T extends TileMachine> extends AbstractBlockContainer
+public abstract class AbstractBlockMachine<T extends TileMachine> extends AbstractBlockContainerDirectional<T>
 {
     //@SideOnly(Side.CLIENT)
     //private final int chatIdMachineSide = ClientUtils.getNewChatMessageId();
@@ -37,20 +34,14 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
         setHasGui();
     }
 
+    public T getTileEntity(IBlockAccess world, BlockPos pos)
+    {
+        return (T) super.getTileEntity(world, pos);
+    }
+
     public boolean canPickupWithWrench()
     {
         return true;
-    }
-
-    public T getTileEntity(IBlockAccess world, BlockPos pos)
-    {
-        TileEntity te = world.getTileEntity(pos);
-        if(!(te instanceof TileMachine))
-        {
-            LogHelper.error("Tile entity for block at position " + pos.toString() + " is not a TileMachine!");
-            return null;
-        }
-        return (T) te;
     }
 
     @Override
@@ -154,12 +145,12 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
                 */
                 case TURN:
                     //Set block facing
-                    if(!world.isRemote && state.getBlock() instanceof AbstractBlockMachineDirectional && side != EnumFacing.UP && side != EnumFacing.DOWN)
+                    if(!world.isRemote && side != EnumFacing.UP && side != EnumFacing.DOWN)
                     {
-                        if(side == state.getValue(AbstractBlockMachineDirectional.FACING))
-                            world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side.getOpposite()));
+                        if(side == state.getValue(FACING))
+                            world.setBlockState(pos, state.withProperty(FACING, side.getOpposite()));
                         else
-                            world.setBlockState(pos, state.withProperty(AbstractBlockMachineDirectional.FACING, side));
+                            world.setBlockState(pos, state.withProperty(FACING, side));
                         TileMachine newTE = getTileEntity(world, pos);
                         if(newTE != null)
                             newTE.copyDataFrom(te);

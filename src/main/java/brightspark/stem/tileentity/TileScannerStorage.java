@@ -2,7 +2,7 @@ package brightspark.stem.tileentity;
 
 import brightspark.stem.recipe.ServerRecipeManager;
 import brightspark.stem.recipe.StemRecipe;
-import brightspark.stem.util.LogHelper;
+import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.NBTHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,8 +10,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class TileScannerStorage extends StemTileEntity
@@ -23,6 +21,7 @@ public class TileScannerStorage extends StemTileEntity
     public TileScannerStorage()
     {
         super(2);
+        shouldSaveInventoryToNBT = false;
     }
 
     /**
@@ -45,14 +44,7 @@ public class TileScannerStorage extends StemTileEntity
      */
     private void sortRecipes()
     {
-        Collections.sort(storedRecipes, new Comparator<ItemStack>()
-        {
-            @Override
-            public int compare(ItemStack o1, ItemStack o2)
-            {
-                return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
-            }
-        });
+        CommonUtils.sortItemStackList(storedRecipes);
         markDirty();
     }
 
@@ -63,10 +55,7 @@ public class TileScannerStorage extends StemTileEntity
     {
         if(stack == null)
             return true;
-        for(ItemStack stored : storedRecipes)
-            if(ItemStack.areItemStacksEqual(stored, stack))
-                return true;
-        return false;
+        return CommonUtils.itemStackListContains(storedRecipes, stack);
     }
 
     public void setRecipeAtIndex(int index, ItemStack recipeStack)
@@ -186,6 +175,7 @@ public class TileScannerStorage extends StemTileEntity
             stack.writeToNBT(tag);
             recipeList.appendTag(tag);
         }
+        nbt.setTag(KEY_RECIPES, recipeList);
 
         return super.writeToNBT(nbt);
     }

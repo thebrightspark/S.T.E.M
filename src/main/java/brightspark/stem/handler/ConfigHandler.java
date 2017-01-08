@@ -51,6 +51,7 @@ public class ConfigHandler
         Config.matterScannerEnergyPerTick = configuration.getInt("matterScannerEnergyPerTick", Categories.MATTER_SCANNER, Config.matterScannerEnergyPerTick, 1, Integer.MAX_VALUE, "Amount of energy used per tick");
 
         //Matter Creator
+        Config.matterCreatorMaxEnergyInput = configuration.getInt("matterCreatorMaxEnergyInput", Categories.MATTER_CREATOR, Config.matterCreatorMaxEnergyInput, -1, Integer.MAX_VALUE, "Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla).");
         Config.matterCreatorEnergyPerMb = configuration.getInt("matterCreatorEnergyPerMb", Categories.MATTER_CREATOR, Config.matterCreatorEnergyPerMb, 1, Integer.MAX_VALUE, "Amount of energy used per mb of STEM fluid to create an item");
 
         if(configuration.hasChanged())

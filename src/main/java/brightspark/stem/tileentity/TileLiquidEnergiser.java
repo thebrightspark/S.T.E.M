@@ -29,7 +29,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         super.update();
 
         //Liquid progress
-        if(active && tank.hasSpace())
+        if(active && tank.hasSpace() && energy.getEnergyStored() >= Config.liquidEnergiserEnergyPerMb)
         {
             if(!worldObj.isRemote)
             {
@@ -41,32 +41,21 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 }
             }
             markDirty();
-            //worldObj.scheduleUpdate(getPos(), getBlockType(), 2);
         }
 
         //Handle slots
-        for(int i = 0; i < slots.length; i++)
+        ItemStack slotStack;
+        //Energy input
+        if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
+            ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
+        //Bucket input
+        if((slotStack = slots[1]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[2] == null)
         {
-            ItemStack stack = slots[i];
-            if(stack == null)
-                continue;
-            switch(i)
-            {
-                case 0: //Energy input
-                    if(stack.getItem() instanceof IEnergyContainerItem)
-                        ((IEnergyContainerItem) stack.getItem()).extractEnergy(stack, getMaxReceieve(null), false);
-                    break;
-                case 1: //Bucket input
-                    if(stack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[2] == null)
-                    {
-                        tank.drainInternal(Fluid.BUCKET_VOLUME);
-                        stack.stackSize--;
-                        if(stack.stackSize <= 0)
-                            setInventorySlotContents(1, null);
-                        setInventorySlotContents(2, CommonUtils.createFilledBucket(StemFluids.fluidStem));
-                    }
-                    break;
-            }
+            tank.drainInternal(Fluid.BUCKET_VOLUME);
+            slotStack.stackSize--;
+            if(slotStack.stackSize <= 0)
+                setInventorySlotContents(1, null);
+            setInventorySlotContents(2, CommonUtils.createFilledBucket(StemFluids.fluidStem));
         }
 
         //Average input

@@ -21,26 +21,13 @@ public class ContainerMatterScanner extends ContainerMachineBase
     protected void addSlots()
     {
         //Energy Input Slot
-        addSlotToContainer(new Slot(inventory, slotI++, 26, 64)
-        {
-            @Override
-            public int getSlotStackLimit()
-            {
-                return 1;
-            }
-
-            @Override
-            public boolean isItemValid(@Nullable ItemStack stack)
-            {
-                return stack != null && stack.getItem() instanceof IEnergyProvider;
-            }
-        });
+        addSlotToContainer(new SlotEnergyInput(inventory, 26, 64));
 
         //Input Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, slotI++, 66, 35));
+        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 66, 35));
 
         //Memory Chip Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, slotI++, 132, 35)
+        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 132, 35)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)
@@ -50,13 +37,13 @@ public class ContainerMatterScanner extends ContainerMachineBase
         });
     }
 
-    public class SlotLockable extends Slot
+    public class SlotLockable extends SlotMachine
     {
         private TileMatterScanner machine;
 
-        public SlotLockable(TileMatterScanner matterScanner, int index, int xPosition, int yPosition)
+        public SlotLockable(TileMatterScanner matterScanner, int xPosition, int yPosition)
         {
-            super(matterScanner, index, xPosition, yPosition);
+            super(matterScanner, xPosition, yPosition);
             machine = matterScanner;
         }
 
