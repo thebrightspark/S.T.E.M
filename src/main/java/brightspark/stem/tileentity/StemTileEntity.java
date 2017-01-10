@@ -49,6 +49,8 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
      */
     public void writeDataToStack(ItemStack stack)
     {
+        if(!stack.hasTagCompound())
+            stack.setTagCompound(new NBTTagCompound());
         //Write inventory
         if(shouldSaveInventoryToNBT)
         {

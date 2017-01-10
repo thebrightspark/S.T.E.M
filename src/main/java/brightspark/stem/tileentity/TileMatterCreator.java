@@ -156,7 +156,7 @@ public class TileMatterCreator extends TileMachineWithFluid
             return false;
         progress++;
         energy.modifyEnergyStored(- Config.matterCreatorEnergyPerMb);
-        tank.drainInternal(1);
+        tank.drain(1, true);
         return true;
     }
 
@@ -226,7 +226,7 @@ public class TileMatterCreator extends TileMachineWithFluid
                 {
                     progress++;
                     energy.modifyEnergyStored(-Config.matterCreatorEnergyPerMb);
-                    tank.drainInternal(1);
+                    tank.drain(1, true);
                     if(progress >= recipeCache.getFluidInput())
                     {
                         //Craft item
@@ -249,10 +249,10 @@ public class TileMatterCreator extends TileMachineWithFluid
         if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
             ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
         //Bucket input
-        if(CommonUtils.isStemBucket(slotStack = slots[1]) && getFluidSpace() > Fluid.BUCKET_VOLUME &&
+        if(CommonUtils.isStemBucket(slotStack = slots[1]) && getFluidSpace() >= Fluid.BUCKET_VOLUME &&
                 (slots[2] == null || slots[2].getItem().equals(Items.BUCKET)))
         {
-            tank.fillInternal(Fluid.BUCKET_VOLUME);
+            tank.fillInternal(Fluid.BUCKET_VOLUME, true);
             slotStack.stackSize--;
             if(slotStack.stackSize <= 0)
                 setInventorySlotContents(1, null);

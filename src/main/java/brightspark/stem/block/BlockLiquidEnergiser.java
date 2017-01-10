@@ -62,7 +62,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergis
             TileLiquidEnergiser machine = getTileEntity(world, pos);
             if(machine.getFluidAmount() >= Fluid.BUCKET_VOLUME)
             {
-                machine.drainInternal(Fluid.BUCKET_VOLUME);
+                machine.drainBucket();
                 heldItem.stackSize--;
                 ItemStack filledBucket = CommonUtils.createFilledBucket(machine.getFluidType());
                 if(!player.inventory.addItemStackToInventory(filledBucket))

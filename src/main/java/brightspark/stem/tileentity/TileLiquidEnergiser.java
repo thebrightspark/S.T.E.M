@@ -36,7 +36,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 //Create STEM
                 while(energy.getEnergyStored() >= Config.liquidEnergiserEnergyPerMb)
                 {
-                    tank.fillInternal(1);
+                    tank.fillInternal(1, true);
                     energy.modifyEnergyStored(-Config.liquidEnergiserEnergyPerMb);
                 }
             }
@@ -51,7 +51,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         //Bucket input
         if((slotStack = slots[1]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[2] == null)
         {
-            tank.drainInternal(Fluid.BUCKET_VOLUME);
+            tank.drainInternal(Fluid.BUCKET_VOLUME, true);
             slotStack.stackSize--;
             if(slotStack.stackSize <= 0)
                 setInventorySlotContents(1, null);

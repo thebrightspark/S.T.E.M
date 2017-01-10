@@ -74,18 +74,6 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     public static final String KEY_PROGRESS = "progress";
     public static final String KEY_SIDE_PERMS = "sidePerms";
 
-    public TileMachine()
-    {
-        this(null);
-    }
-    public TileMachine(int numSlots)
-    {
-        this(null, numSlots);
-    }
-    public TileMachine(StemEnergyStorage energy)
-    {
-        this(energy, 0);
-    }
     public TileMachine(StemEnergyStorage energy, int numSlots)
     {
         super(numSlots);

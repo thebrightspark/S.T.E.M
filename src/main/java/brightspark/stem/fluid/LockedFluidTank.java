@@ -1,30 +1,52 @@
 package brightspark.stem.fluid;
 
+import com.sun.istack.internal.NotNull;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fluids.Fluid;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
+
+import javax.annotation.Nullable;
 
 /**
  * This tank will get locked to only accept the given liquid once created.
  * Also adds some helpful methods and adds a transfer limit.
  */
-public class LockedFluidTank extends FluidTank
+public class LockedFluidTank implements IFluidTank, IFluidHandler
 {
-    //Named "liquid" to avoid conflict with FluidTank#fluid
-    public final Fluid liquid;
+    @NotNull
+    protected FluidStack storedFluid;
+    protected int capacity;
     public int transferRate = 100;
+    protected TileEntity tile;
+    protected IFluidTankProperties[] tankProperties;
 
     public LockedFluidTank(Fluid fluid, int capacity, TileEntity tile)
     {
         this(fluid, capacity);
-        setTileEntity(tile);
+        this.tile = tile;
     }
 
     public LockedFluidTank(Fluid fluid, int capacity)
     {
-        super(fluid, 0, capacity);
-        this.liquid = fluid;
+        storedFluid = new FluidStack(fluid, 0);
+        this.capacity = capacity;
+    }
+
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        storedFluid = FluidStack.loadFluidStackFromNBT(nbt);
+        capacity = nbt.getInteger("tankCapacity");
+        transferRate = nbt.getInteger("tankTransferRate");
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
+    {
+        storedFluid.writeToNBT(nbt);
+        nbt.setInteger("tankCapacity", capacity);
+        nbt.setInteger("tankTransferRate", transferRate);
+        return nbt;
     }
 
     public LockedFluidTank setTransferRate(int rate)
@@ -33,26 +55,29 @@ public class LockedFluidTank extends FluidTank
         return this;
     }
 
-    public Fluid getAcceptableFluid()
+    public void setTile(TileEntity te)
     {
-        return liquid;
+        tile = te;
     }
 
-    @Override
     public boolean canFillFluidType(FluidStack fluid)
     {
-        return fluid.getFluid().equals(this.liquid) && canFill();
+        return storedFluid.isFluidEqual(fluid);
     }
 
-    @Override
     public boolean canDrainFluidType(FluidStack fluid)
     {
-        return fluid != null && fluid.getFluid().equals(this.liquid) && canDrain();
+        return canFillFluidType(fluid);
     }
 
     public boolean hasSpace()
     {
         return getFluidAmount() < getCapacity();
+    }
+
+    public int getSpace()
+    {
+        return getCapacity() - getFluidAmount();
     }
 
     /**
@@ -61,40 +86,166 @@ public class LockedFluidTank extends FluidTank
      */
     public int getMaxInput()
     {
-        return Math.min(capacity - getFluidAmount(), transferRate);
-    }
-
-    public int fill(int amount)
-    {
-        return fillInternal(new FluidStack(liquid, Math.min(amount, transferRate)), true);
-    }
-
-    public int fillInternal(int amount)
-    {
-        return fillInternal(new FluidStack(liquid, amount), true);
-    }
-
-    public FluidStack drain(int amount)
-    {
-        return drainInternal(new FluidStack(liquid, Math.min(amount, transferRate)), true);
-    }
-
-    public FluidStack drainInternal(int amount)
-    {
-        return drainInternal(new FluidStack(liquid, amount), true);
+        return Math.min(getSpace(), transferRate);
     }
 
     /**
-     * Directly sets the amount of fluid.
+     * Will return the max amount that can be outputted at once.
+     * This will either be the max transfer rate or the remaining fluid stored if less than the transfer rate.
+     */
+    public int getMaxOutput()
+    {
+        return Math.min(getFluidAmount(), transferRate);
+    }
+
+    /**
+     * Directly sets the amount of storedFluid.
      */
     public void setAmount(int amount)
     {
-        if(fluid == null)
+        if(storedFluid == null)
             return;
         if(amount < 0)
             amount = 0;
         else if(amount > capacity)
             amount = capacity;
-        fluid.amount = amount;
+        storedFluid.amount = amount;
+    }
+
+    @NotNull
+    @Override
+    public FluidStack getFluid()
+    {
+        return storedFluid;
+    }
+
+    @NotNull
+    public Fluid getFluidType()
+    {
+        return storedFluid.getFluid();
+    }
+
+    @Override
+    public int getFluidAmount()
+    {
+        return storedFluid.amount;
+    }
+
+    @Override
+    public int getCapacity()
+    {
+        return capacity;
+    }
+
+    @Override
+    public FluidTankInfo getInfo()
+    {
+        return new FluidTankInfo(this);
+    }
+
+    @Override
+    public IFluidTankProperties[] getTankProperties()
+    {
+        if (tankProperties == null)
+            tankProperties = new IFluidTankProperties[] { new IFluidTankProperties()
+            {
+                @Nullable
+                @Override
+                public FluidStack getContents()
+                {
+                    return storedFluid.copy();
+                }
+
+                @Override
+                public int getCapacity()
+                {
+                    return capacity;
+                }
+
+                @Override
+                public boolean canFill()
+                {
+                    return true;
+                }
+
+                @Override
+                public boolean canDrain()
+                {
+                    return true;
+                }
+
+                @Override
+                public boolean canFillFluidType(FluidStack fluidStack)
+                {
+                    return LockedFluidTank.this.canFillFluidType(fluidStack);
+                }
+
+                @Override
+                public boolean canDrainFluidType(FluidStack fluidStack)
+                {
+                    return LockedFluidTank.this.canDrainFluidType(fluidStack);
+                }
+            } };
+        return tankProperties;
+    }
+
+    @Override
+    public int fill(FluidStack resource, boolean doFill)
+    {
+        return canFillFluidType(resource) ? fillInternal(Math.min(resource.amount, getMaxInput()), doFill) : 0;
+    }
+
+    /**
+     * Fills ignoring transfer rate.
+     */
+    public int fillInternal(int amount, boolean doFill)
+    {
+        if(amount <= 0)
+            return 0;
+
+        int toFill = Math.min(amount, getSpace());
+
+        if(doFill)
+        {
+            storedFluid.amount += toFill;
+            if(tile != null)
+                FluidEvent.fireEvent(new FluidEvent.FluidFillingEvent(storedFluid, tile.getWorld(), tile.getPos(), this, toFill));
+        }
+
+        return toFill;
+    }
+
+    @Nullable
+    @Override
+    public FluidStack drain(FluidStack resource, boolean doDrain)
+    {
+        return canDrainFluidType(resource) ? drain(resource.amount, doDrain) : null;
+    }
+
+    @Nullable
+    @Override
+    public FluidStack drain(int maxDrain, boolean doDrain)
+    {
+        return drainInternal(Math.min(maxDrain, getMaxOutput()), doDrain);
+    }
+
+    /**
+     * Drains ignoring transfer rate.
+     */
+    public FluidStack drainInternal(int amount, boolean doDrain)
+    {
+        if(amount <= 0)
+            return null;
+
+        int toDrain = Math.min(amount, getFluidAmount());
+
+        if(doDrain)
+        {
+            storedFluid.amount -= toDrain;
+            if(tile != null)
+                FluidEvent.fireEvent(new FluidEvent.FluidDrainingEvent(storedFluid, tile.getWorld(), tile.getPos(), this, toDrain));
+        }
+
+        return new FluidStack(storedFluid.getFluid(), toDrain);
     }
 }
