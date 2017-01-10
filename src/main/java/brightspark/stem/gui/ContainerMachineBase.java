@@ -2,6 +2,7 @@ package brightspark.stem.gui;
 
 import brightspark.stem.message.MessageUpdateClientContainer;
 import brightspark.stem.tileentity.StemTileEntity;
+import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.util.CommonUtils;
 import cofh.api.energy.IEnergyProvider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -199,6 +200,29 @@ public class ContainerMachineBase extends Container
         public boolean isItemValid(@Nullable ItemStack stack)
         {
             return stack != null && stack.getItem() instanceof IEnergyProvider;
+        }
+    }
+
+    public class SlotLockable extends SlotMachine
+    {
+        private TileMachine machine;
+
+        public SlotLockable(TileMachine machine, int xPosition, int yPosition)
+        {
+            super(machine, xPosition, yPosition);
+            this.machine = machine;
+        }
+
+        @Override
+        public boolean canTakeStack(EntityPlayer playerIn)
+        {
+            return !machine.isWorking();
+        }
+
+        @Override
+        public int getSlotStackLimit()
+        {
+            return 1;
         }
     }
 }

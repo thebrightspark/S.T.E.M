@@ -67,8 +67,11 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     protected StemEnergyStorage energy;
     //Dependant on redstone input. Redstone signal = machine off //TODO: Make a button to change redstone interactivity
     public boolean active = true;
+    //Progress isn't actually changed in this class, but is available for tiles which extend this class.
+    protected int progress = 0;
 
     public static final String KEY_STACK_ENERGY = "stackEnergy";
+    public static final String KEY_PROGRESS = "progress";
     public static final String KEY_SIDE_PERMS = "sidePerms";
 
     public TileMachine()
@@ -134,6 +137,21 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     public String getEnergyPercentString()
     {
         return Math.round(getEnergyPercentFloat() * 100) + "%";
+    }
+
+    public int getProgress()
+    {
+        return progress;
+    }
+
+    public String getProgressString()
+    {
+        return progress + "%";
+    }
+
+    public boolean isWorking()
+    {
+        return progress > 0 && progress < 100;
     }
 
     @Override
@@ -291,6 +309,9 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
         //Read energy
         energy.readFromNBT(nbt);
 
+        //Read progress
+        progress = nbt.getInteger(KEY_PROGRESS);
+
         //Read side permissions
         /*
         NBTTagList sideList = nbt.getTagList(KEY_SIDE_PERMS, Constants.NBT.TAG_COMPOUND);
@@ -307,6 +328,9 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     {
         //Write energy
         energy.writeToNBT(nbt);
+
+        //Write progress
+        nbt.setInteger(KEY_PROGRESS, progress);
 
         //Write side permissions
         /*
@@ -387,19 +411,26 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     @Override
     public int getField(int id)
     {
-        return id == 0 ? energy.getEnergyStored() : 0;
+        return id == 0 ? energy.getEnergyStored() : id == 1 ? progress : 0;
     }
 
     @Override
     public void setField(int id, int value)
     {
-        if(id == 0)
-            energy.setEnergyStored(value);
+        switch(id)
+        {
+            case 0:
+                energy.setEnergyStored(value);
+                break;
+            case 1:
+                progress = value;
+                break;
+        }
     }
 
     @Override
     public int getFieldCount()
     {
-        return 1;
+        return 2;
     }
 }

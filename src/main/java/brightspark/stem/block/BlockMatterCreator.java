@@ -1,5 +1,7 @@
 package brightspark.stem.block;
 
+import brightspark.stem.gui.ContainerMatterCreator;
+import brightspark.stem.gui.GuiMatterCreator;
 import brightspark.stem.tileentity.TileMatterCreator;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -22,7 +24,6 @@ public class BlockMatterCreator extends AbstractBlockMachine<TileMatterCreator>
         return new TileMatterCreator();
     }
 
-    /*
     @SideOnly(Side.CLIENT)
     @Override
     public GuiScreen getGui(InventoryPlayer invPlayer, TileEntity te)
@@ -35,5 +36,4 @@ public class BlockMatterCreator extends AbstractBlockMachine<TileMatterCreator>
     {
         return new ContainerMatterCreator(invPlayer, (TileMatterCreator) te);
     }
-    */
 }

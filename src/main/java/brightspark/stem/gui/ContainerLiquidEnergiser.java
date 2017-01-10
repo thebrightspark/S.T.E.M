@@ -1,17 +1,15 @@
 package brightspark.stem.gui;
 
-import brightspark.stem.tileentity.TileMachine;
-import cofh.api.energy.IEnergyProvider;
+import brightspark.stem.tileentity.TileLiquidEnergiser;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
 public class ContainerLiquidEnergiser extends ContainerMachineBase
 {
-    public ContainerLiquidEnergiser(InventoryPlayer invPlayer, TileMachine machine)
+    public ContainerLiquidEnergiser(InventoryPlayer invPlayer, TileLiquidEnergiser machine)
     {
         super(invPlayer, machine);
     }

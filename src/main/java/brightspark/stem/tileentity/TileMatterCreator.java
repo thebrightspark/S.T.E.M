@@ -25,7 +25,6 @@ import java.util.List;
 
 public class TileMatterCreator extends TileMachineWithFluid
 {
-    private int progress = 0;
     private StemRecipe recipeCache;
     private int timeToNextRecipeCheck = 0;
     private List<ItemStack> storageRecipeCache = new ArrayList<ItemStack>();
@@ -85,7 +84,8 @@ public class TileMatterCreator extends TileMachineWithFluid
         return createStatus.colour;
     }
 
-    public boolean isCreating()
+    @Override
+    public boolean isWorking()
     {
         return recipeCache != null && progress > 0 && progress < recipeCache.getFluidInput();
     }
@@ -93,6 +93,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     /**
      * Gets the progress as an integer between 0 and 100 taking into account the energy required.
      */
+    @Override
     public int getProgress()
     {
         if(recipeCache == null)
@@ -216,7 +217,7 @@ public class TileMatterCreator extends TileMachineWithFluid
         }
 
         //Matter progress
-        if(active && isCreating() && hasEnoughEnergy() && hasEnoughFluid() && recipeCache != null)
+        if(active && isWorking() && hasEnoughEnergy() && hasEnoughFluid() && recipeCache != null)
         {
             if(!worldObj.isRemote)
             {

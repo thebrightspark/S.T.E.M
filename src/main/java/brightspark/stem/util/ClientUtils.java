@@ -2,6 +2,8 @@ package brightspark.stem.util;
 
 import brightspark.stem.ISubTypes;
 import brightspark.stem.STEM;
+import brightspark.stem.gui.GuiMachineBase;
+import brightspark.stem.tileentity.TileMachineWithFluid;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -9,11 +11,17 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.IFluidBlock;
+
+import java.awt.*;
 
 public class ClientUtils
 {
@@ -84,5 +92,37 @@ public class ClientUtils
     public static void addClientChatMessage(ITextComponent message, int deleteId)
     {
         mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(message, deleteId);
+    }
+
+    public static void drawGuiFluidBar(GuiMachineBase gui, Rectangle fluidBar, int guiLeft, int guiTop)
+    {
+        //Draw fluid
+        Fluid fluid = ((TileMachineWithFluid) gui.te).getFluidType();
+        TextureAtlasSprite fluidTexture = mc.getTextureMapBlocks().getTextureExtry(fluid.getStill().toString());
+        mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        //mc.renderEngine.bindTexture(fluid.getStill());
+        int fluidHeight = ((TileMachineWithFluid) gui.te).getFluidGuiHeight(fluidBar.height);
+        //drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop + (fluidBar.height - fluidHeight), 0, 0, fluidBar.width, fluidHeight);
+        gui.drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop + (fluidBar.height - fluidHeight), fluidTexture, fluidBar.width, fluidHeight);
+
+        //Draw lines over fluid
+        mc.renderEngine.bindTexture(gui.guiImage);
+        gui.drawTexturedModalRect(fluidBar.x + guiLeft, fluidBar.y + guiTop, 210, 0, fluidBar.width, fluidBar.height);
+    }
+
+    public static void drawGuiFluidTooltips(java.util.List<String> tooltip, GuiMachineBase gui, Rectangle fluidBar, int mouseX, int mouseY)
+    {
+        if(fluidBar.contains(mouseX, mouseY))
+        {
+            TileMachineWithFluid machine = (TileMachineWithFluid) gui.te;
+            tooltip.add(I18n.format(machine.getFluidType().getUnlocalizedName()));
+            tooltip.add(CommonUtils.addDigitGrouping(machine.getFluidAmount()) + "mb");
+        }
+    }
+
+    public static void drawGuiProgressArrow(GuiMachineBase gui, Rectangle arrow, int guiLeft, int guiTop)
+    {
+        int arrowWidth = Math.round(((float) gui.te.getProgress() / 100f) * arrow.width);
+        gui.drawTexturedModalRect(arrow.x + guiLeft, arrow.y + guiTop, 186, 0, arrowWidth, arrow.height);
     }
 }

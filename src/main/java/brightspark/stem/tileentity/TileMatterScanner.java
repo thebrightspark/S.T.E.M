@@ -13,9 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileMatterScanner extends TileMachine
 {
-    private int scanProgress = 0;
     private EnumScanStatus scanStatus = EnumScanStatus.INACTIVE;
-    private static final String KEY_PROGRESS = "scanProgress";
 
     private static final int colourRed = 0xD20000;
     private static final int colourGold = 0xFF8200;
@@ -56,16 +54,6 @@ public class TileMatterScanner extends TileMachine
         super(new StemEnergyStorage(Config.machineEnergyCapacity, 2000), 3);
     }
 
-    public int getScanProgress()
-    {
-        return scanProgress;
-    }
-
-    public String getScanProgressString()
-    {
-        return getScanProgress() + "%";
-    }
-
     @SideOnly(Side.CLIENT)
     public String getScanStatus()
     {
@@ -77,24 +65,19 @@ public class TileMatterScanner extends TileMachine
         return scanStatus.colour;
     }
 
-    public boolean isScanning()
-    {
-        return scanProgress > 0 && scanProgress < 100;
-    }
-
     @Override
     public void update()
     {
         super.update();
 
         //Scan item
-        if(active && isScanning() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(active && isWorking() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
             if(!worldObj.isRemote)
             {
-                scanProgress++;
+                progress++;
                 energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
-                if(scanProgress >= 100) //TEMP?
+                if(progress >= 100) //TEMP?
                 {
                     //Finish scan
                     if(slots[2] != null)
@@ -106,21 +89,21 @@ public class TileMatterScanner extends TileMachine
                             storage.storeRecipe(slots[1]);
                     }
                     slots[1] = null;
-                    scanProgress = 0;
+                    progress = 0;
                 }
             }
             markDirty();
         }
 
         //Check if item can be scanned
-        if(!worldObj.isRemote && scanProgress <= 0 && slots[1] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(!worldObj.isRemote && progress <= 0 && slots[1] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
-            scanProgress++;
+            progress++;
             energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
         }
 
         //Update scan status
-        if(scanProgress == 0)
+        if(progress == 0)
         {
             if(slots[1] != null && !ServerRecipeManager.hasRecipeForStack(slots[1]))
                 scanStatus = EnumScanStatus.NO_RECIPE;
@@ -170,44 +153,5 @@ public class TileMatterScanner extends TileMachine
             if(worldObj.getBlockState(pos.offset(side)).getBlock() instanceof BlockScannerStorage)
                 return (TileScannerStorage) worldObj.getTileEntity(pos.offset(side));
         return null;
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound nbt)
-    {
-        super.readFromNBT(nbt);
-
-        //Read scan progress
-        scanProgress = nbt.getInteger(KEY_PROGRESS);
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound nbt)
-    {
-        //Write scan progress
-        nbt.setInteger(KEY_PROGRESS, scanProgress);
-
-        return super.writeToNBT(nbt);
-    }
-
-    @Override
-    public int getField(int id)
-    {
-        return id == 1 ? scanProgress : super.getField(id);
-    }
-
-    @Override
-    public void setField(int id, int value)
-    {
-        if(id == 1)
-            scanProgress = value;
-        else
-            super.setField(id, value);
-    }
-
-    @Override
-    public int getFieldCount()
-    {
-        return 2;
     }
 }

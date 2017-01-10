@@ -14,10 +14,10 @@ import java.util.List;
 
 public class GuiMachineBase extends GuiContainer
 {
-    public static ResourceLocation guiImage;
+    public ResourceLocation guiImage;
     protected int textColour = 4210752;
-    protected TileMachine te;
-    protected Rectangle energyBar = new Rectangle(29, 18, 10, 42);
+    public TileMachine te;
+    protected final Rectangle energyBar = new Rectangle(29, 18, 10, 42);
 
     public GuiMachineBase(ContainerMachineBase container, String guiImageName)
     {
