@@ -30,26 +30,26 @@ public class StemRecipes
         //Memory Chip
         GameRegistry.addRecipe(new ShapedOreRecipe(StemItems.itemMemoryChip, "iqi", "idi", "igi", 'i', "ingotBlusteel", 'q', "gemQuartz", 'd', "gemDiamond", 'g', "ingotGold"));
         //Memory Bank
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 5), "ici", "ccc", "ici", 'i', "ingotBlusteel", 'c', "memChip"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 4), "ici", "ccc", "ici", 'i', "ingotBlusteel", 'c', "memChip"));
         //Large Memory Bank
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 6), "ibi", "bdb", "ibi", 'i', "ingotBlusteel", 'b', "memBank", 'd', "gemDiamond"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 5), "ibi", "bdb", "ibi", 'i', "ingotBlusteel", 'b', "memBank", 'd', "gemDiamond"));
         //Energy Input Circuit
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 7), "r", "g", "p", 'r', "dustRedstone", 'g', "ingotGold", 'p', "machineProcessor"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 6), "r", "g", "p", 'r', "dustRedstone", 'g', "ingotGold", 'p', "machineProcessor"));
         //Infusion Device
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 8), "pcp", "g b", "pep", 'p', "gemPrismarine", 'c', "energyCircuit", 'g', "ingotGold", 'b', Items.BUCKET, 'e', Blocks.END_ROD));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 7), "pcp", "g b", "pep", 'p', "gemPrismarine", 'c', "energyCircuit", 'g', "ingotGold", 'b', Items.BUCKET, 'e', Blocks.END_ROD));
         //Scanning Device
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 9), "ici", "glg", "ipi", 'i', "ingotBlusteel", 'c', "energyCircuit", 'g', "ingotGold", 'l', Blocks.REDSTONE_LAMP, 'p', "gemPrismarine"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 8), "ici", "glg", "ipi", 'i', "ingotBlusteel", 'c', "energyCircuit", 'g', "ingotGold", 'l', Blocks.REDSTONE_LAMP, 'p', "gemPrismarine"));
         //Memory Reader
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 10), " i ", "rpg", " i ", 'i', "ingotBlusteel", 'r', "dustRedstone", 'p', "machineProcessor", 'g', "ingotGold"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 9), " i ", "rpg", " i ", 'i', "ingotBlusteel", 'r', "dustRedstone", 'p', "machineProcessor", 'g', "ingotGold"));
         //Memory Writer
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 11), " i ", "qpr", " i ", 'i', "ingotBlusteel", 'r', "dustRedstone", 'p', "machineProcessor", 'q', "gemQuartz"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 10), " i ", "qpr", " i ", 'i', "ingotBlusteel", 'r', "dustRedstone", 'p', "machineProcessor", 'q', "gemQuartz"));
 
         //S.T.E.M Exciter
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 12), "ici", "dpb", "iii", 'i', "ingotBlusteel", 'c', "energyCircuit", 'p', "machineProcessor", 'd', "infDevice", 'b', Items.BUCKET));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 11), "ici", "dpb", "iii", 'i', "ingotBlusteel", 'c', "energyCircuit", 'p', "machineProcessor", 'd', "infDevice", 'b', Items.BUCKET));
         //Matter Former
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 13), "iei", "buc", "ipi", 'i', "ingotBlusteel", 'e', "energyCircuit", 'b', Items.BUCKET, 'u', "compUnit", 'c', "chest", 'p', "machineProcessor"));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 12), "iei", "buc", "ipi", 'i', "ingotBlusteel", 'e', "energyCircuit", 'b', Items.BUCKET, 'u', "compUnit", 'c', "chest", 'p', "machineProcessor"));
         //Compression Unit
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 14), "opo", "pmp", "opo", 'o', "obsidian", 'p', Blocks.PISTON, 'm', "machineProcessor"));
+        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 13), "opo", "pmp", "opo", 'o', "obsidian", 'p', Blocks.PISTON, 'm', "machineProcessor"));
 
         //Liquid Energiser
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.liquidEnergiser, " c ", "tbt", " i ", 'c', "energyCircuit", 't', "internalTank", 'b', "machineBlock", 'i', "infDevice"));
