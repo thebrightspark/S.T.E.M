@@ -15,7 +15,9 @@ import java.util.Arrays;
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {
     private int[] pastEnergyInput = new int[40];
+    private int index = 0;
     private int lastEnergyAmount = 0;
+    private int averageInput = 0;
 
     public TileLiquidEnergiser()
     {
@@ -24,9 +26,26 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     }
 
     @Override
+    public int getProgress()
+    {
+        return Math.min(Math.round(((float) energy.getEnergyStored() / (float) Config.liquidEnergiserEnergyPerMb) * 100f), 100);
+    }
+
+    @Override
     public void update()
     {
         super.update();
+
+        //Average input
+        if(!worldObj.isRemote)
+        {
+            int lastDiff = energy.getEnergyStored() - lastEnergyAmount;
+            pastEnergyInput[index] = lastDiff < 0 ? 0 : lastDiff;
+            //lastEnergyAmount = energy.getEnergyStored();
+            if(++index > pastEnergyInput.length - 1)
+                index = 0;
+            averageInput = CommonUtils.average(pastEnergyInput);
+        }
 
         //Liquid progress
         if(active && tank.hasSpace() && energy.getEnergyStored() >= Config.liquidEnergiserEnergyPerMb)
@@ -58,21 +77,37 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
             setInventorySlotContents(2, StemFluids.getStemBucket());
         }
 
-        //Average input
-        for(int i = 0; i < pastEnergyInput.length - 1; i++)
-            pastEnergyInput[i] = pastEnergyInput[i + 1];
-        int lastDiff = energy.getEnergyStored() - lastEnergyAmount;
-        pastEnergyInput[pastEnergyInput.length - 1] = lastDiff < 0 ? 0 : lastDiff;
         lastEnergyAmount = energy.getEnergyStored();
     }
 
     public int getAverageInput()
     {
-        return CommonUtils.average(pastEnergyInput);
+        return averageInput;
     }
 
     public String getAverageInputString()
     {
         return getAverageInput() + " RF/t";
+    }
+
+    @Override
+    public int getField(int id)
+    {
+        return id == 3 ? averageInput : super.getField(id);
+    }
+
+    @Override
+    public void setField(int id, int value)
+    {
+        if(id == 3)
+            averageInput = value;
+        else
+            super.setField(id, value);
+    }
+
+    @Override
+    public int getFieldCount()
+    {
+        return 4;
     }
 }

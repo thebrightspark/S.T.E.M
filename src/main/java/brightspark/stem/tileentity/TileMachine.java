@@ -134,7 +134,7 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
 
     public String getProgressString()
     {
-        return progress + "%";
+        return getProgress() + "%";
     }
 
     public boolean isWorking()
