@@ -18,13 +18,13 @@ public class ContainerMatterScanner extends ContainerMachineBase
     protected void addSlots()
     {
         //Energy Input Slot
-        addSlotToContainer(new SlotEnergyInput(inventory, 26, 64));
+        //addSlotToContainer(new SlotEnergyInput(inventory, 26, 64));
 
         //Input Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 66, 35));
+        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 44, 39));
 
         //Memory Chip Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 132, 35)
+        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 110, 39)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)

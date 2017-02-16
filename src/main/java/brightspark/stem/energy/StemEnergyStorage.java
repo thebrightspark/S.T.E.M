@@ -5,6 +5,9 @@ import net.minecraftforge.energy.EnergyStorage;
 
 public class StemEnergyStorage extends EnergyStorage
 {
+    //Used to lock energy transfer when machine is not in use
+    protected boolean canTransfer = true;
+
     public StemEnergyStorage(int capacity)
     {
         super(capacity);
@@ -99,5 +102,26 @@ public class StemEnergyStorage extends EnergyStorage
             this.energy = capacity;
         else if (this.energy < 0)
             this.energy = 0;
+    }
+
+    /**
+     * Used to lock energy transfer when machine is not in use.
+     * This will cause canExtract and canReceive to always return false when this is false;
+     */
+    public void setCanTransfer(boolean canTransfer)
+    {
+        this.canTransfer = canTransfer;
+    }
+
+    @Override
+    public boolean canExtract()
+    {
+        return canTransfer && super.canExtract();
+    }
+
+    @Override
+    public boolean canReceive()
+    {
+        return canTransfer && super.canReceive();
     }
 }

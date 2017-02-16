@@ -21,8 +21,8 @@ public class TileMatterScanner extends TileMachine
 
     private enum EnumScanStatus
     {
-        INACTIVE("gui.scan.inactive", colourRed),
-        NO_RECIPE("gui.scan.recipe", colourRed),
+        INACTIVE("gui.inactive", colourRed),
+        NO_RECIPE("gui.recipe", colourRed),
         NO_STORAGE("gui.scan.storage", colourRed),
         ACTIVE("gui.scan.active", colourGold),
         COMPLETE("gui.scan.complete", colourGreen);
@@ -80,15 +80,15 @@ public class TileMatterScanner extends TileMachine
                 if(progress >= 100) //TEMP?
                 {
                     //Finish scan
-                    if(slots[2] != null)
-                        ItemMemoryChip.setMemory(slots[2], slots[1]);
+                    if(slots[1] != null)
+                        ItemMemoryChip.setMemory(slots[1], slots[0]);
                     else
                     {
                         TileScannerStorage storage = getAdjacentStorage();
                         if(storage != null)
-                            storage.storeRecipe(slots[1]);
+                            storage.storeRecipe(slots[0]);
                     }
-                    slots[1] = null;
+                    slots[0] = null;
                     progress = 0;
                 }
             }
@@ -96,7 +96,7 @@ public class TileMatterScanner extends TileMachine
         }
 
         //Check if item can be scanned
-        if(!worldObj.isRemote && progress <= 0 && slots[1] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[1]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
+        if(!worldObj.isRemote && progress <= 0 && slots[0] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[0]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
         {
             progress++;
             energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
@@ -105,16 +105,16 @@ public class TileMatterScanner extends TileMachine
         //Update scan status
         if(progress == 0)
         {
-            if(slots[1] != null && !ServerRecipeManager.hasRecipeForStack(slots[1]))
+            if(slots[0] != null && !ServerRecipeManager.hasRecipeForStack(slots[0]))
                 scanStatus = EnumScanStatus.NO_RECIPE;
-            else if(slots[1] != null && !hasStorageDestination())
+            else if(slots[0] != null && !hasStorageDestination())
                 scanStatus = EnumScanStatus.NO_STORAGE;
-            else if(!ItemMemoryChip.isMemoryEmpty(slots[2]))
+            else if(!ItemMemoryChip.isMemoryEmpty(slots[1]))
                 scanStatus = EnumScanStatus.COMPLETE;
             else
                 scanStatus = EnumScanStatus.INACTIVE;
         }
-        else if(slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[2]))
+        else if(slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[1]))
             scanStatus = EnumScanStatus.COMPLETE;
         else if(!hasStorageDestination())
             scanStatus = EnumScanStatus.NO_STORAGE;
@@ -132,7 +132,7 @@ public class TileMatterScanner extends TileMachine
 
     private boolean hasMemoryChip()
     {
-        return slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[2]);
+        return slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[1]);
     }
 
     private boolean hasAdjacentStorage()

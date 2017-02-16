@@ -19,10 +19,10 @@ public class ContainerMatterCreator extends ContainerMachineBase
     protected void addSlots()
     {
         //Energy input slot
-        addSlotToContainer(new SlotEnergyInput(inventory, 8, 64));
+        //addSlotToContainer(new SlotEnergyInput(inventory, 8, 64));
 
         //Fluid bucket input slot
-        addSlotToContainer(new SlotMachine(inventory, 62, 23)
+        addSlotToContainer(new SlotMachine(inventory, 37, 23)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)
@@ -32,10 +32,10 @@ public class ContainerMatterCreator extends ContainerMachineBase
         });
 
         //Bucket output slot
-        addSlotToContainer(new SlotOutputOnly(inventory, 62, 54));
+        addSlotToContainer(new SlotOutputOnly(inventory, 37, 54));
 
         //Memory chip slot
-        addSlotToContainer(new SlotLockable((TileMatterCreator) inventory, 89, 39)
+        addSlotToContainer(new SlotLockable((TileMatterCreator) inventory, 79, 39)
         {
             @Override
             public boolean isItemValid(@Nullable ItemStack stack)
@@ -45,6 +45,6 @@ public class ContainerMatterCreator extends ContainerMachineBase
         });
 
         //Item output slot
-        addSlotToContainer(new SlotOutputOnly(inventory, 143, 39));
+        addSlotToContainer(new SlotOutputOnly(inventory, 133, 39));
     }
 }

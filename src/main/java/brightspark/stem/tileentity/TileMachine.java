@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextFormatting;
 
 public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITickable
 {
+    //TODO: When want to try permissions again, maybe make it its own object?
     public enum EnumSidePerm
     {
         ALL(0),

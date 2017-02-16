@@ -9,13 +9,12 @@ import java.awt.*;
 
 public class GuiMatterCreator extends GuiMachineBase
 {
-    protected Rectangle fluidBar = new Rectangle(33, 23, 16, 47);
+    protected Rectangle fluidBar = new Rectangle(8, 23, 16, 47);
     protected Rectangle arrow = new Rectangle(112, 38, 24, 17);
 
     public GuiMatterCreator(InventoryPlayer invPlayer, TileMatterCreator machine)
     {
         super(new ContainerMatterCreator(invPlayer, machine), "matterCreator");
-        energyBar.setLocation(11, 18);
     }
 
     @Override
@@ -30,11 +29,11 @@ public class GuiMatterCreator extends GuiMachineBase
     protected void drawText()
     {
         super.drawText();
-        fontRendererObj.drawString(I18n.format("gui.progress") + " " + te.getProgressString(), 84, 22, textColour);
+        fontRendererObj.drawString(I18n.format("gui.progress") + " " + te.getProgressString(), 75, 22, textColour);
         TileMatterCreator creator = (TileMatterCreator) te;
         int colour = creator.getCreationStatusColour();
-        fontRendererObj.drawString(I18n.format("gui.status"), 84, 62, colour);
-        fontRendererObj.drawString(creator.getCreationStatus(), 84, 74, colour);
+        fontRendererObj.drawString(I18n.format("gui.status"), 75, 65, colour);
+        fontRendererObj.drawString(creator.getCreationStatus(), 75, 77, colour);
     }
 
     @Override

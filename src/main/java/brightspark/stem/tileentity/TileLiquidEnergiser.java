@@ -37,6 +37,7 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         super.update();
 
         //Average input
+        //TODO: Maybe later only show average input on WAILA tooltips for powered blocks?
         if(!worldObj.isRemote)
         {
             int lastDiff = energy.getEnergyStored() - lastEnergyAmount;
@@ -65,16 +66,16 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         //Handle slots
         ItemStack slotStack;
         //Energy input
-        if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
-            ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
+        //if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
+        //    ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
         //Bucket input
-        if((slotStack = slots[1]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[2] == null)
+        if((slotStack = slots[0]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[1] == null)
         {
             tank.drainInternal(Fluid.BUCKET_VOLUME, true);
             slotStack.stackSize--;
             if(slotStack.stackSize <= 0)
-                setInventorySlotContents(1, null);
-            setInventorySlotContents(2, StemFluids.getStemBucket());
+                setInventorySlotContents(0, null);
+            setInventorySlotContents(1, StemFluids.getStemBucket());
         }
 
         lastEnergyAmount = energy.getEnergyStored();

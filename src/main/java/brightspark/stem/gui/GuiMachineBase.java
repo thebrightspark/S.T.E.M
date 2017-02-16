@@ -3,6 +3,7 @@ package brightspark.stem.gui;
 import brightspark.stem.STEM;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.util.CommonUtils;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
@@ -17,7 +18,8 @@ public class GuiMachineBase extends GuiContainer
     public ResourceLocation guiImage;
     protected int textColour = 4210752;
     public TileMachine te;
-    protected final Rectangle energyBar = new Rectangle(29, 18, 10, 42);
+
+    //protected final Rectangle energyBar = new Rectangle(29, 18, 10, 42);
 
     public GuiMachineBase(ContainerMachineBase container, String guiImageName)
     {
@@ -37,9 +39,14 @@ public class GuiMachineBase extends GuiContainer
         drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
         //Draw energy bar
-        int pixelsHigh = Math.round(energyBar.height * te.getEnergyPercentFloat());
-        int correctYPos = energyBar.height - pixelsHigh;
-        drawTexturedModalRect(guiLeft + energyBar.x, guiTop + energyBar.y + correctYPos, 176, correctYPos, energyBar.width, pixelsHigh);
+        /*
+        if(shouldDrawEnergy)
+        {
+            int pixelsHigh = Math.round(energyBar.height * te.getEnergyPercentFloat());
+            int correctYPos = energyBar.height - pixelsHigh;
+            drawTexturedModalRect(guiLeft + energyBar.x, guiTop + energyBar.y + correctYPos, 176, correctYPos, energyBar.width, pixelsHigh);
+        }
+        */
     }
 
     @Override
@@ -63,10 +70,23 @@ public class GuiMachineBase extends GuiContainer
 
     protected void drawTooltips(List<String> tooltip, int mouseX, int mouseY)
     {
-        if(energyBar.contains(mouseX, mouseY))
+        /*
+        if(shouldDrawEnergy && energyBar.contains(mouseX, mouseY))
         {
             tooltip.add("Energy: " + CommonUtils.addDigitGrouping(te.getEnergyStored(null)) + " RF");
             tooltip.add("Max: " + CommonUtils.addDigitGrouping(te.getMaxEnergyStored(null)) + " RF");
         }
+        */
+    }
+
+    public void drawCenteredString(FontRenderer fontRendererIn, String text, int y, int color)
+    {
+        fontRendererIn.drawString(text, (xSize / 2) - (fontRendererIn.getStringWidth(text) / 2), y, color);
+    }
+
+    @Override
+    public void drawCenteredString(FontRenderer fontRendererIn, String text, int x, int y, int color)
+    {
+        fontRendererIn.drawString(text, x - (fontRendererIn.getStringWidth(text) / 2), y, color);
     }
 }

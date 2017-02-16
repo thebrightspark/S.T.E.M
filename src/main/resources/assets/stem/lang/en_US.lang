@@ -51,12 +51,19 @@ gui.energyStorage.max=Max:
 gui.progress=Progress:
 gui.averageInput=Average Input:
 gui.status=Status:
+gui.inactive=Inactive
+gui.recipe=No Recipe
 
 gui.scan.recipe=No Recipe
 gui.scan.storage=Waiting For Storage
 gui.scan.active=Scanning...
-gui.scan.inactive=Inactive
 gui.scan.complete=Scan Complete
+
+gui.create.active=Creating...
+gui.create.output=Empty Output Slot
+gui.create.energy=No Energy
+gui.create.fluid=No Fluid
+gui.create.complete=Creation Complete
 
 //Misc
 

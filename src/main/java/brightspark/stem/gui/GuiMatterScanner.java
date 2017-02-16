@@ -9,7 +9,7 @@ import java.awt.*;
 
 public class GuiMatterScanner extends GuiMachineBase
 {
-    protected Rectangle arrow = new Rectangle(95, 34, 24, 17);
+    protected Rectangle arrow = new Rectangle(73, 38, 24, 17);
 
     public GuiMatterScanner(InventoryPlayer invPlayer, TileMatterScanner machine)
     {
@@ -29,9 +29,8 @@ public class GuiMatterScanner extends GuiMachineBase
         super.drawText();
 
         TileMatterScanner scanner = (TileMatterScanner) te;
-        fontRendererObj.drawString(I18n.format("gui.progress") + " " + scanner.getProgressString(), 55, 20, textColour);
+        drawCenteredString(fontRendererObj, I18n.format("gui.progress") + " " + scanner.getProgressString(), 20, textColour);
         int colour = scanner.getScanStatusColour();
-        fontRendererObj.drawString(I18n.format("gui.status"), 55, 58, colour);
-        fontRendererObj.drawString(scanner.getScanStatus(), 65, 70, colour);
+        drawCenteredString(fontRendererObj, I18n.format("gui.status") + " " + scanner.getScanStatus(), 66, colour);
     }
 }

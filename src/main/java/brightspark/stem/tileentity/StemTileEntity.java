@@ -200,7 +200,8 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     @Override
     public void setInventorySlotContents(int index, @Nullable ItemStack stack)
     {
-        if(isValidSlot(index)) slots[index] = stack;
+        if(isValidSlot(index))
+            slots[index] = stack;
     }
 
     @Override
