@@ -10,7 +10,7 @@ import java.awt.*;
 public class GuiMatterCreator extends GuiMachineBase
 {
     protected Rectangle fluidBar = new Rectangle(8, 23, 16, 47);
-    protected Rectangle arrow = new Rectangle(112, 38, 24, 17);
+    protected Rectangle arrow = new Rectangle(102, 39, 24, 17);
 
     public GuiMatterCreator(InventoryPlayer invPlayer, TileMatterCreator machine)
     {

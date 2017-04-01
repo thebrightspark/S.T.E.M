@@ -66,41 +66,48 @@ public class TileMatterScanner extends TileMachine
     }
 
     @Override
+    public int getEnergyPerTick()
+    {
+        return Config.matterScannerEnergyPerTick;
+    }
+
+    @Override
+    public boolean canWork()
+    {
+        if(isWorking())
+            return super.canWork();
+        else
+            return super.canWork() && slots[0] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[0]);
+    }
+
+    @Override
+    public void doWork()
+    {
+        super.doWork();
+
+        //Scan item
+        if(progress < 100)
+            progress++;
+        if(progress >= 100)
+        {
+            //Finish scan
+            if(slots[1] != null)
+                ItemMemoryChip.setMemory(slots[1], slots[0]);
+            else
+            {
+                TileScannerStorage storage = getAdjacentStorage();
+                if(storage != null)
+                    storage.storeRecipe(slots[0]);
+            }
+            slots[0] = null;
+            progress = 0;
+        }
+    }
+
+    @Override
     public void update()
     {
         super.update();
-
-        //Scan item
-        if(active && isWorking() && hasStorageDestination() && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
-        {
-            if(!worldObj.isRemote)
-            {
-                progress++;
-                energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
-                if(progress >= 100) //TEMP?
-                {
-                    //Finish scan
-                    if(slots[1] != null)
-                        ItemMemoryChip.setMemory(slots[1], slots[0]);
-                    else
-                    {
-                        TileScannerStorage storage = getAdjacentStorage();
-                        if(storage != null)
-                            storage.storeRecipe(slots[0]);
-                    }
-                    slots[0] = null;
-                    progress = 0;
-                }
-            }
-            markDirty();
-        }
-
-        //Check if item can be scanned
-        if(!worldObj.isRemote && progress <= 0 && slots[0] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[0]) && energy.getEnergyStored() >= Config.matterScannerEnergyPerTick)
-        {
-            progress++;
-            energy.modifyEnergyStored(-Config.matterScannerEnergyPerTick);
-        }
 
         //Update scan status
         if(progress == 0)

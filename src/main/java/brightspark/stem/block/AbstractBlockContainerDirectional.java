@@ -14,9 +14,6 @@ import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-/**
- * Created by Mark on 14/12/2016.
- */
 public abstract class AbstractBlockContainerDirectional<T extends TileEntity> extends AbstractBlockContainer<T>
 {
     public static final PropertyDirection FACING = BlockHorizontal.FACING;

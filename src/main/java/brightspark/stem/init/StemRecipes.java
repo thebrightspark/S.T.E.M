@@ -45,11 +45,11 @@ public class StemRecipes
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 10), " i ", "qpr", " i ", 'i', "ingotBlusteel", 'r', "dustRedstone", 'p', "machineProcessor", 'q', "gemQuartz"));
 
         //S.T.E.M Exciter
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 11), "ici", "dpb", "iii", 'i', "ingotBlusteel", 'c', "energyCircuit", 'p', "machineProcessor", 'd', "infDevice", 'b', Items.BUCKET));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 11), "ici", "dpb", "iii", 'i', "ingotBlusteel", 'c', "energyCircuit", 'p', "machineProcessor", 'd', "infDevice", 'b', Items.BUCKET));
         //Matter Former
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 12), "iei", "buc", "ipi", 'i', "ingotBlusteel", 'e', "energyCircuit", 'b', Items.BUCKET, 'u', "compUnit", 'c', "chest", 'p', "machineProcessor"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 12), "iei", "buc", "ipi", 'i', "ingotBlusteel", 'e', "energyCircuit", 'b', Items.BUCKET, 'u', "compUnit", 'c', "chest", 'p', "machineProcessor"));
         //Compression Unit
-        //GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 13), "opo", "pmp", "opo", 'o', "obsidian", 'p', Blocks.PISTON, 'm', "machineProcessor"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 13), "opo", "pmp", "opo", 'o', "obsidian", 'p', Blocks.PISTON, 'm', "machineProcessor"));
 
         //Liquid Energiser
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.liquidEnergiser, " c ", "tbt", " i ", 'c', "energyCircuit", 't', "internalTank", 'b', "machineBlock", 'i', "infDevice"));
@@ -58,7 +58,7 @@ public class StemRecipes
         //Scanner Storage
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.scannerStorage, "   ", "rbw", " m ", 'r', "memReader", 'w', "memWriter", 'b', "machineBlock", 'm', "largeMemBank"));
         //Matter Creator
-        //GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.matterCreator, " c ", "ebf", " t ", 'c', "energyCircuit", 'e', "exciter", 'b', "machineBlock", 'f', "matterFormer"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.matterCreator, " c ", "ebf", " t ", 'c', "energyCircuit", 'e', "exciter", 'b', "machineBlock", 'f', "matterFormer"));
         //Liquid Compressor
 
     }

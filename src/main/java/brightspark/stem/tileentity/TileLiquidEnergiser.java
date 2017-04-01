@@ -14,15 +14,12 @@ import java.util.Arrays;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {
-    private int[] pastEnergyInput = new int[40];
-    private int index = 0;
-    private int lastEnergyAmount = 0;
-    private int averageInput = 0;
+    //private int[] pastEnergyInput = new int[40];
 
     public TileLiquidEnergiser()
     {
         super(new StemEnergyStorage(-1, Config.liquidEnergiserMaxEnergyInput), new FluidStack(StemFluids.fluidStem, 8000), 3);
-        Arrays.fill(pastEnergyInput, 0);
+        //Arrays.fill(pastEnergyInput, 0);
     }
 
     @Override
@@ -32,12 +29,27 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     }
 
     @Override
+    public boolean canWork()
+    {
+        return super.canWork() && tank.hasSpace();
+    }
+
+    @Override
+    public void doWork()
+    {
+        super.doWork();
+        tank.fillInternal(1, true);
+    }
+
+    @Override
     public void update()
     {
         super.update();
 
         //Average input
         //TODO: Maybe later only show average input on WAILA tooltips for powered blocks?
+        // Might not even be able to do average energy if I switch to handling energy differently
+        /*
         if(!worldObj.isRemote)
         {
             int lastDiff = energy.getEnergyStored() - lastEnergyAmount;
@@ -47,27 +59,10 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
                 index = 0;
             averageInput = CommonUtils.average(pastEnergyInput);
         }
-
-        //Liquid progress
-        if(active && tank.hasSpace() && energy.getEnergyStored() >= Config.liquidEnergiserEnergyPerMb)
-        {
-            if(!worldObj.isRemote)
-            {
-                //Create STEM
-                while(energy.getEnergyStored() >= Config.liquidEnergiserEnergyPerMb)
-                {
-                    tank.fillInternal(1, true);
-                    energy.modifyEnergyStored(-Config.liquidEnergiserEnergyPerMb);
-                }
-            }
-            markDirty();
-        }
+        */
 
         //Handle slots
         ItemStack slotStack;
-        //Energy input
-        //if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
-        //    ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
         //Bucket input
         if((slotStack = slots[0]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[1] == null)
         {
@@ -78,9 +73,10 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
             setInventorySlotContents(1, StemFluids.getStemBucket());
         }
 
-        lastEnergyAmount = energy.getEnergyStored();
+        //lastEnergyAmount = energy.getEnergyStored();
     }
 
+    /*
     public int getAverageInput()
     {
         return averageInput;
@@ -111,4 +107,5 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
     {
         return 4;
     }
+    */
 }

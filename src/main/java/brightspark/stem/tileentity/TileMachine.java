@@ -83,19 +83,20 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
         //    sideConfigs.put(side, EnumSidePerm.ALL);
     }
 
-    public boolean hasEnergy()
+    /**
+     * If the machine is able to do work - does not take into account energy stored
+     */
+    public boolean canWork()
     {
-        return energy.getEnergyStored() > 0;
+        return active;
     }
 
-    public boolean isEnergyFull()
+    /**
+     * If the machine has enough energy to work
+     */
+    public boolean hasEnoughEnergy()
     {
-        return energy.getEnergyStored() >= energy.getMaxEnergyStored();
-    }
-
-    public boolean canReceiveEnergy(EnumFacing side)
-    {
-        return !isEnergyFull(); //&& sideConfigs.get(side).canInput();
+        return energy.getEnergyStored() >= getEnergyPerTick();
     }
 
     public int getMaxExtract(EnumFacing side)
@@ -114,20 +115,6 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
         //    return 0;
     }
 
-    /**
-     * Gets a float between 0 and 1 of how full the energy is (1 being full and 0 empty).
-     * @return Value between 0 and 1.
-     */
-    public float getEnergyPercentFloat()
-    {
-        return (float) energy.getEnergyStored() / (float) energy.getMaxEnergyStored();
-    }
-
-    public String getEnergyPercentString()
-    {
-        return Math.round(getEnergyPercentFloat() * 100) + "%";
-    }
-
     public int getProgress()
     {
         return progress;
@@ -141,6 +128,20 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     public boolean isWorking()
     {
         return progress > 0 && progress < 100;
+    }
+
+    public int getEnergyPerTick()
+    {
+        return 1000000;
+    }
+
+    /**
+     * Called in update() every time there's enough energy to do some work.
+     * May be called multiple times per tick if there's a lot of energy.
+     */
+    public void doWork()
+    {
+        energy.modifyEnergyStored(-getEnergyPerTick());
     }
 
     @Override
@@ -342,6 +343,15 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     @Override
     public void update()
     {
+        energy.setCanTransfer(canWork());
+        if(canWork() && hasEnoughEnergy())
+        {
+            if(!worldObj.isRemote)
+                while(canWork() && hasEnoughEnergy())
+                    doWork();
+            markDirty();
+        }
+
         /*
         IHaveFluid fluidTE = this instanceof IHaveFluid ? (IHaveFluid) this : null;
         IBlockState state = worldObj.getBlockState(pos);
@@ -373,10 +383,7 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     @Override
     public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate)
     {
-        if(canReceiveEnergy(from))
-            return energy.receiveEnergy(maxReceive, simulate);
-        else
-            return 0;
+        return energy.receiveEnergy(maxReceive, simulate);
     }
 
     @Override

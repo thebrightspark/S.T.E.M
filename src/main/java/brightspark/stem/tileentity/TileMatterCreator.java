@@ -26,8 +26,8 @@ import java.util.List;
 public class TileMatterCreator extends TileMachineWithFluid
 {
     private StemRecipe recipeCache;
-    private int timeToNextRecipeCheck = 0;
-    private List<ItemStack> storageRecipeCache = new ArrayList<ItemStack>();
+    //private int timeToNextRecipeCheck = 0;
+    //private List<ItemStack> storageRecipeCache = new ArrayList<ItemStack>();
     private EnumCreationStatus createStatus = EnumCreationStatus.INACTIVE;
 
     private static final int colourRed = 0xD20000;
@@ -97,9 +97,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     {
         if(recipeCache == null)
             return 0;
-        int energyNeeded = recipeCache.getFluidInput() * Config.matterCreatorEnergyPerMb;
-        int energyReceived = progress * Config.matterCreatorEnergyPerMb + energy.getEnergyStored();
-        return Math.round((energyReceived / energyNeeded) * 100);
+        return Math.round(((float) progress / (float) recipeCache.getFluidInput()) * 100);
     }
 
     /**
@@ -114,15 +112,18 @@ public class TileMatterCreator extends TileMachineWithFluid
             recipeCache = null;
     }
 
+    /*
     private void sortCachedRecipes()
     {
         CommonUtils.sortItemStackList(storageRecipeCache);
         markDirty();
     }
+    */
 
     /**
      * Forces a check for recipes in all adjacent Scanner Storage blocks and saves to a cache.
      */
+    /*
     public void updateCachedRecipeStorage()
     {
         storageRecipeCache.clear();
@@ -142,6 +143,7 @@ public class TileMatterCreator extends TileMachineWithFluid
         }
         sortCachedRecipes();
     }
+    */
 
     /**
      * Starts the creating process if possible.
@@ -165,7 +167,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     private boolean canOutput()
     {
         ItemStack outputStack = slots[3];
-        return outputStack == null || (outputStack.equals(recipeCache.getOutput()) && outputStack.stackSize < 64);
+        return outputStack == null || (outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.stackSize < 64);
     }
 
     private boolean hasMemoryChip()
@@ -173,41 +175,43 @@ public class TileMatterCreator extends TileMachineWithFluid
         return slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[2]);
     }
 
+    /*
     private boolean hasAdjacentRecipeStorage()
     {
         return !storageRecipeCache.isEmpty();
     }
+    */
 
-    private boolean hasEnoughEnergy()
+    @Override
+    public int getEnergyPerTick()
     {
-        return energy.getEnergyStored() >= Config.matterCreatorEnergyPerMb;
-    }
-
-    private boolean hasEnoughFluid()
-    {
-        return tank.getFluidAmount() > 0;
+        return Config.matterCreatorEnergyPerMb;
     }
 
     @Override
-    public void update()
+    public boolean canWork()
     {
-        super.update();
+        if(recipeCache == null)
+            updateCachedRecipe(hasMemoryChip() ? ItemMemoryChip.getMemory(slots[2]) : null);
+        return super.canWork() && recipeCache != null && tank.getFluidAmount() > 0 && hasMemoryChip() && canOutput() && progress < recipeCache.getFluidInput();
+    }
 
+    @Override
+    public void doWork()
+    {
+        super.doWork();
+
+        /*
         if(timeToNextRecipeCheck > 0)
             timeToNextRecipeCheck--;
+        */
 
         //Update cached recipe
-        if(timeToNextRecipeCheck <= 0)
-        {
-            timeToNextRecipeCheck = 20;
-            //Check for memory chip first
-            if(slots[2] != null)
-            {
-                if(recipeCache == null && hasMemoryChip())
-                    updateCachedRecipe(ItemMemoryChip.getMemory(slots[2]));
-            }
-            else
-                updateCachedRecipe(null);
+        //if(timeToNextRecipeCheck <= 0)
+        //{
+            //timeToNextRecipeCheck = 20;
+
+            //Used to have the check for a memory chip here. Now been moved to canWork()
 
             //TODO: Later be able to choose an item from adjacent storages within the GUI
             //Then check adjacent scanner storage blocks
@@ -219,41 +223,30 @@ public class TileMatterCreator extends TileMachineWithFluid
                     updateCachedRecipe(storageRecipeCache.get(0));
             }
             */
-        }
+        //}
 
         //Matter progress
-        if(active && isWorking() && hasEnoughEnergy() && hasEnoughFluid() && recipeCache != null)
+        //Increase progress
+        progress++;
+        tank.drain(1, true);
+        if(progress >= recipeCache.getFluidInput())
         {
-            if(!worldObj.isRemote)
-            {
-                //Increase progress
-                while(hasEnoughEnergy() && hasEnoughFluid())
-                {
-                    progress++;
-                    energy.modifyEnergyStored(-Config.matterCreatorEnergyPerMb);
-                    tank.drain(1, true);
-                    if(progress >= recipeCache.getFluidInput())
-                    {
-                        //Craft item
-                        ItemStack stackInOutputSlot = slots[3];
-                        if(stackInOutputSlot != null)
-                        {
-                            if(stackInOutputSlot.equals(recipeCache.getOutput()))
-                                stackInOutputSlot.stackSize++;
-                        }
-                        setInventorySlotContents(3, recipeCache.getOutput().copy());
-                    }
-                }
-            }
-            markDirty();
+            //Craft item
+            ItemStack stackInOutputSlot = slots[3];
+            if(stackInOutputSlot != null && stackInOutputSlot.isItemEqual(recipeCache.getOutput()))
+                stackInOutputSlot.stackSize++;
+            else
+                setInventorySlotContents(3, recipeCache.getOutput().copy());
+            progress = 0;
         }
+    }
+
+    @Override
+    public void update()
+    {
+        super.update();
 
         //Handle slots
-        /*
-        //Energy input
-        if((slotStack = slots[0]) != null && slotStack.getItem() instanceof IEnergyContainerItem)
-            ((IEnergyContainerItem) slotStack.getItem()).extractEnergy(slotStack, getMaxReceieve(null), false);
-        */
         //Bucket input
         if(CommonUtils.isStemBucket(slots[0]) && getFluidSpace() >= Fluid.BUCKET_VOLUME &&
                 (slots[1] == null || slots[1].getItem().equals(Items.BUCKET)))
@@ -269,22 +262,19 @@ public class TileMatterCreator extends TileMachineWithFluid
         }
 
         //Update creation status
-        if(progress == 0)
-        {
-            if(!hasMemoryChip() && !hasAdjacentRecipeStorage())
-                createStatus = EnumCreationStatus.NO_RECIPE;
-            else if(!canOutput())
-                createStatus = EnumCreationStatus.CANT_OUTPUT;
-            else if(!hasEnoughEnergy())
-                createStatus = EnumCreationStatus.NO_ENERGY;
-            else if(!hasEnoughFluid())
-                createStatus = EnumCreationStatus.NO_FLUID;
-            else
-                createStatus = EnumCreationStatus.INACTIVE;
-        }
-        else if(recipeCache != null && progress >= recipeCache.getFluidInput())
-            createStatus = EnumCreationStatus.COMPLETE;
-        else
+        if(!hasMemoryChip()) //&& !hasAdjacentRecipeStorage())
+            createStatus = EnumCreationStatus.NO_RECIPE;
+        else if(!canOutput())
+            createStatus = EnumCreationStatus.CANT_OUTPUT;
+        else if(tank.getFluidAmount() <= 0)
+            createStatus = EnumCreationStatus.NO_FLUID;
+        //else if(!hasEnoughEnergy())
+        //    createStatus = EnumCreationStatus.NO_ENERGY;
+        else if(progress > 0)
             createStatus = EnumCreationStatus.ACTIVE;
+        else
+            createStatus = EnumCreationStatus.INACTIVE;
+        //else if(recipeCache != null && progress >= recipeCache.getFluidInput())
+        //    createStatus = EnumCreationStatus.COMPLETE;
     }
 }

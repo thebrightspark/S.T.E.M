@@ -21,6 +21,9 @@ item.basic.infDevice.name=Infusing Device
 item.basic.scanDevice.name=Scanning Device
 item.basic.memReader.name=Memory Reader
 item.basic.memWriter.name=Memory Writer
+item.basic.exciter.name=S.T.E.M Exciter
+item.basic.former.name=Matter Former
+item.basic.compressor.name=Compression Unit
 
 //Blocks
 

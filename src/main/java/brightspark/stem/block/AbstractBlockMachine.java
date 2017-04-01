@@ -34,11 +34,6 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
         setHasGui();
     }
 
-    public T getTileEntity(IBlockAccess world, BlockPos pos)
-    {
-        return (T) super.getTileEntity(world, pos);
-    }
-
     public boolean canPickupWithWrench()
     {
         return true;
@@ -86,7 +81,6 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
      */
     protected void writeNbtToDroppedStack(IBlockAccess world, BlockPos pos, IBlockState state, TileMachine machine, ItemStack drop)
     {
-        //LogHelper.info("Is Machine Null: " + (machine == null));
         if(machine != null)
             machine.writeDataToStack(drop);
     }
@@ -95,14 +89,10 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase player, ItemStack stack)
     {
         super.onBlockPlacedBy(world, pos, state, player, stack);
-        //LogHelper.info("Block Placed");
         if(world == null || pos == null) return;
         TileMachine machine = getTileEntity(world, pos);
-        //LogHelper.info("Block Placed - TE: " + (machine != null));
         if(machine == null) return;
         machine.readDataFromStack(stack);
-        //if(!world.isRemote)
-        //    world.notifyBlockUpdate(pos, state, state, 3);
     }
 
     @Override

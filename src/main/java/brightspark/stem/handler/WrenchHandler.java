@@ -6,6 +6,7 @@ import brightspark.stem.util.WrenchHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -69,8 +70,10 @@ public class WrenchHandler
             //Break machine only on server
             IBlockState state = world.getBlockState(pos);
             AbstractBlockMachine machine = (AbstractBlockMachine) state.getBlock();
-            TileMachine te = machine.getTileEntity(world, pos);
-            te.usedWrenchToBreak = true;
+            TileEntity te = machine.getTileEntity(world, pos);
+            if(!(te instanceof TileMachine))
+                return;
+            ((TileMachine) te).usedWrenchToBreak = true;
             if(machine.removedByPlayer(state, world, pos, player, true))
                 machine.harvestBlock(world, player, pos, state, te, event.getItemStack());
         }

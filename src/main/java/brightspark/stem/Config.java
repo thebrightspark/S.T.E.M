@@ -1,8 +1,5 @@
 package brightspark.stem;
 
-/**
- * Created by Mark on 07/11/2016.
- */
 public class Config
 {
     //Machines General
