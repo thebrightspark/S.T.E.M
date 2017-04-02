@@ -4,9 +4,8 @@ import brightspark.stem.Config;
 import brightspark.stem.block.BlockScannerStorage;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.item.ItemMemoryChip;
-import brightspark.stem.recipe.ServerRecipeManager;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -77,7 +76,7 @@ public class TileMatterScanner extends TileMachine
         if(isWorking())
             return super.canWork();
         else
-            return super.canWork() && slots[0] != null && hasStorageDestination() && ServerRecipeManager.hasRecipeForStack(slots[0]);
+            return super.canWork() && slots[0] != null && hasStorageDestination() && CommonUtils.hasRecipeForStack(slots[0]);
     }
 
     @Override
@@ -112,7 +111,7 @@ public class TileMatterScanner extends TileMachine
         //Update scan status
         if(progress == 0)
         {
-            if(slots[0] != null && !ServerRecipeManager.hasRecipeForStack(slots[0]))
+            if(slots[0] != null && !CommonUtils.hasRecipeForStack(slots[0]))
                 scanStatus = EnumScanStatus.NO_RECIPE;
             else if(slots[0] != null && !hasStorageDestination())
                 scanStatus = EnumScanStatus.NO_STORAGE;

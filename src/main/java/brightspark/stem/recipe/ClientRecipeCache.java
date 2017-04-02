@@ -2,7 +2,6 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.message.MessageRecipeRequest;
 import brightspark.stem.util.CommonUtils;
-import brightspark.stem.util.LogHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -33,7 +32,7 @@ public class ClientRecipeCache
         setRecipe(stack, -1);
     }
 
-    private static StemRecipe getRecipe(ItemStack stack)
+    private static StemRecipe getRecipeInternal(ItemStack stack)
     {
         for(StemRecipe recipe : cachedRecipes)
             if(recipe.isStackEqual(stack))
@@ -43,7 +42,7 @@ public class ClientRecipeCache
 
     private static void setRecipe(ItemStack stack, int fluid)
     {
-        StemRecipe recipe = getRecipe(stack.copy());
+        StemRecipe recipe = getRecipeInternal(stack.copy());
         if(recipe == null)
             cachedRecipes.add(new StemRecipe(stack, fluid));
         else
@@ -59,19 +58,29 @@ public class ClientRecipeCache
     }
 
     /**
+     * Gets the recipe for the stack given.
+     * Will request the recipe from the server if not already cached locally.
+     */
+    public static StemRecipe getRecipe(ItemStack recipeStack)
+    {
+        StemRecipe recipe = getRecipeInternal(recipeStack);
+        if(recipe == null || recipe.getFluidInput() == -2)
+        {
+            //No recipe or dirty recipe - needs to be requested
+            requestRecipe(recipeStack);
+            return null;
+        }
+        return recipe;
+    }
+
+    /**
      * Gets the amount of STEM fluid needed to create the given ItemStack.
      * Will request the recipe from the server if not already cached locally.
      */
     public static int getFluidAmount(ItemStack recipeStack)
     {
         StemRecipe recipe = getRecipe(recipeStack);
-        if(recipe == null || recipe.getFluidInput() == -2)
-        {
-            //No recipe or dirty recipe - needs to be requested
-            requestRecipe(recipeStack);
-            return -1;
-        }
-        return recipe.getFluidInput();
+        return recipe == null ? -1 : recipe.getFluidInput();
     }
 
     /**

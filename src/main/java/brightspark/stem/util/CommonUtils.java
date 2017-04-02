@@ -3,12 +3,16 @@ package brightspark.stem.util;
 import brightspark.stem.STEM;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.message.*;
+import brightspark.stem.recipe.ClientRecipeCache;
+import brightspark.stem.recipe.ServerRecipeManager;
+import brightspark.stem.recipe.StemRecipe;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.UniversalBucket;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -135,6 +139,29 @@ public class CommonUtils
             if(ItemStack.areItemStacksEqual(stored, stackToCheckFor))
                 return true;
         return false;
+    }
+
+    /**
+     * Gets the StemRecipe for the given ItemStack if it exists.
+     * On the server, this will access the ServerRecipeManager and get the recipe directly.
+     * On the client, this will access the ClientRecipeCache, which will get the cached recipe and request it from
+     *  the server if it doesn't have it.
+     */
+    public static StemRecipe getRecipeForStack(ItemStack stack)
+    {
+        if(FMLCommonHandler.instance().getSide().isClient())
+            return ClientRecipeCache.getRecipe(stack);
+        else
+            return ServerRecipeManager.getRecipeForStack(stack);
+    }
+
+    /**
+     * Uses getRecipeForStack and checks if the result is not null.
+     */
+    public static boolean hasRecipeForStack(ItemStack stack)
+    {
+        StemRecipe recipe = getRecipeForStack(stack);
+        return recipe != null && recipe.getFluidInput() > 0;
     }
 
     /**

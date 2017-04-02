@@ -105,11 +105,16 @@ public class TileMatterCreator extends TileMachineWithFluid
      */
     public void updateCachedRecipe(ItemStack stack)
     {
-        int fluidAmount = stack == null ? 0 : ClientRecipeCache.getFluidAmount(stack);
-        if(fluidAmount > 0)
-            recipeCache = new StemRecipe(stack, fluidAmount);
-        else
+        if(stack == null)
             recipeCache = null;
+        else
+        {
+            StemRecipe recipe = CommonUtils.getRecipeForStack(stack);
+            if(recipe != null && recipe.getFluidInput() > 0)
+                recipeCache = recipe;
+            else
+                recipeCache = null;
+        }
     }
 
     /*
@@ -146,19 +151,13 @@ public class TileMatterCreator extends TileMachineWithFluid
     */
 
     /**
-     * Starts the creating process if possible.
-     * Will return true if creating was successfully started.
-     *
-     * This'll be called from the GUI //TODO or in update() if on repeat mode.
+     * Stops creation and sets energy to 0
      */
-    public boolean startCreating()
+    public void stopCreation()
     {
-        if(!active || energy.getEnergyStored() < Config.matterCreatorEnergyPerMb || tank.getFluidAmount() <= 0 || !canOutput())
-            return false;
-        progress++;
-        energy.modifyEnergyStored(- Config.matterCreatorEnergyPerMb);
-        tank.drain(1, true);
-        return true;
+        energy.setEnergyStored(0);
+        progress = 0;
+        recipeCache = null;
     }
 
     /**
@@ -167,7 +166,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     private boolean canOutput()
     {
         ItemStack outputStack = slots[3];
-        return outputStack == null || (outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.stackSize < 64);
+        return outputStack == null || (recipeCache != null && outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.stackSize < 64);
     }
 
     private boolean hasMemoryChip()

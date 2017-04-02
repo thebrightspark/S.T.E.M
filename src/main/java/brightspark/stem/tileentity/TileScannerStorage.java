@@ -98,7 +98,7 @@ public class TileScannerStorage extends StemTileEntity
 
     public StemRecipe getRecipeAtIndex(int index)
     {
-        return index < 0 || index >= storedRecipes.size() ? null : ServerRecipeManager.getRecipeForStack(storedRecipes.get(index));
+        return index < 0 || index >= storedRecipes.size() ? null : CommonUtils.getRecipeForStack(storedRecipes.get(index));
     }
 
     @Override

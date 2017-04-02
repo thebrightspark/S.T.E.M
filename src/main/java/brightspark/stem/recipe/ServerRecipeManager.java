@@ -59,10 +59,14 @@ public class ServerRecipeManager
      */
     public static StemRecipe getRecipeForStack(ItemStack stack)
     {
+        if(stack == null)
+            return null;
+        if(recipes == null)
+            return new StemRecipe(stack, 0);
         for(StemRecipe recipe : recipes)
             if(recipe.isStackEqual(stack))
                 return recipe;
-        return null;
+        return new StemRecipe(stack, 0);
     }
 
     /**
