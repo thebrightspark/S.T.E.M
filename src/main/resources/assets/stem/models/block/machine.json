@@ -4,6 +4,9 @@
 		"particle": "stem:blocks/machineBlock",
 		"up": "stem:blocks/machine_top",
         "down": "stem:blocks/machineBlock",
-        "south": "stem:blocks/machineBlock"
+        "north": "stem:blocks/machineBlock",
+        "south": "stem:blocks/machineBlock",
+        "east": "stem:blocks/machineBlock",
+        "west": "stem:blocks/machineBlock"
 	}
 }
