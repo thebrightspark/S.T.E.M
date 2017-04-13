@@ -1,6 +1,5 @@
 package brightspark.stem.fluid;
 
-import com.sun.istack.internal.NotNull;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.*;
@@ -15,7 +14,6 @@ import javax.annotation.Nullable;
  */
 public class LockedFluidTank implements IFluidTank, IFluidHandler
 {
-    @NotNull
     protected FluidStack storedFluid;
     protected int capacity;
     public int transferRate = 100;
@@ -112,14 +110,12 @@ public class LockedFluidTank implements IFluidTank, IFluidHandler
         storedFluid.amount = amount;
     }
 
-    @NotNull
     @Override
     public FluidStack getFluid()
     {
         return storedFluid;
     }
 
-    @NotNull
     public Fluid getFluidType()
     {
         return storedFluid.getFluid();
