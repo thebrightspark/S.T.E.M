@@ -346,7 +346,7 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
         energy.setCanTransfer(canWork());
         if(canWork() && hasEnoughEnergy())
         {
-            if(!worldObj.isRemote)
+            if(!world.isRemote)
                 while(canWork() && hasEnoughEnergy())
                     doWork();
             markDirty();

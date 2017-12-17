@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-        "layer0": "stem:items/ingotBlusteel"
+        "layer0": "stem:items/energy_circuit"
     }
 }

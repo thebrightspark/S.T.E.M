@@ -5,28 +5,22 @@ import brightspark.stem.tileentity.TileLiquidEnergiser;
 import brightspark.stem.tileentity.TileMatterCreator;
 import brightspark.stem.tileentity.TileMatterScanner;
 import brightspark.stem.tileentity.TileScannerStorage;
-import brightspark.stem.util.ClientUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StemBlocks
 {
-    public static List<Block> BLOCKS = new ArrayList<Block>();
+    public static List<Block> BLOCKS;
+    public static List<ItemBlock> ITEM_BLOCKS;
 
     public static BlockBasic machineBlock;
     public static BlockLiquidEnergiser liquidEnergiser;
@@ -34,11 +28,10 @@ public class StemBlocks
     public static BlockScannerStorage scannerStorage;
     public static BlockMatterCreator matterCreator;
 
-    public static void registerBlock(Block block)
+    public static void addBlock(Block block)
     {
-        GameRegistry.register(block);
-        GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
         BLOCKS.add(block);
+        ITEM_BLOCKS.add((ItemBlock) new ItemBlock(block).setRegistryName(block.getRegistryName()));
     }
 
     public static void registerTE(Class<? extends TileEntity> te, Block block)
@@ -46,23 +39,19 @@ public class StemBlocks
         GameRegistry.registerTileEntity(te, block.getRegistryName().getResourcePath());
     }
 
-    public static void regOreDic(Block block)
+
+
+    public static void init()
     {
-        OreDictionary.registerOre(block.getRegistryName().getResourcePath(), block);
-    }
+        BLOCKS = new ArrayList<>();
+        ITEM_BLOCKS = new ArrayList<>();
 
+        addBlock(machineBlock = new BlockBasic("machine_block", Material.IRON));
 
-
-    public static void regBlocks()
-    {
-        registerBlock(machineBlock = new BlockBasic("machineBlock", Material.IRON));
-
-        registerBlock(liquidEnergiser = new BlockLiquidEnergiser());
-        registerBlock(matterScanner = new BlockMatterScanner());
-        registerBlock(scannerStorage = new BlockScannerStorage());
-        registerBlock(matterCreator = new BlockMatterCreator());
-
-        regOreDic(machineBlock);
+        addBlock(liquidEnergiser = new BlockLiquidEnergiser());
+        addBlock(matterScanner = new BlockMatterScanner());
+        addBlock(scannerStorage = new BlockScannerStorage());
+        addBlock(matterCreator = new BlockMatterCreator());
     }
 
     public static void regTileEntities()
@@ -71,13 +60,6 @@ public class StemBlocks
         registerTE(TileMatterScanner.class, matterScanner);
         registerTE(TileScannerStorage.class, scannerStorage);
         registerTE(TileMatterCreator.class, matterCreator);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void regModels()
-    {
-        for(Block block : BLOCKS)
-            ClientUtils.regModel(block);
     }
 
     @SideOnly(Side.CLIENT)
@@ -94,5 +76,22 @@ public class StemBlocks
             }
         });
         */
+    }
+
+    public static Block[] getBlocks()
+    {
+        if(BLOCKS == null) init();
+        return BLOCKS.toArray(new Block[BLOCKS.size()]);
+    }
+
+    public static ItemBlock[] getItemBlocks()
+    {
+        if(ITEM_BLOCKS == null) init();
+        return ITEM_BLOCKS.toArray(new ItemBlock[ITEM_BLOCKS.size()]);
+    }
+
+    public static void regOres()
+    {
+        OreDictionary.registerOre("machine_block", machineBlock);
     }
 }

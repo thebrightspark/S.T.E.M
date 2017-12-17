@@ -1,7 +1,6 @@
 package brightspark.stem.init;
 
 import brightspark.stem.STEM;
-import brightspark.stem.util.ClientUtils;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
@@ -12,10 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.BlockFluidClassic;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class StemFluids
 {
@@ -52,14 +48,8 @@ public class StemFluids
         return fluid;
     }
 
-    public static void regFluids()
+    public static void init()
     {
         fluidStem = regFluid("stem", 4000, 4000, MapColor.PINK);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void regModels()
-    {
-        ClientUtils.regFluidModel((IFluidBlock) fluidStem.getBlock());
     }
 }

@@ -120,14 +120,7 @@ public class CommonUtils
      */
     public static void sortItemStackList(List<ItemStack> list)
     {
-        Collections.sort(list, new Comparator<ItemStack>()
-        {
-            @Override
-            public int compare(ItemStack o1, ItemStack o2)
-            {
-                return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
-            }
-        });
+        list.sort((o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
     }
 
     /**

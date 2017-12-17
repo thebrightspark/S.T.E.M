@@ -8,30 +8,30 @@ wrenchMode.config_side=Configure
 wrenchMode.overlay.mode=Current Wrench Mode:
 wrenchMode.overlay.side=Side %s Permission:
 
-item.memChip.name=Memory Chip
+item.mem_chip.name=Memory Chip
 
-item.basic.blusteelCompound.name=Blusteel Compound
-item.basic.ingotBlusteel.name=Blusteel Ingot
-item.basic.machineProcessor.name=Machine Processor
-item.basic.internalTank.name=Internal Tank
-item.basic.memBank.name=Memory Bank
-item.basic.largeMemBank.name=Large Memory Bank
-item.basic.energyCircuit.name=Energy Input Circuit
-item.basic.infDevice.name=Infusing Device
-item.basic.scanDevice.name=Scanning Device
-item.basic.memReader.name=Memory Reader
-item.basic.memWriter.name=Memory Writer
+item.basic.blusteel_compound.name=Blusteel Compound
+item.basic.ingot_blusteel.name=Blusteel Ingot
+item.basic.machine_processor.name=Machine Processor
+item.basic.internal_tank.name=Internal Tank
+item.basic.mem_bank.name=Memory Bank
+item.basic.large_mem_bank.name=Large Memory Bank
+item.basic.energy_circuit.name=Energy Input Circuit
+item.basic.inf_device.name=Infusing Device
+item.basic.scan_device.name=Scanning Device
+item.basic.mem_reader.name=Memory Reader
+item.basic.mem_writer.name=Memory Writer
 item.basic.exciter.name=S.T.E.M Exciter
 item.basic.former.name=Matter Former
 item.basic.compressor.name=Compression Unit
 
 //Blocks
 
-tile.machineBlock.name=Machine Block
-tile.liquidEnergiser.name=Liquid Energiser
-tile.matterScanner.name=Matter Scanner
-tile.scannerStorage.name=Scanner Storage
-tile.matterCreator.name=Matter Creator
+tile.machine_block.name=Machine Block
+tile.liquid_energiser.name=Liquid Energiser
+tile.matter_scanner.name=Matter Scanner
+tile.scanner_storage.name=Scanner Storage
+tile.matter_creator.name=Matter Creator
 
 //Fluids
 

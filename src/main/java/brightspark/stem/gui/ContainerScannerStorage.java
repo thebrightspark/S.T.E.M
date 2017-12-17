@@ -79,7 +79,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
         ItemStack inputStack = inventory.getStackInSlot(0);
         if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
         {
-            if(!player.worldObj.isRemote)
+            if(!player.world.isRemote)
                 inputSlotChanged(inputStack);
             else
                 inventory.setInventorySlotContents(0, null);

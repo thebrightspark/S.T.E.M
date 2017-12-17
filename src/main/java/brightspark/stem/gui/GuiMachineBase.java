@@ -64,8 +64,8 @@ public class GuiMachineBase extends GuiContainer
 
     protected void drawText()
     {
-        fontRendererObj.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, textColour);
-        fontRendererObj.drawString(I18n.format("container.inventory"), 8, 82, textColour);
+        fontRenderer.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, textColour);
+        fontRenderer.drawString(I18n.format("container.inventory"), 8, 82, textColour);
     }
 
     protected void drawTooltips(List<String> tooltip, int mouseX, int mouseY)

@@ -67,7 +67,7 @@ public class MessageUpdateTileRecipe implements IMessage
                 @Override
                 public void run()
                 {
-                    World world = Minecraft.getMinecraft().theWorld;
+                    World world = Minecraft.getMinecraft().world;
                     TileEntity te = world.getTileEntity(message.getPos());
                     if(te instanceof TileScannerStorage)
                         ((TileScannerStorage) te).setRecipeAtIndex(message.index, message.recipeStack);

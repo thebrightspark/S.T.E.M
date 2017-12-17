@@ -1,0 +1,7 @@
+{
+	"parent": "stem:block/machine",
+	"textures": {
+		"north": "stem:blocks/matter_creator_front",
+		"south": "stem:blocks/matter_creator_back"
+	}
+}

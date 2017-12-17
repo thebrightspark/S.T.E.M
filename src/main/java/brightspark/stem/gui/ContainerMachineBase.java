@@ -48,7 +48,7 @@ public class ContainerMachineBase extends Container
     @Override
     public boolean canInteractWith(EntityPlayer playerIn)
     {
-        return inventory.isUseableByPlayer(playerIn);
+        return inventory.isUsableByPlayer(playerIn);
     }
 
     /**
@@ -75,7 +75,7 @@ public class ContainerMachineBase extends Container
                     if(cachedFields[i] > Short.MAX_VALUE || cachedFields[i] < Short.MIN_VALUE)
                         CommonUtils.NETWORK.sendTo(new MessageUpdateClientContainer(i, cachedFields[i]), (EntityPlayerMP) listener);
                     else
-                        listener.sendProgressBarUpdate(this, i, cachedFields[i]);
+                        listener.sendWindowProperty(this, i, cachedFields[i]);
                 }
     }
 
@@ -106,7 +106,7 @@ public class ContainerMachineBase extends Container
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot)
     {
-        ItemStack stack = null;
+        ItemStack stack = ItemStack.EMPTY;
         Slot slotObject = this.inventorySlots.get(slot);
 
         if (slotObject != null && slotObject.getHasStack())
@@ -118,7 +118,7 @@ public class ContainerMachineBase extends Container
             if (slot < slotI)
             {
                 if (!mergeItemStack(stackInSlot, slotI, slotI + 36, true))
-                    return null;
+                    return ItemStack.EMPTY;
 
                 slotObject.onSlotChange(stackInSlot, stack);
             }
@@ -131,31 +131,31 @@ public class ContainerMachineBase extends Container
                     Slot guiSlot = inventorySlots.get(i);
                     if(guiSlot.isItemValid(stackInSlot))
                     {
-                        int slotStackSpace = guiSlot.getStack() == null ? guiSlot.getSlotStackLimit() : guiSlot.getSlotStackLimit() - guiSlot.getStack().stackSize;
+                        int slotStackSpace = guiSlot.getStack().isEmpty() ? guiSlot.getSlotStackLimit() : guiSlot.getSlotStackLimit() - guiSlot.getStack().getCount();
                         ItemStack splitStack = stackInSlot.splitStack(slotStackSpace);
                         if(mergeItemStack(splitStack, i, i + 1, false))
                         {
                             success = true;
-                            if(splitStack.stackSize <= 0)
+                            if(splitStack.getCount() <= 0)
                                 break;
                         }
                         else
-                            stackInSlot.stackSize += splitStack.stackSize;
+                            stackInSlot.grow(splitStack.getCount());
                     }
                 }
                 if(!success)
-                    return null;
+                    return ItemStack.EMPTY;
             }
 
-            if (stackInSlot.stackSize == 0)
-                slotObject.putStack(null);
+            if (stackInSlot.getCount() == 0)
+                slotObject.putStack(ItemStack.EMPTY);
             else
                 slotObject.onSlotChanged();
 
-            if (stackInSlot.stackSize == stack.stackSize)
-                return null;
+            if (stackInSlot.getCount() == stack.getCount())
+                return ItemStack.EMPTY;
 
-            slotObject.onPickupFromSlot(player, stackInSlot);
+            slotObject.onTake(player, stackInSlot);
         }
 
         return stack;

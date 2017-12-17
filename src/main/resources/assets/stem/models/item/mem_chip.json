@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-        "layer0": "stem:items/energyCircuit"
+        "layer0": "stem:items/mem_chip"
     }
 }

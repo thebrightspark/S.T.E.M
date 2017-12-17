@@ -21,10 +21,10 @@ public class CommandStem extends CommandBase
         if(ServerRecipeManager.removeRecipe(stack))
         {
             CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-            sender.addChatMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
+            sender.sendMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
         }
         else
-            sender.addChatMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
+            sender.sendMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
     }
 
     private void addRecipe(ICommandSender sender, ItemStack stack, int fluidAmount)
@@ -32,20 +32,22 @@ public class CommandStem extends CommandBase
         if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
         {
             CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-            sender.addChatMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
+            sender.sendMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
         }
         else
-            sender.addChatMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
+            sender.sendMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
     }
 
+
+
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "stem";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         String text = "\nAdd Specific Item: stem add <itemId> [itemMeta] <fluidAmount>" +
                 "\n Remove Specific Item: stem remove <itemId> [itemMeta]" +
@@ -58,7 +60,7 @@ public class CommandStem extends CommandBase
     }
 
     @Override
-    public List<String> getCommandAliases()
+    public List<String> getAliases()
     {
         return Collections.emptyList();
     }
@@ -69,7 +71,7 @@ public class CommandStem extends CommandBase
         if(sender.getEntityWorld().isRemote)
             return;
         if(args.length == 0)
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
 
         boolean isPlayer = sender instanceof EntityPlayer;
 
@@ -80,13 +82,13 @@ public class CommandStem extends CommandBase
                 //Remove held item
                 if(isPlayer)
                 {
-                    if(((EntityPlayer) sender).getHeldItemMainhand() == null)
+                    if(((EntityPlayer) sender).getHeldItemMainhand().isEmpty())
                         throw new CommandException("No item held");
                     else
                     {
                         //Remove recipe
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
-                        heldItem.stackSize = 1;
+                        heldItem.setCount(1);
                         removeRecipe(sender, heldItem);
                     }
                 }
@@ -126,12 +128,12 @@ public class CommandStem extends CommandBase
                 //Add held item
                 if(isPlayer)
                 {
-                    if(((EntityPlayer) sender).getHeldItemMainhand() == null)
+                    if(((EntityPlayer) sender).getHeldItemMainhand().isEmpty())
                         throw new CommandException("No item held");
                     else
                     {
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
-                        heldItem.stackSize = 1;
+                        heldItem.setCount(1);
                         int fluidAmount;
                         try
                         {
@@ -190,24 +192,24 @@ public class CommandStem extends CommandBase
             }
             else
                 //Incorrect command
-                throw new WrongUsageException(getCommandUsage(sender));
+                throw new WrongUsageException(getUsage(sender));
         }
         else if(args[0].equals("save") || args[0].equals("s"))
         {
             //Save recipes
             ServerRecipeManager.saveRecipes();
-            sender.addChatMessage(new TextComponentString("Recipes saved"));
+            sender.sendMessage(new TextComponentString("Recipes saved"));
         }
         else if(args[0].equals("reset"))
         {
             //Reset recipes to default
             ServerRecipeManager.resetRecipeFile();
             CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(null));
-            sender.addChatMessage(new TextComponentString("Recipes reset to default"));
+            sender.sendMessage(new TextComponentString("Recipes reset to default"));
         }
         else
             //Incorrect command
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
     }
 
     /**
@@ -219,7 +221,7 @@ public class CommandStem extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         switch(args.length)
         {

@@ -1,0 +1,5 @@
+{
+	"variants": {
+		"normal": { "model": "stem:machine_block" }
+	}
+}

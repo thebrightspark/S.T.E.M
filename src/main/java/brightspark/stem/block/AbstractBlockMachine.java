@@ -110,16 +110,16 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
      * block, etc.
      */
     @Override
-    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block)
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos)
     {
         getTileEntity(world, pos).active = !world.isBlockPowered(pos);
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         //Actions for wrench
-        WrenchHelper.EnumWrenchMode mode = WrenchHelper.getWrenchMode(heldItem);
+        WrenchHelper.EnumWrenchMode mode = WrenchHelper.getWrenchMode(player.getHeldItem(hand));
         if(mode != null && !player.isSneaking())
         {
             TileMachine te = getTileEntity(world, pos);
@@ -150,6 +150,6 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
                     return true;
             }
         }
-        return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
     }
 }

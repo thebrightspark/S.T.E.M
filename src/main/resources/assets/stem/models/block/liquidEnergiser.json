@@ -1,8 +1,0 @@
-{
-	"parent": "stem:block/machine",
-	"textures": {
-		"north": "stem:blocks/liquidEnergiser_front",
-		"east": "stem:blocks/liquidEnergiser_left",
-		"west": "stem:blocks/liquidEnergiser_right"
-	}
-}

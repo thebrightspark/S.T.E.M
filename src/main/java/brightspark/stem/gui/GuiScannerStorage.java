@@ -23,7 +23,7 @@ import java.util.List;
 
 public class GuiScannerStorage extends GuiContainer
 {
-    private static final ResourceLocation guiImage = new ResourceLocation(STEM.MOD_ID, STEM.GUI_TEXTURE_DIR + "scannerStorage.png");
+    private static final ResourceLocation guiImage = new ResourceLocation(STEM.MOD_ID, STEM.GUI_TEXTURE_DIR + "scanner_storage.png");
     protected TileScannerStorage te;
     protected ContainerScannerStorage container;
     private static final int colourRed = 0x7A3D3D;
@@ -62,13 +62,13 @@ public class GuiScannerStorage extends GuiContainer
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        fontRendererObj.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, 4210752);
-        fontRendererObj.drawString(I18n.format("container.inventory"), 8, 82, 4210752);
+        fontRenderer.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, 4210752);
+        fontRenderer.drawString(I18n.format("container.inventory"), 8, 82, 4210752);
 
         List<ItemStack> recipes = te.getStoredRecipes();
         if(recipes == null || recipes.isEmpty())
             //No recipes stored
-            fontRendererObj.drawString("No Recipes Stored", 50, 25, colourRed);
+            fontRenderer.drawString("No Recipes Stored", 50, 25, colourRed);
         else
         {
             //Display recipe
@@ -77,28 +77,28 @@ public class GuiScannerStorage extends GuiContainer
 
             //Draw index
             String numText = (container.recipeSelected + 1) + "/" + te.getStoredRecipes().size();
-            int textWidth = fontRendererObj.getStringWidth(numText);
+            int textWidth = fontRenderer.getStringWidth(numText);
             int x = (recipeBox.width / 2) - (textWidth / 2) + recipeBox.x;
-            fontRendererObj.drawString(numText, x, recipeBox.y + 2, colourBlue);
+            fontRenderer.drawString(numText, x, recipeBox.y + 2, colourBlue);
 
             //Draw item
             itemRender.renderItemAndEffectIntoGUI(recipeStack, recipeBox.x, recipeBox.y + 16);
             //Draw item name
-            fontRendererObj.drawString(recipeStack.getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
+            fontRenderer.drawString(recipeStack.getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
 
             if(fluidAmount < 0)
             {
                 //If the recipe info is being requested from the server
                 //Draw error text
-                fontRendererObj.drawString("Waiting for recipe", recipeBox.x + 18, recipeBox.y + 12, colourRed);
-                fontRendererObj.drawString("info from server...", recipeBox.x + 18, recipeBox.y + 22, colourRed);
+                fontRenderer.drawString("Waiting for recipe", recipeBox.x + 18, recipeBox.y + 12, colourRed);
+                fontRenderer.drawString("info from server...", recipeBox.x + 18, recipeBox.y + 22, colourRed);
             }
             else
             {
                 //Draw fluid needed
-                fontRendererObj.drawString(fluidAmount + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
+                fontRenderer.drawString(fluidAmount + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
                 //Draw energy needed
-                fontRendererObj.drawString(CommonUtils.addDigitGrouping(fluidAmount * Config.matterCreatorEnergyPerMb) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
+                fontRenderer.drawString(CommonUtils.addDigitGrouping(fluidAmount * Config.matterCreatorEnergyPerMb) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
             }
         }
     }
@@ -109,7 +109,7 @@ public class GuiScannerStorage extends GuiContainer
     @Override
     protected void actionPerformed(GuiButton button) throws IOException
     {
-        inventorySlots.enchantItem(mc.thePlayer, button.id);
+        inventorySlots.enchantItem(mc.player, button.id);
         mc.playerController.sendEnchantPacket(inventorySlots.windowId, button.id);
     }
 
@@ -142,9 +142,9 @@ public class GuiScannerStorage extends GuiContainer
             if(!visible) return;
             mc.getTextureManager().bindTexture(guiImage);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
+            hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
             //Draw icon
-            drawTexturedModalRect(xPosition, yPosition, iconX, enabled ? 0 : height, width, height);
+            drawTexturedModalRect(x, y, iconX, enabled ? 0 : height, width, height);
         }
     }
 }

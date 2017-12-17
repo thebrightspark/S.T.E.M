@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.NonNullList;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -21,7 +22,7 @@ import javax.annotation.Nullable;
 public class StemTileEntity extends TileEntity implements ISidedInventory
 {
     //The ItemStacks stored in this tile
-    protected ItemStack[] slots;
+    protected NonNullList<ItemStack> slots;
     //This is used by getSlotsForFace
     protected int[] slotsForFaces;
     //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench is used.
@@ -32,7 +33,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
 
     public StemTileEntity(int numSlots)
     {
-        slots = new ItemStack[numSlots];
+        slots = NonNullList.withSize(numSlots, ItemStack.EMPTY);
         slotsForFaces = CommonUtils.createAscIntArray(numSlots);
     }
 
@@ -40,8 +41,8 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     {
         //Copy inventory
         if(shouldSaveInventoryToNBT)
-            for(int i = 0; i < machine.slots.length; ++ i)
-                slots[i] = machine.slots[i];
+            for(int i = 0; i < machine.slots.size(); ++ i)
+                slots.set(i, machine.slots.get(i));
     }
 
     /**
@@ -55,12 +56,12 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
         if(shouldSaveInventoryToNBT)
         {
             NBTTagList stackList = new NBTTagList();
-            for(int i = 0; i < slots.length; ++ i)
+            for(int i = 0; i < slots.size(); ++ i)
             {
-                if(slots[i] == null) continue;
+                if(slots.get(i).isEmpty()) continue;
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setByte("slot", (byte) i);
-                slots[i].writeToNBT(tag);
+                slots.get(i).writeToNBT(tag);
                 stackList.appendTag(tag);
             }
             NBTHelper.setList(stack, KEY_INVENTORY, stackList);
@@ -79,7 +80,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
             for(int i = 0; i < stackList.tagCount(); ++ i)
             {
                 NBTTagCompound tag = stackList.getCompoundTagAt(i);
-                slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+                slots.set(tag.getByte("slot"), new ItemStack(tag));
             }
         }
     }
@@ -94,7 +95,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
             for(int i = 0; i < stackList.tagCount(); ++ i)
             {
                 NBTTagCompound tag = stackList.getCompoundTagAt(i);
-                slots[tag.getByte("slot")] = ItemStack.loadItemStackFromNBT(tag);
+                slots.set(tag.getByte("slot"), new ItemStack(tag));
             }
         }
 
@@ -108,12 +109,12 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
         if(shouldSaveInventoryToNBT)
         {
             NBTTagList stackList = new NBTTagList();
-            for(int i = 0; i < slots.length; ++ i)
+            for(int i = 0; i < slots.size(); ++ i)
             {
-                if(slots[i] == null) continue;
+                if(slots.get(i).isEmpty()) continue;
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setByte("slot", (byte) i);
-                slots[i].writeToNBT(tag);
+                slots.get(i).writeToNBT(tag);
                 stackList.appendTag(tag);
             }
             nbt.setTag(KEY_INVENTORY, stackList);
@@ -149,7 +150,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
 
     private boolean isValidSlot(int index)
     {
-        return index >= 0 && index < slots.length;
+        return index >= 0 && index < slots.size();
     }
 
     @Override
@@ -173,14 +174,23 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     @Override
     public int getSizeInventory()
     {
-        return slots.length;
+        return slots.size();
+    }
+
+    @Override
+    public boolean isEmpty()
+    {
+        for(ItemStack stack : slots)
+            if(!stack.isEmpty())
+                return false;
+        return true;
     }
 
     @Nullable
     @Override
     public ItemStack getStackInSlot(int index)
     {
-        return isValidSlot(index) ? slots[index] : null;
+        return isValidSlot(index) ? slots.get(index) : null;
     }
 
     @Nullable
@@ -198,10 +208,10 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     }
 
     @Override
-    public void setInventorySlotContents(int index, @Nullable ItemStack stack)
+    public void setInventorySlotContents(int index, ItemStack stack)
     {
         if(isValidSlot(index))
-            slots[index] = stack;
+            slots.set(index, stack);
     }
 
     @Override
@@ -211,9 +221,9 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player)
+    public boolean isUsableByPlayer(EntityPlayer player)
     {
-        return worldObj.getTileEntity(pos) == this && player.getDistanceSq((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D) <= 64.0D;
+        return world.getTileEntity(pos) == this && player.getDistanceSq((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D) <= 64.0D;
     }
 
     @Override
@@ -246,7 +256,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     @Override
     public void clear()
     {
-        slots = new ItemStack[slots.length];
+        slots.clear();
     }
 
     @Override

@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "stem:blocks/machineBlock"
+		"all": "stem:blocks/machine_block"
 	}
 }

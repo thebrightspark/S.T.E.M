@@ -15,7 +15,7 @@ public class ItemMemoryChip extends ItemBasic
 {
     public ItemMemoryChip()
     {
-        super("memChip");
+        super("mem_chip");
         setMaxStackSize(1);
     }
 
@@ -41,7 +41,7 @@ public class ItemMemoryChip extends ItemBasic
     public static ItemStack getMemory(ItemStack memChipStack)
     {
         NBTTagCompound memTag = memChipStack.getTagCompound();
-        return memTag == null ? null : ItemStack.loadItemStackFromNBT(memTag);
+        return memTag == null ? null : new ItemStack(memTag);
     }
 
     public static void clearMemory(ItemStack memChipStack)
@@ -59,15 +59,16 @@ public class ItemMemoryChip extends ItemBasic
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
+        ItemStack stack = player.getHeldItem(hand);
         //Clear memory on item
         if(player.isSneaking() && !isMemoryEmpty(stack))
         {
             clearMemory(stack);
-            if(world.isRemote) player.addChatMessage(new TextComponentString("Memory Cleared!"));
+            if(world.isRemote) player.sendMessage(new TextComponentString("Memory Cleared!"));
         }
-        return super.onItemRightClick(stack, world, player, hand);
+        return super.onItemRightClick(world, player, hand);
     }
 
     @Override
