@@ -28,7 +28,7 @@ public class StemRecipes
         //Memory Chip
         GameRegistry.addRecipe(new ShapedOreRecipe(StemItems.itemMemoryChip, "iqi", "idi", "igi", 'i', "ingot_blusteel", 'q', "gemQuartz", 'd', "gemDiamond", 'g', "ingotGold"));
         //Memory Bank
-        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 4), "ici", "ccc", "ici", 'i', "ingot_blusteel", 'c', "memChip"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 4), "ici", "ccc", "ici", 'i', "ingot_blusteel", 'c', "mem_chip"));
         //Large Memory Bank
         GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(StemItems.itemBasic, 1, 5), "ibi", "bdb", "ibi", 'i', "ingot_blusteel", 'b', "mem_bank", 'd', "gemDiamond"));
         //Energy Input Circuit
@@ -52,7 +52,7 @@ public class StemRecipes
         //Liquid Energiser
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.liquidEnergiser, " c ", "tbt", " i ", 'c', "energy_circuit", 't', "internal_tank", 'b', "machine_block", 'i', "inf_device"));
         //Matter Scanner
-        GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.matterScanner, " c ", " bm", " s ", 'c', "energy_circuit", 'm', "memChip", 'b', "machine_block", 's', "scan_device"));
+        GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.matterScanner, " c ", " bm", " s ", 'c', "energy_circuit", 'm', "mem_chip", 'b', "machine_block", 's', "scan_device"));
         //Scanner Storage
         GameRegistry.addRecipe(new ShapedOreRecipe(StemBlocks.scannerStorage, "   ", "rbw", " m ", 'r', "mem_reader", 'w', "mem_writer", 'b', "machine_block", 'm', "large_mem_bank"));
         //Matter Creator
