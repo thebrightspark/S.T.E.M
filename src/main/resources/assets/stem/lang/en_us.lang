@@ -48,6 +48,11 @@ sideEnergyPerm.input=Input
 sideEnergyPerm.output=Output
 sideEnergyPerm.none=None
 
+message.recipes.cantfinditem=Couldn't find the item '%s'
+message.recipes.cantfindrecipe=Couldn't find any recipes for the item '%s'
+message.recipes.none=No recipes
+message.recipes.title=Recipe - Page %d / %d
+
 //GUIs
 
 gui.energyStorage.max=Max:

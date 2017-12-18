@@ -45,6 +45,11 @@ public class ServerRecipeManager
         return false;
     }
 
+    public static List<StemRecipe> getRecipes()
+    {
+        return recipes;
+    }
+
     /**
      * Checks if a recipe exists for the given item.
      */
@@ -115,12 +120,12 @@ public class ServerRecipeManager
             throw new RuntimeException("Couldn't close CSV Writer");
         }
 
-        LogHelper.info("Recipes saved successfully.");
+        LogHelper.info("Saved " + recipes.size() + " recipes successfully.");
     }
 
     public static void init()
     {
-        recipes = new ArrayList<StemRecipe>();
+        recipes = new ArrayList<>();
         stemRecipeFile = new File(STEM.CONFIG_DIR, "recipes.csv");
     }
 
