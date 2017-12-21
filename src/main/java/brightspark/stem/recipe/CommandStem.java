@@ -59,9 +59,9 @@ public class CommandStem extends CommandBase
     public String getUsage(ICommandSender sender)
     {
         String text = "\nAdd Specific Item: stem add <itemId> [itemMeta] <fluidAmount>" +
-                "\n Remove Specific Item: stem remove <itemId> [itemMeta]" +
-                "\n Save Recipes To File: stem save" +
-                "\n Reset Recipe File To Default : stem reset";
+                "\nRemove Specific Item: stem remove <itemId> [itemMeta]" +
+                "\nSave Recipes To File: stem save" +
+                "\nReset Recipe File To Default : stem reset";
         if(sender instanceof EntityPlayer)
             text += "\nAdd Held Item: stem add <fluidAmount>" +
                     "\nRemove Held Item: stem remove";

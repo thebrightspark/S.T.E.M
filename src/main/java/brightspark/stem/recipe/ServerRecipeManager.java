@@ -71,7 +71,7 @@ public class ServerRecipeManager
         for(StemRecipe recipe : recipes)
             if(recipe.isStackEqual(stack))
                 return recipe;
-        return new StemRecipe(stack, 0);
+        return null;
     }
 
     /**
