@@ -30,7 +30,7 @@ public class StemRecipe
      */
     public boolean isStackEqual(ItemStack stack)
     {
-        return OreDictionary.itemMatches(output, stack, true);
+        return OreDictionary.itemMatches(output, stack, false);
     }
 
     public int getFluidInput()

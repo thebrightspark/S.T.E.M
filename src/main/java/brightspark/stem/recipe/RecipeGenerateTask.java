@@ -4,7 +4,7 @@ import brightspark.stem.util.LogHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
-import net.minecraft.util.NonNullList;
+import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
@@ -19,21 +19,20 @@ public class RecipeGenerateTask implements Runnable
     private static Map<ItemStack, ItemStack> furnaceRecipes = FurnaceRecipes.instance().getSmeltingList();
 
     private RecipeGenerator generator;
-    private NonNullList<ItemStack> stacks;
+    private List<Item> items;
     private int recipesGenerated = 0;
 
     public RecipeGenerateTask(RecipeGenerator generator, List<Item> items)
     {
         this.generator = generator;
-        stacks = NonNullList.create();
-        items.forEach(item -> item.getSubItems(item, null, stacks));
+        this.items = items;
     }
 
     @Override
     public void run()
     {
-        stacks.forEach(stack -> {
-            StemRecipe recipe = genRecipeForStack(stack);
+        items.forEach(item -> {
+            StemRecipe recipe = genRecipeForStack(new ItemStack(item, 1, OreDictionary.WILDCARD_VALUE));
             if(recipe != null) addRecipe(recipe);
         });
 
@@ -158,7 +157,7 @@ public class RecipeGenerateTask implements Runnable
     {
         List<IRecipe> matchingRecipes = new ArrayList<>();
         craftingRecipes.forEach(recipe -> {
-            if(recipe.getRecipeOutput().isItemEqual(stack))
+            if(recipe.getRecipeOutput().isItemEqualIgnoreDurability(stack))
                 matchingRecipes.add(recipe);
         });
         return matchingRecipes;
@@ -168,7 +167,7 @@ public class RecipeGenerateTask implements Runnable
     {
         List<ItemStack> matchingInputs = new ArrayList<>();
         furnaceRecipes.forEach((input, output) -> {
-            if(output.isItemEqual(stack))
+            if(OreDictionary.itemMatches(output, stack, false))
                 matchingInputs.add(input);
         });
         return matchingInputs;
