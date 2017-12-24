@@ -17,8 +17,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class CommonUtils
@@ -33,7 +31,7 @@ public class CommonUtils
         NETWORK.registerMessage(MessageRecipeRequest.Handler.class, MessageRecipeRequest.class, 2, Side.SERVER);
         NETWORK.registerMessage(MessageRecipeReply.Handler.class, MessageRecipeReply.class, 3, Side.CLIENT);
         NETWORK.registerMessage(MessageSyncConfigs.Handler.class, MessageSyncConfigs.class, 4, Side.CLIENT);
-        NETWORK.registerMessage(MessageRecipeMakeDirty.Handler.class, MessageRecipeMakeDirty.class, 5, Side.CLIENT);
+        NETWORK.registerMessage(MessageRemoveCachedRecipe.Handler.class, MessageRemoveCachedRecipe.class, 5, Side.CLIENT);
     }
 
     /**

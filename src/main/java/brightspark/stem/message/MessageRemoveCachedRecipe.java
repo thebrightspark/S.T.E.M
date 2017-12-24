@@ -11,18 +11,18 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.Arrays;
 
-public class MessageRecipeMakeDirty implements IMessage
+public class MessageRemoveCachedRecipe implements IMessage
 {
     public NonNullList<ItemStack> stacks = NonNullList.create();
 
-    public MessageRecipeMakeDirty() {}
+    public MessageRemoveCachedRecipe() {}
 
-    public MessageRecipeMakeDirty(ItemStack stack)
+    public MessageRemoveCachedRecipe(ItemStack stack)
     {
         this.stacks.add(stack);
     }
 
-    public MessageRecipeMakeDirty(ItemStack[] stacks)
+    public MessageRemoveCachedRecipe(ItemStack[] stacks)
     {
         this.stacks.addAll(Arrays.asList(stacks));
     }
@@ -45,15 +45,15 @@ public class MessageRecipeMakeDirty implements IMessage
         if(size > 0) stacks.forEach(stack -> CommonUtils.writeStackToBuf(buf, stack));
     }
 
-    public static class Handler implements IMessageHandler<MessageRecipeMakeDirty, IMessage>
+    public static class Handler implements IMessageHandler<MessageRemoveCachedRecipe, IMessage>
     {
         @Override
-        public IMessage onMessage(MessageRecipeMakeDirty message, MessageContext ctx)
+        public IMessage onMessage(MessageRemoveCachedRecipe message, MessageContext ctx)
         {
             if(message.stacks.isEmpty())
-                ClientRecipeCache.markRecipeDirty(null);
+                ClientRecipeCache.removeRecipe(null);
             else
-                message.stacks.forEach(ClientRecipeCache::markRecipeDirty);
+                message.stacks.forEach(ClientRecipeCache::removeRecipe);
             return null;
         }
     }

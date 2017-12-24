@@ -1,6 +1,6 @@
 package brightspark.stem.recipe;
 
-import brightspark.stem.message.MessageRecipeMakeDirty;
+import brightspark.stem.message.MessageRemoveCachedRecipe;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import net.minecraft.command.*;
@@ -25,7 +25,7 @@ public class CommandStem extends CommandBase
     {
         if(ServerRecipeManager.removeRecipe(stack))
         {
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stack));
             sender.sendMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
         }
         else
@@ -36,7 +36,7 @@ public class CommandStem extends CommandBase
     {
         if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
         {
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stack));
             sender.sendMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
         }
         else
@@ -218,7 +218,7 @@ public class CommandStem extends CommandBase
         {
             //Reset recipes to default
             ServerRecipeManager.resetRecipeFile();
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty());
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe());
             sender.sendMessage(new TextComponentString("Recipes reset to default"));
         }
         else if(args[0].equals("load"))
@@ -245,7 +245,7 @@ public class CommandStem extends CommandBase
                 List<ItemStack> stacks = new ArrayList<>(changes.size());
                 changes.forEach(recipe -> stacks.add(recipe.getOutput()));
                 LogHelper.info("Sending %s recipe invalidations to clients", stacks.size());
-                CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stacks.toArray(new ItemStack[stacks.size()])));
+                CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stacks.toArray(new ItemStack[stacks.size()])));
             }
         }
         else if(args[0].equals("list") || args[0].equals("l"))
@@ -324,6 +324,11 @@ public class CommandStem extends CommandBase
                 }
                 sender.sendMessage(recipeToMessage(searchRecipe));
             }
+        }
+        else if(args[0].equalsIgnoreCase("generate"))
+        {
+            //Generate stem recipes
+            new RecipeGenerator().generateRecipes(sender);
         }
         else
             //Incorrect command

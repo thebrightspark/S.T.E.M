@@ -14,6 +14,6 @@ public class EventHandler
     {
         //Clear client cache so recipes are re-synced as needed
         LogHelper.info("Clearing client recipe cache");
-        ClientRecipeCache.markRecipeDirty(null);
+        ClientRecipeCache.removeRecipe(null);
     }
 }
