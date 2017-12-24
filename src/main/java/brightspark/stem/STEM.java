@@ -57,6 +57,8 @@ public class STEM
     public void preInit(FMLPreInitializationEvent event)
     {
         //Initialize item, blocks, textures/models and configs here
+        LogHelper.setLogger(event.getModLog());
+
         CONFIG_DIR = new File(event.getModConfigurationDirectory(), STEM.MOD_ID);
         if(!CONFIG_DIR.mkdirs())
             LogHelper.error("Config directory either already exists or couldn't be created");

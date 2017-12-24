@@ -1,55 +1,44 @@
 package brightspark.stem.util;
 
 import brightspark.stem.STEM;
-import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
-
-//  Class originally created by Pahimar
+import org.apache.logging.log4j.Logger;
 
 public class LogHelper
 {
-    public static void log(Level logLevel, Object object)
+    private static Logger LOGGER = null;
+    
+    public static void setLogger(Logger logger)
     {
-        FMLLog.log(STEM.MOD_NAME, logLevel, STEM.MOD_NAME + ": " + String.valueOf(object));
+        LOGGER = logger;
+    }
+    
+    public static void log(Level logLevel, String text, Object... args)
+    {
+        String s = STEM.MOD_NAME + ": " + String.format(text, args);
+        if(LOGGER == null)
+            System.out.println(String.format("[%s] %s", logLevel, s));
+        else
+            LOGGER.log(logLevel, s);
     }
 
-    public static void all(Object object)
+    public static void debug(String text, Object... args)
     {
-        log(Level.ALL, object);
+        log(Level.DEBUG, text, args);
     }
 
-    public static void debug(Object object)
+    public static void error(String text, Object... args)
     {
-        log(Level.DEBUG, object);
+        log(Level.ERROR, text, args);
     }
 
-    public static void error(Object object)
+    public static void info(String text, Object... args)
     {
-        log(Level.ERROR, object);
+        log(Level.INFO, text, args);
     }
 
-    public static void fatal(Object object)
+    public static void warn(String text, Object... args)
     {
-        log(Level.FATAL, object);
-    }
-
-    public static void info(Object object)
-    {
-        log(Level.INFO, object);
-    }
-
-    public static void off(Object object)
-    {
-        log(Level.OFF, object);
-    }
-
-    public static void trace(Object object)
-    {
-        log(Level.TRACE, object);
-    }
-
-    public static void warn(Object object)
-    {
-        log(Level.WARN, object);
+        log(Level.WARN, text, args);
     }
 }
