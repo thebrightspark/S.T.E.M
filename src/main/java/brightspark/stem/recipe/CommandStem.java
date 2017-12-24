@@ -2,6 +2,7 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.message.MessageRecipeMakeDirty;
 import brightspark.stem.util.CommonUtils;
+import brightspark.stem.util.LogHelper;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -14,6 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,8 +62,11 @@ public class CommandStem extends CommandBase
     {
         String text = "\nAdd Specific Item: stem add <itemId> [itemMeta] <fluidAmount>" +
                 "\nRemove Specific Item: stem remove <itemId> [itemMeta]" +
+                "\nList Recipes: stem list [page]" +
+                "\nList Item Recipe: stem list [itemId] [itemMeta]" +
                 "\nSave Recipes To File: stem save" +
-                "\nReset Recipe File To Default : stem reset";
+                "\nReset Recipe File To Default: stem reset" +
+                "\nReload Recipes From File: stem load";
         if(sender instanceof EntityPlayer)
             text += "\nAdd Held Item: stem add <fluidAmount>" +
                     "\nRemove Held Item: stem remove";
@@ -213,8 +218,35 @@ public class CommandStem extends CommandBase
         {
             //Reset recipes to default
             ServerRecipeManager.resetRecipeFile();
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(null));
+            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty());
             sender.sendMessage(new TextComponentString("Recipes reset to default"));
+        }
+        else if(args[0].equals("load"))
+        {
+            //Reload the recipes from the file - will invalidate clients for changes
+            List<StemRecipe> oldRecipes = new ArrayList<>(ServerRecipeManager.getRecipes());
+            ServerRecipeManager.readRecipeFile();
+            List<StemRecipe> newRecipes = ServerRecipeManager.getRecipes();
+
+            List<StemRecipe> changes = new ArrayList<>();
+            newRecipes.forEach(recipe -> {
+                if(!oldRecipes.contains(recipe))
+                    changes.add(recipe);
+                else
+                {
+                    for(StemRecipe r : oldRecipes)
+                        if(recipe.isStackEqual(r.getOutput()) && r.getFluidInput() != recipe.getFluidInput())
+                            changes.add(recipe);
+                }
+            });
+
+            if(!changes.isEmpty())
+            {
+                List<ItemStack> stacks = new ArrayList<>(changes.size());
+                changes.forEach(recipe -> stacks.add(recipe.getOutput()));
+                LogHelper.info("Sending %s recipe invalidations to clients", stacks.size());
+                CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stacks.toArray(new ItemStack[stacks.size()])));
+            }
         }
         else if(args[0].equals("list") || args[0].equals("l"))
         {
@@ -312,7 +344,7 @@ public class CommandStem extends CommandBase
         switch(args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s", "reset", "list", "l");
+                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s", "reset", "load", "list", "l");
             case 2:
                 return getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys());
             default:

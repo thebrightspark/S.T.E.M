@@ -72,4 +72,10 @@ public class StemRecipe
     {
         return output.toString() + ", " + fluidInput + "mb";
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        return obj instanceof StemRecipe && ((StemRecipe) obj).output.isItemEqual(output) && ((StemRecipe) obj).fluidInput == fluidInput;
+    }
 }

@@ -60,7 +60,7 @@ public class ClientUtils
         Item item = Item.getItemFromBlock((Block) fluidBlock);
         if(item == null)
         {
-            LogHelper.fatal("Fluid " + ((Block) fluidBlock).getRegistryName() + " gave a null Item!");
+            LogHelper.error("Fluid " + ((Block) fluidBlock).getRegistryName() + " gave a null Item!");
             return;
         }
         ModelBakery.registerItemVariants(item);
