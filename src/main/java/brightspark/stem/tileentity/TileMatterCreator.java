@@ -157,7 +157,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     private boolean canOutput()
     {
         ItemStack outputStack = slots.get(3);
-        return recipeCache != null && outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.getCount() < 64;
+        return outputStack.isEmpty() || (recipeCache != null && outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.getCount() < 64);
     }
 
     private boolean hasMemoryChip()
