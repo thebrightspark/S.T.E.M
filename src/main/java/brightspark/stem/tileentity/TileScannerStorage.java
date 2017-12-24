@@ -53,7 +53,7 @@ public class TileScannerStorage extends StemTileEntity
      */
     private boolean containsRecipe(ItemStack stack)
     {
-        if(stack == null)
+        if(stack.isEmpty())
             return true;
         return CommonUtils.itemStackListContains(storedRecipes, stack);
     }
@@ -71,6 +71,11 @@ public class TileScannerStorage extends StemTileEntity
     public List<ItemStack> getStoredRecipes()
     {
         return storedRecipes;
+    }
+
+    public boolean hasRecipes()
+    {
+        return getStoredRecipes().size() > 0;
     }
 
     /**

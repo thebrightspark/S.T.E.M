@@ -21,12 +21,12 @@ public class ItemMemoryChip extends ItemBasic
 
     public static boolean isMemoryEmpty(ItemStack memChipStack)
     {
-        return memChipStack == null || getMemory(memChipStack) == null;
+        return getMemory(memChipStack).isEmpty();
     }
 
     public static void setMemory(ItemStack memChipStack, ItemStack stack)
     {
-        if(stack == null)
+        if(stack.isEmpty())
         {
             clearMemory(memChipStack);
             return;
@@ -41,7 +41,7 @@ public class ItemMemoryChip extends ItemBasic
     public static ItemStack getMemory(ItemStack memChipStack)
     {
         NBTTagCompound memTag = memChipStack.getTagCompound();
-        return memTag == null ? null : new ItemStack(memTag);
+        return memTag == null ? ItemStack.EMPTY : new ItemStack(memTag);
     }
 
     public static void clearMemory(ItemStack memChipStack)
@@ -75,7 +75,7 @@ public class ItemMemoryChip extends ItemBasic
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         ItemStack stackInMem = getMemory(stack);
-        if(stackInMem != null)
+        if(!stackInMem.isEmpty())
         {
             tooltip.add(stackInMem.getDisplayName());
             int fluid = ClientRecipeCache.getFluidAmount(stackInMem);
@@ -98,7 +98,7 @@ public class ItemMemoryChip extends ItemBasic
     public String getHighlightTip(ItemStack stack, String displayName)
     {
         ItemStack stackInMem = getMemory(stack);
-        if(stackInMem != null)
+        if(!stackInMem.isEmpty())
             return displayName + " (" + stackInMem.getDisplayName() + ")";
         return super.getHighlightTip(stack, displayName);
     }

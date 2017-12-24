@@ -64,7 +64,7 @@ public class ServerRecipeManager
      */
     public static StemRecipe getRecipeForStack(ItemStack stack)
     {
-        if(stack == null)
+        if(stack.isEmpty())
             return null;
         if(recipes == null)
             return new StemRecipe(stack, 0);

@@ -58,7 +58,7 @@ public class WrenchHelper
      */
     public static boolean isWrench(ItemStack stack)
     {
-        if(stack == null) return false;
+        if(stack.isEmpty()) return false;
         String item = stack.getItem().getRegistryName().toString();
         for(String id : WRENCH_IDS)
             if(item.equals(id))

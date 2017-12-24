@@ -20,7 +20,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractBlockMachine<T extends TileMachine> extends AbstractBlockContainerDirectional<T>

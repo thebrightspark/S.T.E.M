@@ -99,7 +99,7 @@ public class CommonUtils
 
     public static boolean isStemBucket(ItemStack stack)
     {
-        return stack != null && stack.getItem() instanceof UniversalBucket && ((UniversalBucket) stack.getItem()).getFluid(stack).getFluid().equals(StemFluids.fluidStem);
+        return stack.getItem() instanceof UniversalBucket && ((UniversalBucket) stack.getItem()).getFluid(stack).getFluid().equals(StemFluids.fluidStem);
     }
 
     public static ItemStack readStackFromBuf(ByteBuf buf)

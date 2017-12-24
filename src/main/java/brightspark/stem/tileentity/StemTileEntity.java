@@ -186,21 +186,18 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
         return true;
     }
 
-    @Nullable
     @Override
     public ItemStack getStackInSlot(int index)
     {
-        return isValidSlot(index) ? slots.get(index) : null;
+        return isValidSlot(index) ? slots.get(index) : ItemStack.EMPTY;
     }
 
-    @Nullable
     @Override
     public ItemStack decrStackSize(int index, int count)
     {
         return ItemStackHelper.getAndSplit(slots, index, count);
     }
 
-    @Nullable
     @Override
     public ItemStack removeStackFromSlot(int index)
     {
@@ -235,7 +232,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     @Override
     public boolean isItemValidForSlot(int index, ItemStack stack)
     {
-        return isValidSlot(index) && stack != null;
+        return isValidSlot(index) && !stack.isEmpty();
     }
 
     @Override

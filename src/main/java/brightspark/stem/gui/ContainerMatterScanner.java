@@ -27,9 +27,9 @@ public class ContainerMatterScanner extends ContainerMachineBase
         addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 110, 39)
         {
             @Override
-            public boolean isItemValid(@Nullable ItemStack stack)
+            public boolean isItemValid(ItemStack stack)
             {
-                return stack != null && stack.getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(stack);
+                return stack.getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(stack);
             }
         });
     }
