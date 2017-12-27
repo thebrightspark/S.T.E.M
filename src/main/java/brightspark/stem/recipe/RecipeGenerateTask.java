@@ -1,6 +1,7 @@
 package brightspark.stem.recipe;
 
 import brightspark.stem.util.LogHelper;
+import javafx.util.Pair;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -8,10 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipeGenerateTask implements Runnable
 {
@@ -21,6 +19,8 @@ public class RecipeGenerateTask implements Runnable
     private RecipeGenerator generator;
     private List<Item> items;
     private int recipesGenerated = 0;
+    private Set<IRecipe> checkedCraftingRecipes = new HashSet<>();
+    private Set<Pair<ItemStack, ItemStack>> checkedFurnaceRecipes = new HashSet<>();
 
     public RecipeGenerateTask(RecipeGenerator generator, List<Item> items)
     {
@@ -66,9 +66,12 @@ public class RecipeGenerateTask implements Runnable
                             break;
                         }
                         int ingFluid = ServerRecipeManager.getStemNeeded(ingStack);
+                        //If no stem recipe, try generate one
                         if(ingFluid <= 0)
                         {
-                            //If no stem recipe, try generate one
+                            //If we end up trying to generate a recipe twice, then return null
+                            if(!checkedCraftingRecipes.add(recipe))
+                                return null;
                             StemRecipe ingStemRecipe = genRecipeForStack(ingStack);
                             if(ingStemRecipe == null)
                             {
@@ -104,9 +107,12 @@ public class RecipeGenerateTask implements Runnable
                 for(ItemStack furnaceInput : furnaceInputs)
                 {
                     int ingFluid = ServerRecipeManager.getStemNeeded(furnaceInput);
+                    //If no stem recipe, try generate one
                     if(ingFluid <= 0)
                     {
-                        //If no stem recipe, try generate one
+                        //If we end up trying to generate a recipe twice, then return null
+                        if(!checkedFurnaceRecipes.add(new Pair<>(furnaceInput, furnaceRecipes.get(furnaceInput))))
+                            return null;
                         StemRecipe ingStemRecipe = genRecipeForStack(furnaceInput);
                         if(ingStemRecipe == null)
                             continue;
