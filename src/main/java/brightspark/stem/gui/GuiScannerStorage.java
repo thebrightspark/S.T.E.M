@@ -73,7 +73,7 @@ public class GuiScannerStorage extends GuiContainer
         {
             //Display recipe
             ItemStack recipeStack = recipes.get(container.recipeSelected);
-            int fluidAmount = ClientRecipeCache.getFluidAmount(recipeStack);
+            long fluidAmount = ClientRecipeCache.getFluidAmount(recipeStack);
 
             //Draw index
             String numText = (container.recipeSelected + 1) + "/" + te.getStoredRecipes().size();
@@ -96,9 +96,10 @@ public class GuiScannerStorage extends GuiContainer
             else
             {
                 //Draw fluid needed
-                fontRenderer.drawString(fluidAmount + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
+                fontRenderer.drawString(CommonUtils.addDigitGrouping(fluidAmount) + "mb", recipeBox.x + 18, recipeBox.y + 22, colourBlue);
                 //Draw energy needed
-                fontRenderer.drawString(CommonUtils.addDigitGrouping(fluidAmount * Config.matterCreatorEnergyPerMb) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
+                long energy = fluidAmount * (long) Config.matterCreatorEnergyPerMb;
+                fontRenderer.drawString(CommonUtils.addDigitGrouping(energy) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
             }
         }
     }

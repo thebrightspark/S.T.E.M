@@ -1,5 +1,6 @@
 package brightspark.stem.recipe;
 
+import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -8,21 +9,22 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class StemRecipe
 {
-    protected int fluidInput;
+    protected long fluidInput;
     protected ItemStack output;
 
-    public StemRecipe(Block result, int fluid)
+    public StemRecipe(Block result, long fluid)
     {
         this(new ItemStack(result), fluid);
     }
-    public StemRecipe(Item result, int fluid)
+    public StemRecipe(Item result, long fluid)
     {
         this(new ItemStack(result), fluid);
     }
-    public StemRecipe(ItemStack result, int fluid)
+    public StemRecipe(ItemStack result, long fluid)
     {
-        fluidInput = fluid;
         output = result.copy();
+        output.setCount(1);
+        fluidInput = (long) Math.ceil((double) fluid / (double) result.getCount());
     }
 
     /**
@@ -30,15 +32,15 @@ public class StemRecipe
      */
     public boolean isStackEqual(ItemStack stack)
     {
-        return OreDictionary.itemMatches(output, stack, false);
+        return OreDictionary.itemMatches(stack, output, false);
     }
 
-    public int getFluidInput()
+    public long getFluidInput()
     {
         return fluidInput;
     }
 
-    public void setFluidInput(int fluid)
+    public void setFluidInput(long fluid)
     {
         fluidInput = fluid;
     }
@@ -53,7 +55,7 @@ public class StemRecipe
      */
     public String[] toCsvStringArray()
     {
-        return new String[] {output.getItem().getRegistryName().toString(), Integer.toString(output.getMetadata()), Integer.toString(fluidInput)};
+        return new String[] {output.getItem().getRegistryName().toString(), Integer.toString(output.getMetadata()), Long.toString(fluidInput)};
     }
 
     public static StemRecipe fromCsvStringArray(String[] recipe)
@@ -64,13 +66,13 @@ public class StemRecipe
             LogHelper.warn("Couldn't find item '" + recipe[0] + "' from recipe: " + recipe[0] + ", " + recipe[1] + ", " + recipe[2]);
             return null;
         }
-        return new StemRecipe(new ItemStack(item, 1, Integer.parseInt(recipe[1])), Integer.parseInt(recipe[2]));
+        return new StemRecipe(new ItemStack(item, 1, Integer.parseInt(recipe[1])), Long.parseLong(recipe[2]));
     }
 
     @Override
     public String toString()
     {
-        return output.toString() + ", " + fluidInput + "mb";
+        return CommonUtils.stackToString(output) + ", " + fluidInput + "mb";
     }
 
     @Override

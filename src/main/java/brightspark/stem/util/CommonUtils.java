@@ -37,6 +37,14 @@ public class CommonUtils
     /**
      * Returns a string of the inputted number with commas added to group the digits.
      */
+    public static String addDigitGrouping(long number)
+    {
+        return addDigitGrouping(Long.toString(number));
+    }
+
+    /**
+     * Returns a string of the inputted number with commas added to group the digits.
+     */
     public static String addDigitGrouping(int number)
     {
         return addDigitGrouping(Integer.toString(number));
@@ -121,6 +129,11 @@ public class CommonUtils
         list.sort((o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
     }
 
+    public static void sortStemRecipeList(List<StemRecipe> list)
+    {
+        list.sort((o1, o2) -> o1.getOutput().getDisplayName().compareToIgnoreCase(o2.getOutput().getDisplayName()));
+    }
+
     /**
      * Checks if the given ItemStack List contains the given ItemStack.
      */
@@ -153,6 +166,14 @@ public class CommonUtils
     {
         StemRecipe recipe = getRecipeForStack(stack);
         return recipe != null && recipe.getFluidInput() > 0;
+    }
+
+    /**
+     * Returns an ItemStack as a string in a good format for logging
+     */
+    public static String stackToString(ItemStack stack)
+    {
+        return String.format("%s (%s)", stack.getDisplayName(), stack);
     }
 
     /**

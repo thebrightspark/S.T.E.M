@@ -53,6 +53,9 @@ public class ConfigHandler
         Config.matterCreatorMaxEnergyInput = configuration.getInt("matterCreatorMaxEnergyInput", Categories.MATTER_CREATOR, Config.matterCreatorMaxEnergyInput, -1, Integer.MAX_VALUE, "Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla).");
         Config.matterCreatorEnergyPerMb = configuration.getInt("matterCreatorEnergyPerMb", Categories.MATTER_CREATOR, Config.matterCreatorEnergyPerMb, 1, Integer.MAX_VALUE, "Amount of energy used per mb of STEM fluid to create an item");
 
+        //Misc
+        Config.useProceduralRecipeGen = configuration.getBoolean("useProceduralRecipeGen", Configuration.CATEGORY_GENERAL, Config.useProceduralRecipeGen, "Whether recipes will attempt to be generated on the fly when requested from the server");
+
         if(configuration.hasChanged())
             configuration.save();
     }

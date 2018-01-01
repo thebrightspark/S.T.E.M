@@ -40,7 +40,7 @@ public class ClientRecipeCache
         return null;
     }
 
-    private static void setRecipe(ItemStack stack, int fluid)
+    private static void setRecipe(ItemStack stack, long fluid)
     {
         StemRecipe recipe = getRecipeInternal(stack.copy());
         if(recipe == null)
@@ -52,7 +52,7 @@ public class ClientRecipeCache
     /**
      * Used by packets to recieve recipes sent from the server.
      */
-    public static void receiveRecipe(ItemStack stack, int fluidAmount)
+    public static void receiveRecipe(ItemStack stack, long fluidAmount)
     {
         setRecipe(stack, fluidAmount);
     }
@@ -77,7 +77,7 @@ public class ClientRecipeCache
      * Gets the amount of STEM fluid needed to create the given ItemStack.
      * Will request the recipe from the server if not already cached locally.
      */
-    public static int getFluidAmount(ItemStack recipeStack)
+    public static long getFluidAmount(ItemStack recipeStack)
     {
         StemRecipe recipe = getRecipe(recipeStack);
         return recipe == null ? -1 : recipe.getFluidInput();

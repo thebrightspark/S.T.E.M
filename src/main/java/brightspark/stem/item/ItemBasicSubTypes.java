@@ -43,7 +43,12 @@ public class ItemBasicSubTypes extends ItemBasic implements ISubTypes
     public String getUnlocalizedName(ItemStack stack)
     {
         if(hasSubtypes)
-            return super.getUnlocalizedName(stack) + "." + getSubNames()[stack.getMetadata()];
+        {
+            int meta = stack.getMetadata();
+            String[] names = getSubNames();
+            if(meta >= 0 && meta < names.length)
+                return super.getUnlocalizedName(stack) + "." + names[meta];
+        }
         return super.getUnlocalizedName(stack);
     }
 

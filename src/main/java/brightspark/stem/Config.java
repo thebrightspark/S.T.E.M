@@ -27,4 +27,9 @@ public class Config
     public static int matterCreatorMaxEnergyInput = -1;
     /** Amount of energy used per mb of STEM fluid to create an item */
     public static int matterCreatorEnergyPerMb = 10000;
+
+    //Misc
+
+    /** Whether recipes will attempt to be generated on the fly when requested from the server */
+    public static boolean useProceduralRecipeGen = true;
 }

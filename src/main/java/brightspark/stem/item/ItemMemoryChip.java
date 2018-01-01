@@ -1,6 +1,7 @@
 package brightspark.stem.item;
 
 import brightspark.stem.recipe.ClientRecipeCache;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -78,11 +79,11 @@ public class ItemMemoryChip extends ItemBasic
         if(!stackInMem.isEmpty())
         {
             tooltip.add(stackInMem.getDisplayName());
-            int fluid = ClientRecipeCache.getFluidAmount(stackInMem);
+            long fluid = ClientRecipeCache.getFluidAmount(stackInMem);
             if(fluid < 0)
                 tooltip.add("Waiting for fluid data from server...");
             else
-                tooltip.add(fluid + "mb");
+                tooltip.add(CommonUtils.addDigitGrouping(fluid) + "mb");
         }
     }
 
