@@ -173,7 +173,12 @@ public class CommonUtils
      */
     public static String stackToString(ItemStack stack)
     {
-        return String.format("%s (%s)", stack.getDisplayName(), stack);
+        String stackName;
+        if(stack.getItem().getRegistryName().getResourcePath().equalsIgnoreCase("xtones"))
+            stackName = stack.getItem().getRegistryName().toString();
+        else
+            stackName = stack.getDisplayName();
+        return String.format("%s (%s)", stackName, stack);
     }
 
     /**

@@ -2,17 +2,16 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
-import javafx.util.Pair;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.*;
 
@@ -26,7 +25,7 @@ public class RecipeGenerateTask implements Runnable
     private List<Item> items;
     private int recipesGenerated = 0;
     private Set<IRecipe> checkedCraftingRecipes = new HashSet<>();
-    private Set<Pair<ItemStack, ItemStack>> checkedFurnaceRecipes = new HashSet<>();
+    private Set<ImmutablePair<ItemStack, ItemStack>> checkedFurnaceRecipes = new HashSet<>();
 
     public RecipeGenerateTask(ItemStack stack)
     {
@@ -141,7 +140,7 @@ public class RecipeGenerateTask implements Runnable
             for(ItemStack furnaceInput : furnaceInputs)
             {
                 //If we end up trying to generate a recipe twice, then skip
-                if(!checkedFurnaceRecipes.add(new Pair<>(furnaceInput, furnaceRecipes.get(furnaceInput))))
+                if(!checkedFurnaceRecipes.add(new ImmutablePair<>(furnaceInput, furnaceRecipes.get(furnaceInput))))
                     continue;
                 //Get the fluid amount required from the ingredient
                 long fluidAmount = genFluidFromIngredients(Collections.singletonList(furnaceInput));
