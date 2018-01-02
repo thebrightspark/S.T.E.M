@@ -20,7 +20,6 @@ public class RecipeGenerateTask implements Runnable
     private static List<IRecipe> craftingRecipes = CraftingManager.getInstance().getRecipeList();
     private static Map<ItemStack, ItemStack> furnaceRecipes = FurnaceRecipes.instance().getSmeltingList();
 
-    private RecipeGenerator generator;
     private ItemStack itemStack;
     private List<Item> items;
     private int recipesGenerated = 0;
@@ -32,9 +31,8 @@ public class RecipeGenerateTask implements Runnable
         itemStack = stack;
     }
 
-    public RecipeGenerateTask(RecipeGenerator generator, List<Item> items)
+    public RecipeGenerateTask(List<Item> items)
     {
-        this.generator = generator;
         this.items = items;
     }
 
@@ -70,10 +68,9 @@ public class RecipeGenerateTask implements Runnable
                     addRecipe(recipe);
                 }
             });
-        }
 
-        if(generator != null)
-            generator.onTaskCompleted(recipesGenerated);
+            RecipeGenerator.onTaskCompleted(recipesGenerated);
+        }
     }
 
     private StemRecipe genRecipeForStack(ItemStack stack, boolean strict)

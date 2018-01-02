@@ -328,7 +328,7 @@ public class CommandStem extends CommandBase
         else if(args[0].equalsIgnoreCase("generate"))
         {
             //Generate stem recipes
-            new RecipeGenerator().generateRecipes(sender);
+            RecipeGenerator.generateRecipes(sender);
         }
         else
             //Incorrect command

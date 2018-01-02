@@ -13,12 +13,20 @@ import java.util.concurrent.TimeUnit;
 
 public class RecipeGenerator
 {
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10, r -> new Thread(r, "StemRecipeGenerator"));
-    private ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2);
-    private int activeThreads, recipesGeneratedTotal, recipeGeneratedLast, iterations;
+    private static ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10, r -> new Thread(r, "StemRecipeGenerator"));
+    private static ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(2);
+    private static int activeThreads, recipesGeneratedTotal, recipeGeneratedLast, iterations;
+    private static boolean active = false;
 
-    public void generateRecipes(ICommandSender sender)
+    public static void generateRecipes(ICommandSender sender)
     {
+        if(active)
+        {
+            sender.sendMessage(new TextComponentString("Generation task already running."));
+            return;
+        }
+
+        active = true;
         runGenerationTasks();
 
         //Run a checker to detect when the tasks have finished
@@ -29,6 +37,7 @@ public class RecipeGenerator
                 {
                     //No recipes generated last time, so end generation
                     sender.sendMessage(new TextComponentString(String.format("Generated %s stem recipes in %s iterations.", recipesGeneratedTotal, iterations)));
+                    active = false;
                     executor.shutdown();
                     scheduledExecutor.shutdown();
                 }
@@ -43,18 +52,18 @@ public class RecipeGenerator
             }
         }, 1000, 500, TimeUnit.MILLISECONDS);
 
-        /*scheduledExecutor.schedule(() -> {
+        scheduledExecutor.schedule(() -> {
             if(activeThreads != 0)
             {
                 sender.sendMessage(new TextComponentString("Threads haven't finished after 10 seconds, so shutting down threads." +
-                        "\nManaged to generate " + recipesGenerated + " stem recipes though."));
+                        "\nManaged to generate " + recipesGeneratedTotal + " stem recipes though."));
                 executor.shutdown();
                 scheduledExecutor.shutdown();
             }
-        }, 10, TimeUnit.SECONDS);*/
+        }, 60, TimeUnit.SECONDS);
     }
 
-    private void runGenerationTasks()
+    private static void runGenerationTasks()
     {
         List<Item> allItems = Lists.newArrayList(Item.REGISTRY);
         /*
@@ -70,11 +79,11 @@ public class RecipeGenerator
         */
 
         //TEMP
-        executor.execute(new RecipeGenerateTask(this, allItems));
+        executor.execute(new RecipeGenerateTask(allItems));
         activeThreads++;
     }
 
-    public void onTaskCompleted(int recipesGenerated)
+    public static void onTaskCompleted(int recipesGenerated)
     {
         recipeGeneratedLast += recipesGenerated;
         activeThreads--;
