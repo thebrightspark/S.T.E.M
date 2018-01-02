@@ -228,20 +228,29 @@ public class CommandStem extends CommandBase
             ServerRecipeManager.readRecipeFile();
             List<StemRecipe> newRecipes = ServerRecipeManager.getRecipes();
 
+            //Detect all changes
             List<StemRecipe> changes = new ArrayList<>();
             newRecipes.forEach(recipe -> {
+                //If a new recipe was added, add to changed
                 if(!oldRecipes.contains(recipe))
                     changes.add(recipe);
                 else
                 {
                     for(StemRecipe r : oldRecipes)
+                        //If a recipe has changed, add to changed
                         if(recipe.isStackEqual(r.getOutput()) && r.getFluidInput() != recipe.getFluidInput())
                             changes.add(recipe);
                 }
             });
+            oldRecipes.forEach(recipe -> {
+                //If an old recipe was removed, then add to changed
+                if(!newRecipes.contains(recipe))
+                    changes.add(recipe);
+            });
 
             if(!changes.isEmpty())
             {
+                //Update clients with changes
                 List<ItemStack> stacks = new ArrayList<>(changes.size());
                 changes.forEach(recipe -> stacks.add(recipe.getOutput()));
                 LogHelper.info("Sending %s recipe invalidations to clients", stacks.size());
