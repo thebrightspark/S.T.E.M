@@ -51,7 +51,7 @@ public abstract class AbstractBlockContainerDirectional<T extends TileEntity> ex
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.HORIZONTALS[meta]);
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
     }
 
     /**
@@ -60,7 +60,7 @@ public abstract class AbstractBlockContainerDirectional<T extends TileEntity> ex
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(FACING).getIndex();
+        return state.getValue(FACING).getHorizontalIndex();
     }
 
     /**
