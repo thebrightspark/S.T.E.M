@@ -92,6 +92,7 @@ public class RecipeGenerateTask implements Runnable
         //TODO: Other modded recipes?
 
         LogHelper.warn("Couldn't generate a recipe for %s", CommonUtils.stackToString(stack));
+        ServerRecipeManager.addRecipe(new StemRecipe(stack, 0));
         return null;
     }
 

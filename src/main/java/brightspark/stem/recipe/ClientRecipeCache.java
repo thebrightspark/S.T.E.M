@@ -50,7 +50,7 @@ public class ClientRecipeCache
     }
 
     /**
-     * Used by packets to recieve recipes sent from the server.
+     * Used by packets to receive recipes sent from the server.
      */
     public static void receiveRecipe(ItemStack stack, long fluidAmount)
     {
