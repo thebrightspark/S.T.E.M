@@ -54,7 +54,7 @@ public class WrenchHelper
     }
 
     /**
-     * Returns true if the item is a recognised wrench.
+     * Returns true if the item is a recognised wrench.json.
      */
     public static boolean isWrench(ItemStack stack)
     {
@@ -67,7 +67,7 @@ public class WrenchHelper
     }
 
     /**
-     * Gets the translated wrench mode for compatible wrenches.
+     * Gets the translated wrench.json mode for compatible wrenches.
      */
     public static EnumWrenchMode getWrenchMode(ItemStack stack)
     {
@@ -76,7 +76,7 @@ public class WrenchHelper
         {
             if(stack.getItem() instanceof ItemWrench)
                 mode = ItemWrench.getMode(stack);
-            //TODO: Add other wrench compatability (Also add wrench to string ids above)
+            //TODO: Add other wrench.json compatability (Also add wrench.json to string ids above)
         }
         return mode;
     }

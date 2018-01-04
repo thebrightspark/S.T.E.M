@@ -72,6 +72,7 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
+        StemRecipes.init();
         StemBlocks.regOres();
         StemItems.regOres();
         WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
@@ -87,7 +88,6 @@ public class STEM
         StemItems.ITEMS = null;
         StemBlocks.BLOCKS = null;
         StemBlocks.ITEM_BLOCKS = null;
-        StemRecipes.RECIPES = null;
     }
 
     @Mod.EventHandler

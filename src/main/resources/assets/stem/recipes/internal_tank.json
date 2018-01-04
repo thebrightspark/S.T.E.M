@@ -1,0 +1,23 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        "IGI",
+        "G G",
+        "IGI"
+    ],
+    "key": {
+        "I": {
+            "type": "forge:ore_dict",
+            "ore": "ingot_blusteel"
+        },
+        "G": {
+            "type": "forge:ore_dict",
+            "ore": "blockGlass"
+        }
+    },
+    "result": {
+        "item": "stem:basic",
+        "data": 3
+    }
+}

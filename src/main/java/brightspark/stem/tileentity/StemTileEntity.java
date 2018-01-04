@@ -25,7 +25,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     protected NonNullList<ItemStack> slots;
     //This is used by getSlotsForFace
     protected int[] slotsForFaces;
-    //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench is used.
+    //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench.json is used.
     public boolean usedWrenchToBreak = false;
     protected boolean shouldSaveInventoryToNBT = true;
 

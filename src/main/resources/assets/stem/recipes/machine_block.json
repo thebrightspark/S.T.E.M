@@ -1,0 +1,21 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        "BOB",
+        "O O",
+        "BOB"
+    ],
+    "key": {
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "ingot_blusteel"
+        },
+        "O": {
+            "item": "minecraft:iron_bars"
+        }
+    },
+    "result": {
+        "item": "stem:machine_block"
+    }
+}

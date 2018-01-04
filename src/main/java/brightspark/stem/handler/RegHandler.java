@@ -39,13 +39,6 @@ public class RegHandler
         StemBlocks.regTileEntities();
     }
 
-    @SubscribeEvent
-    public static void initRecipes(Register<IRecipe> event)
-    {
-        IForgeRegistry<IRecipe> registry = event.getRegistry();
-        registry.registerAll(StemRecipes.getRecipes());
-    }
-
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void regModels(ModelRegistryEvent event)

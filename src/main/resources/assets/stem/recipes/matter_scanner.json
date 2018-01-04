@@ -1,0 +1,30 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        " C ",
+        " BM",
+        " S "
+    ],
+    "key": {
+        "C": {
+            "type": "forge:ore_dict",
+            "ore": "energy_circuit"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "machine_block"
+        },
+        "M": {
+            "type": "forge:ore_dict",
+            "ore": "mem_chip"
+        },
+        "S": {
+            "type": "forge:ore_dict",
+            "ore": "scan_device"
+        }
+    },
+    "result": {
+        "item": "stem:matter_scanner"
+    }
+}

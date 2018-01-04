@@ -1,0 +1,26 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        " BG",
+        " PB",
+        "B  "
+    ],
+    "key": {
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "ingot_blusteel"
+        },
+        "G": {
+            "type": "forge:ore_dict",
+            "ore": "dustGlowstone"
+        },
+        "P": {
+            "type": "forge:ore_dict",
+            "ore": "machine_processor"
+        }
+    },
+    "result": {
+        "item": "stem:wrench"
+    }
+}

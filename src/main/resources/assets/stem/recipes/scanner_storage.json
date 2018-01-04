@@ -1,0 +1,30 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        "   ",
+        "RBW",
+        " M "
+    ],
+    "key": {
+        "R": {
+            "type": "forge:ore_dict",
+            "ore": "mem_reader"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "machine_block"
+        },
+        "W": {
+            "type": "forge:ore_dict",
+            "ore": "mem_writer"
+        },
+        "M": {
+            "type": "forge:ore_dict",
+            "ore": "large_mem_bank"
+        }
+    },
+    "result": {
+        "item": "stem:scanner_storage"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        " C ",
+        "TBT",
+        " I "
+    ],
+    "key": {
+        "C": {
+            "type": "forge:ore_dict",
+            "ore": "energy_circuit"
+        },
+        "T": {
+            "type": "forge:ore_dict",
+            "ore": "internal_tank"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "machine_block"
+        },
+        "I": {
+            "type": "forge:ore_dict",
+            "ore": "inf_device"
+        }
+    },
+    "result": {
+        "item": "stem:liquid_energiser"
+    }
+}

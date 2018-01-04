@@ -1,0 +1,26 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        "OPO",
+        "PMP",
+        "OPO"
+    ],
+    "key": {
+        "O": {
+            "type": "forge:ore_dict",
+            "ore": "obsidian"
+        },
+        "P": {
+            "type": "minecraft:piston"
+        },
+        "M": {
+            "type": "forge:ore_dict",
+            "ore": "machine_processor"
+        }
+    },
+    "result": {
+        "item": "stem:basic",
+        "data": 13
+    }
+}

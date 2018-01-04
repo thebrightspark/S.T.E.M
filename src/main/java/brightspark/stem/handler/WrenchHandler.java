@@ -33,7 +33,7 @@ public class WrenchHandler
             int xMid = res.getScaledWidth() / 2;
             int yMid = res.getScaledHeight() / 2 + 50;
 
-            //Render wrench mode
+            //Render wrench.json mode
             WrenchHelper.EnumWrenchMode wrenchMode = WrenchHelper.getWrenchMode(heldItem);
             String text = I18n.format("wrenchMode.overlay.mode") + " " + wrenchMode.toString();
             fontRenderer.drawStringWithShadow(text, xMid - (fontRenderer.getStringWidth(text) / 2), yMid, fontColour);

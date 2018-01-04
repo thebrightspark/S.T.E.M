@@ -119,7 +119,7 @@ public abstract class AbstractBlockMachine<T extends TileMachine> extends Abstra
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
-        //Actions for wrench
+        //Actions for wrench.json
         WrenchHelper.EnumWrenchMode mode = WrenchHelper.getWrenchMode(player.getHeldItem(hand));
         if(mode != null && !player.isSneaking())
         {

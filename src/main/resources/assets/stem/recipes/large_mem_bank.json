@@ -1,0 +1,27 @@
+{
+    "type": "forge:ore_shaped",
+    "group": "stem",
+    "pattern": [
+        "IBI",
+        "BDB",
+        "IBI"
+    ],
+    "key": {
+        "I": {
+            "type": "forge:ore_dict",
+            "ore": "ingot_blusteel"
+        },
+        "B": {
+            "type": "forge:ore_dict",
+            "ore": "mem_bank"
+        },
+        "D": {
+            "type": "forge:ore_dict",
+            "ore": "gemDiamond"
+        }
+    },
+    "result": {
+        "item": "stem:basic",
+        "data": 5
+    }
+}

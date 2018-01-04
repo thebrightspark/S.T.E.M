@@ -1,0 +1,24 @@
+{
+    "type": "forge:ore_shapeless",
+    "group": "stem",
+    "ingredients": [
+        {
+            "type": "forge:ore_dict",
+            "ore": "ingotIron"
+        },
+        {
+            "type": "forge:ore_dict",
+            "ore": "gemLapis"
+        },
+        {
+            "item": "minecraft:coal",
+        },
+        {
+            "item": "minecraft:coal",
+        }
+    ],
+    "result": {
+        "item": "stem:basic",
+        "data": 0
+    }
+}

@@ -55,7 +55,7 @@ public class ItemWrench extends ItemBasic
             RayTraceResult ray = rayTrace(world, player, false);
             if(ray == null || ray.typeOfHit != RayTraceResult.Type.BLOCK || !(world.getBlockState(ray.getBlockPos()).getBlock() instanceof AbstractBlockMachine))
             {
-                //Change wrench mode
+                //Change wrench.json mode
                 nextMode(stack);
                 if(world.isRemote)
                     ClientUtils.addClientChatMessage(new TextComponentString(getMode(stack).getDisplayPrefix()), chatIdWrenchMode);
