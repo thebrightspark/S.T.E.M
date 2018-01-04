@@ -1,12 +1,12 @@
 {
 	"parent": "block/cube",
 	"textures": {
-		"particle": "stem:blocks/machineBlock",
+		"particle": "stem:blocks/machine_block",
 		"up": "stem:blocks/machine_top",
-        "down": "stem:blocks/machineBlock",
-        "north": "stem:blocks/machineBlock",
-        "south": "stem:blocks/machineBlock",
-        "east": "stem:blocks/machineBlock",
-        "west": "stem:blocks/machineBlock"
+        "down": "stem:blocks/machine_block",
+        "north": "stem:blocks/machine_block",
+        "south": "stem:blocks/machine_block",
+        "east": "stem:blocks/machine_block",
+        "west": "stem:blocks/machine_block"
 	}
 }

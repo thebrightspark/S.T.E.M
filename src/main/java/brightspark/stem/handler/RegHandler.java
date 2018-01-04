@@ -1,0 +1,46 @@
+package brightspark.stem.handler;
+
+import brightspark.stem.init.StemBlocks;
+import brightspark.stem.init.StemFluids;
+import brightspark.stem.init.StemItems;
+import brightspark.stem.util.ClientUtils;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.event.RegistryEvent.Register;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.registry.IForgeRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@Mod.EventBusSubscriber
+public class RegHandler
+{
+    @SubscribeEvent
+    public static void initItems(Register<Item> event)
+    {
+        IForgeRegistry<Item> registry = event.getRegistry();
+        registry.registerAll(StemItems.getItems());
+        registry.registerAll(StemBlocks.getItemBlocks());
+    }
+
+    @SubscribeEvent
+    public static void initBlocks(Register<Block> event)
+    {
+        IForgeRegistry<Block> registry = event.getRegistry();
+        registry.registerAll(StemBlocks.getBlocks());
+
+        StemFluids.init();
+        StemBlocks.regTileEntities();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public static void regModels(ModelRegistryEvent event)
+    {
+        StemItems.ITEMS.forEach(ClientUtils::regModel);
+        StemBlocks.BLOCKS.forEach(ClientUtils::regModel);
+        ClientUtils.regModel(StemFluids.fluidStem);
+    }
+}

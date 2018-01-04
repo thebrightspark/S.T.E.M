@@ -48,7 +48,7 @@ public class MessageUpdateClientContainer implements IMessage
                 @Override
                 public void run()
                 {
-                    Minecraft.getMinecraft().thePlayer.openContainer.updateProgressBar(message.id, message.value);
+                    Minecraft.getMinecraft().player.openContainer.updateProgressBar(message.id, message.value);
                 }
             });
             return null;

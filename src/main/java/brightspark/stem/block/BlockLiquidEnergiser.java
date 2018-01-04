@@ -24,14 +24,13 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergiser>
 {
     public BlockLiquidEnergiser()
     {
-        super("liquidEnergiser");
+        super("liquid_energiser");
     }
 
     @Override
@@ -54,16 +53,17 @@ public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergis
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
+        ItemStack heldItem = player.getHeldItem(hand);
         //Handle bucket click
-        if(heldItem != null && heldItem.getItem().equals(Items.BUCKET))
+        if(heldItem.getItem().equals(Items.BUCKET))
         {
             TileLiquidEnergiser machine = getTileEntity(world, pos);
             if(machine.getFluidAmount() >= Fluid.BUCKET_VOLUME)
             {
                 machine.drainBucket();
-                heldItem.stackSize--;
+                heldItem.shrink(1);
                 ItemStack filledBucket = CommonUtils.createFilledBucket(machine.getFluidType());
                 if(!player.inventory.addItemStackToInventory(filledBucket))
                     player.entityDropItem(filledBucket, 0f);
@@ -71,7 +71,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergis
             return true;
         }
 
-        return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
+        return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
     }
 
     @Override

@@ -7,6 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -19,7 +20,6 @@ import java.util.List;
  * >0 -> fluid amount for stack
  *  0 -> no recipe for stack
  * -1 -> waiting for server response
- * -2 -> recipe marked as dirty
  */
 @SideOnly(Side.CLIENT)
 public class ClientRecipeCache
@@ -40,7 +40,7 @@ public class ClientRecipeCache
         return null;
     }
 
-    private static void setRecipe(ItemStack stack, int fluid)
+    private static void setRecipe(ItemStack stack, long fluid)
     {
         StemRecipe recipe = getRecipeInternal(stack.copy());
         if(recipe == null)
@@ -50,9 +50,9 @@ public class ClientRecipeCache
     }
 
     /**
-     * Used by packets to recieve recipes sent from the server.
+     * Used by packets to receive recipes sent from the server.
      */
-    public static void receiveRecipe(ItemStack stack, int fluidAmount)
+    public static void receiveRecipe(ItemStack stack, long fluidAmount)
     {
         setRecipe(stack, fluidAmount);
     }
@@ -64,7 +64,7 @@ public class ClientRecipeCache
     public static StemRecipe getRecipe(ItemStack recipeStack)
     {
         StemRecipe recipe = getRecipeInternal(recipeStack);
-        if(recipe == null || recipe.getFluidInput() == -2)
+        if(recipe == null)
         {
             //No recipe or dirty recipe - needs to be requested
             requestRecipe(recipeStack);
@@ -77,22 +77,31 @@ public class ClientRecipeCache
      * Gets the amount of STEM fluid needed to create the given ItemStack.
      * Will request the recipe from the server if not already cached locally.
      */
-    public static int getFluidAmount(ItemStack recipeStack)
+    public static long getFluidAmount(ItemStack recipeStack)
     {
         StemRecipe recipe = getRecipe(recipeStack);
         return recipe == null ? -1 : recipe.getFluidInput();
     }
 
     /**
-     * Marks the specified recipe as dirty.
+     * Removed the cached recipe for this stack.
      * If stack is null, then clears all cached recipes.
      */
-    public static void markRecipeDirty(ItemStack stack)
+    public static void removeRecipe(ItemStack stack)
     {
         if(stack == null)
             //Remove all cached recipes
             cachedRecipes.clear();
         else
-            setRecipe(stack, -2);
+        {
+            //Remove the recipe for the given stack
+            Iterator<StemRecipe> iterator = cachedRecipes.iterator();
+            while(iterator.hasNext())
+                if(iterator.next().isStackEqual(stack))
+                {
+                    iterator.remove();
+                    break;
+                }
+        }
     }
 }

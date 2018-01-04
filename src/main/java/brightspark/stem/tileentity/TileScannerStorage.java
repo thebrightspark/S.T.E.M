@@ -53,7 +53,7 @@ public class TileScannerStorage extends StemTileEntity
      */
     private boolean containsRecipe(ItemStack stack)
     {
-        if(stack == null)
+        if(stack.isEmpty())
             return true;
         return CommonUtils.itemStackListContains(storedRecipes, stack);
     }
@@ -71,6 +71,11 @@ public class TileScannerStorage extends StemTileEntity
     public List<ItemStack> getStoredRecipes()
     {
         return storedRecipes;
+    }
+
+    public boolean hasRecipes()
+    {
+        return getStoredRecipes().size() > 0;
     }
 
     /**
@@ -120,7 +125,7 @@ public class TileScannerStorage extends StemTileEntity
     {
         //Write recipes
         NBTTagList recipeList = new NBTTagList();
-        for(int i = 0; i < slots.length; ++i)
+        for(int i = 0; i < slots.size(); ++i)
         {
             NBTTagCompound tag = new NBTTagCompound();
             storedRecipes.get(i).writeToNBT(tag);
@@ -142,7 +147,7 @@ public class TileScannerStorage extends StemTileEntity
         for(int i = 0; i < recipeList.tagCount(); ++i)
         {
             NBTTagCompound tag = recipeList.getCompoundTagAt(i);
-            addRecipe(ItemStack.loadItemStackFromNBT(tag));
+            addRecipe(new ItemStack(tag));
         }
         sortRecipes();
 
@@ -157,7 +162,7 @@ public class TileScannerStorage extends StemTileEntity
         for(int i = 0; i < recipeList.tagCount(); i++)
         {
             NBTTagCompound tag = recipeList.getCompoundTagAt(i);
-            addRecipe(ItemStack.loadItemStackFromNBT(tag));
+            addRecipe(new ItemStack(tag));
         }
         sortRecipes();
 

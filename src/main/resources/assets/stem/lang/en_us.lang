@@ -1,0 +1,79 @@
+//Items
+
+item.wrench.name=Configuration Wand
+item.wrench.tooltip=Tools can come in many forms...
+wrenchMode.mode=Mode:
+wrenchMode.turn=Turn
+wrenchMode.config_side=Configure
+wrenchMode.overlay.mode=Current Wrench Mode:
+wrenchMode.overlay.side=Side %s Permission:
+
+item.mem_chip.name=Memory Chip
+
+item.basic.blusteel_compound.name=Blusteel Compound
+item.basic.ingot_blusteel.name=Blusteel Ingot
+item.basic.machine_processor.name=Machine Processor
+item.basic.internal_tank.name=Internal Tank
+item.basic.mem_bank.name=Memory Bank
+item.basic.large_mem_bank.name=Large Memory Bank
+item.basic.energy_circuit.name=Energy Input Circuit
+item.basic.inf_device.name=Infusing Device
+item.basic.scan_device.name=Scanning Device
+item.basic.mem_reader.name=Memory Reader
+item.basic.mem_writer.name=Memory Writer
+item.basic.exciter.name=S.T.E.M Exciter
+item.basic.former.name=Matter Former
+item.basic.compressor.name=Compression Unit
+
+//Blocks
+
+tile.machine_block.name=Machine Block
+tile.liquid_energiser.name=Liquid Energiser
+tile.matter_scanner.name=Matter Scanner
+tile.scanner_storage.name=Scanner Storage
+tile.matter_creator.name=Matter Creator
+
+//Fluids
+
+tile.stem.name=S.T.E.M
+fluid.stem=S.T.E.M
+
+//Generic
+
+tooltip.shift=Hold SHIFT for extra info
+
+sideEnergyPerm.mode=Side %s Permission:
+sideEnergyPerm.all=All
+sideEnergyPerm.input=Input
+sideEnergyPerm.output=Output
+sideEnergyPerm.none=None
+
+message.recipes.cantfinditem=Couldn't find the item '%s'
+message.recipes.cantfindrecipe=Couldn't find any recipes for the item '%s'
+message.recipes.none=No recipes
+message.recipes.title=Recipe - Page %d / %d
+
+//GUIs
+
+gui.energyStorage.max=Max:
+gui.progress=Progress:
+gui.averageInput=Average Input:
+gui.status=Status:
+gui.inactive=Inactive
+gui.recipe=No Recipe
+
+gui.scan.recipe=No Recipe
+gui.scan.storage=Waiting For Storage
+gui.scan.active=Scanning...
+gui.scan.complete=Scan Complete
+
+gui.create.active=Creating...
+gui.create.output=Empty Output Slot
+gui.create.energy=No Energy
+gui.create.fluid=No Fluid
+gui.create.complete=Creation Complete
+
+//Misc
+
+waila.energyStorage.stored=Energy:
+waila.energyStorage.inOut=Max Input/Output:

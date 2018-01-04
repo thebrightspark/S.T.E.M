@@ -1,6 +1,0 @@
-{
-	"parent": "stem:block/machine",
-	"textures": {
-		"north": "stem:blocks/matterScanner_side"
-	}
-}

@@ -45,12 +45,12 @@ public class ContainerScannerStorage extends ContainerMachineBase
      */
     public void inputSlotChanged(ItemStack newItem)
     {
-        if(newItem == null || !(newItem.getItem() instanceof ItemMemoryChip))
+        if(newItem.isEmpty() || !(newItem.getItem() instanceof ItemMemoryChip))
             return;
 
         ItemStack chipSavedStack = ItemMemoryChip.getMemory(newItem);
 
-        if(chipSavedStack == null)
+        if(chipSavedStack.isEmpty())
         {
             //Save current recipe to item
             if(getMachine().getStoredRecipes() == null || getMachine().getStoredRecipes().isEmpty())
@@ -66,7 +66,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
 
         //Move item to output slot
         inventory.setInventorySlotContents(1, newItem.copy());
-        inventory.setInventorySlotContents(0, null);
+        inventory.setInventorySlotContents(0, ItemStack.EMPTY);
 
         detectAndSendChanges();
     }
@@ -77,12 +77,12 @@ public class ContainerScannerStorage extends ContainerMachineBase
         ItemStack returnStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 
         ItemStack inputStack = inventory.getStackInSlot(0);
-        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip)
+        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip && (getMachine().hasRecipes() || !ItemMemoryChip.isMemoryEmpty(inputStack)))
         {
-            if(!player.worldObj.isRemote)
+            if(!player.world.isRemote)
                 inputSlotChanged(inputStack);
             else
-                inventory.setInventorySlotContents(0, null);
+                inventory.setInventorySlotContents(0, ItemStack.EMPTY);
         }
 
         return returnStack;

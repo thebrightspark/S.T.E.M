@@ -2,7 +2,6 @@ package brightspark.stem;
 
 import brightspark.stem.handler.ConfigHandler;
 import brightspark.stem.handler.GuiHandler;
-import brightspark.stem.handler.WrenchHandler;
 import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
@@ -13,13 +12,11 @@ import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.relauncher.Side;
 
 import java.io.File;
 
@@ -38,9 +35,9 @@ public class STEM
     public static final CreativeTabs STEM_TAB = new CreativeTabs(MOD_ID)
     {
         @Override
-        public Item getTabIconItem()
+        public ItemStack getTabIconItem()
         {
-            return Item.getItemFromBlock(StemFluids.fluidStem.getBlock());
+            return new ItemStack(StemFluids.fluidStem.getBlock());
         }
 
         @Override
@@ -60,25 +57,13 @@ public class STEM
     public void preInit(FMLPreInitializationEvent event)
     {
         //Initialize item, blocks, textures/models and configs here
+        LogHelper.setLogger(event.getModLog());
+
         CONFIG_DIR = new File(event.getModConfigurationDirectory(), STEM.MOD_ID);
         if(!CONFIG_DIR.mkdirs())
             LogHelper.error("Config directory either already exists or couldn't be created");
         ConfigHandler.init(new File(CONFIG_DIR, "config.cfg"));
-        MinecraftForge.EVENT_BUS.register(new ConfigHandler());
         CommonUtils.regNetwork();
-
-        StemFluids.regFluids();
-        StemItems.regItems();
-        StemBlocks.regBlocks();
-
-        WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
-
-        if(event.getSide() == Side.CLIENT)
-        {
-            StemFluids.regModels();
-            StemItems.regModels();
-            StemBlocks.regModels();
-        }
     }
 
     @Mod.EventHandler
@@ -86,14 +71,12 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
+        StemBlocks.regOres();
+        StemItems.regOres();
         StemRecipes.init();
-
-        if(event.getSide() == Side.CLIENT)
-            StemBlocks.regColours();
-        StemBlocks.regTileEntities();
+        WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-        MinecraftForge.EVENT_BUS.register(new WrenchHandler());
     }
 
     @Mod.EventHandler
@@ -101,6 +84,9 @@ public class STEM
     {
         //Run stuff after mods have initialized here
 
+        StemItems.ITEMS = null;
+        StemBlocks.BLOCKS = null;
+        StemBlocks.ITEM_BLOCKS = null;
     }
 
     @Mod.EventHandler

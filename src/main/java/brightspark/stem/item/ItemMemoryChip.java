@@ -1,6 +1,7 @@
 package brightspark.stem.item;
 
 import brightspark.stem.recipe.ClientRecipeCache;
+import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,18 +16,18 @@ public class ItemMemoryChip extends ItemBasic
 {
     public ItemMemoryChip()
     {
-        super("memChip");
+        super("mem_chip");
         setMaxStackSize(1);
     }
 
     public static boolean isMemoryEmpty(ItemStack memChipStack)
     {
-        return memChipStack == null || getMemory(memChipStack) == null;
+        return getMemory(memChipStack).isEmpty();
     }
 
     public static void setMemory(ItemStack memChipStack, ItemStack stack)
     {
-        if(stack == null)
+        if(stack.isEmpty())
         {
             clearMemory(memChipStack);
             return;
@@ -41,7 +42,7 @@ public class ItemMemoryChip extends ItemBasic
     public static ItemStack getMemory(ItemStack memChipStack)
     {
         NBTTagCompound memTag = memChipStack.getTagCompound();
-        return memTag == null ? null : ItemStack.loadItemStackFromNBT(memTag);
+        return memTag == null ? ItemStack.EMPTY : new ItemStack(memTag);
     }
 
     public static void clearMemory(ItemStack memChipStack)
@@ -59,29 +60,30 @@ public class ItemMemoryChip extends ItemBasic
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack stack, World world, EntityPlayer player, EnumHand hand)
+    public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand)
     {
+        ItemStack stack = player.getHeldItem(hand);
         //Clear memory on item
         if(player.isSneaking() && !isMemoryEmpty(stack))
         {
             clearMemory(stack);
-            if(world.isRemote) player.addChatMessage(new TextComponentString("Memory Cleared!"));
+            if(world.isRemote) player.sendMessage(new TextComponentString("Memory Cleared!"));
         }
-        return super.onItemRightClick(stack, world, player, hand);
+        return super.onItemRightClick(world, player, hand);
     }
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
     {
         ItemStack stackInMem = getMemory(stack);
-        if(stackInMem != null)
+        if(!stackInMem.isEmpty())
         {
             tooltip.add(stackInMem.getDisplayName());
-            int fluid = ClientRecipeCache.getFluidAmount(stackInMem);
+            long fluid = ClientRecipeCache.getFluidAmount(stackInMem);
             if(fluid < 0)
                 tooltip.add("Waiting for fluid data from server...");
             else
-                tooltip.add(fluid + "mb");
+                tooltip.add(CommonUtils.addDigitGrouping(fluid) + "mb");
         }
     }
 
@@ -97,7 +99,7 @@ public class ItemMemoryChip extends ItemBasic
     public String getHighlightTip(ItemStack stack, String displayName)
     {
         ItemStack stackInMem = getMemory(stack);
-        if(stackInMem != null)
+        if(!stackInMem.isEmpty())
             return displayName + " (" + stackInMem.getDisplayName() + ")";
         return super.getHighlightTip(stack, displayName);
     }

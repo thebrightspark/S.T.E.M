@@ -1,6 +1,8 @@
 package brightspark.stem.recipe;
 
+import brightspark.stem.Config;
 import brightspark.stem.STEM;
+import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
@@ -17,11 +19,11 @@ public class ServerRecipeManager
 {
     public static final char csvSeparator = ',';
     private static File stemRecipeFile;
-    private static List<StemRecipe> recipes;
+    private static List<StemRecipe> recipes = new ArrayList<>();
 
     public static boolean addRecipe(StemRecipe recipe)
     {
-        StemRecipe existingRecipe = getRecipeForStack(recipe.getOutput());
+        StemRecipe existingRecipe = getRecipeFromCache(recipe.getOutput());
         if(existingRecipe == null)
             recipes.add(recipe);
         else
@@ -45,6 +47,27 @@ public class ServerRecipeManager
         return false;
     }
 
+    public static List<StemRecipe> getRecipes()
+    {
+        CommonUtils.sortStemRecipeList(recipes);
+        return recipes;
+    }
+
+    public static StemRecipe getRecipeFromCache(ItemStack stack)
+    {
+        for(StemRecipe recipe : recipes)
+            if(recipe.isStackEqual(stack))
+                return recipe;
+        return null;
+    }
+
+    private static StemRecipe getRecipeInternal(ItemStack stack)
+    {
+        if(Config.useProceduralRecipeGen)
+            new RecipeGenerateTask(stack).run();
+        return getRecipeFromCache(stack);
+    }
+
     /**
      * Checks if a recipe exists for the given item.
      */
@@ -59,26 +82,17 @@ public class ServerRecipeManager
      */
     public static StemRecipe getRecipeForStack(ItemStack stack)
     {
-        if(stack == null)
-            return null;
-        if(recipes == null)
-            return new StemRecipe(stack, 0);
-        for(StemRecipe recipe : recipes)
-            if(recipe.isStackEqual(stack))
-                return recipe;
-        return new StemRecipe(stack, 0);
+        return stack.isEmpty() ? null : getRecipeInternal(stack);
     }
 
     /**
      * Get the amount of S.T.E.M needed to make the item.
      * Returns 0 if there's no recipe for the item.
      */
-    public static int getStemNeeded(ItemStack stack)
+    public static long getStemNeeded(ItemStack stack)
     {
-        for(StemRecipe recipe : recipes)
-            if(recipe.isStackEqual(stack))
-                return recipe.getFluidInput();
-        return 0;
+        StemRecipe recipe = getRecipeInternal(stack);
+        return recipe != null ? recipe.getFluidInput() : 0;
     }
 
     /**
@@ -115,12 +129,11 @@ public class ServerRecipeManager
             throw new RuntimeException("Couldn't close CSV Writer");
         }
 
-        LogHelper.info("Recipes saved successfully.");
+        LogHelper.info("Saved " + recipes.size() + " recipes successfully.");
     }
 
     public static void init()
     {
-        recipes = new ArrayList<StemRecipe>();
         stemRecipeFile = new File(STEM.CONFIG_DIR, "recipes.csv");
     }
 
@@ -178,7 +191,10 @@ public class ServerRecipeManager
             //Save recipes from file as recipe objects in the recipe array
             recipes.clear();
             for(String[] r : fromFile)
-                recipes.add(StemRecipe.fromCsvStringArray(r));
+            {
+                StemRecipe recipe = StemRecipe.fromCsvStringArray(r);
+                if(recipe != null) recipes.add(recipe);
+            }
 
             LogHelper.info("Recipe file read successfully.");
 

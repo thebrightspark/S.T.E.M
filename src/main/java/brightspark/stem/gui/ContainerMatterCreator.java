@@ -62,11 +62,12 @@ public class ContainerMatterCreator extends ContainerMachineBase
         }
 
         @Override
-        public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack)
+        public ItemStack onTake(EntityPlayer playerIn, ItemStack stack)
         {
-            super.onPickupFromSlot(playerIn, stack);
+            stack = super.onTake(playerIn, stack);
             //Stop creation and set energy to 0
             machine.stopCreation();
+            return stack;
         }
     }
 }

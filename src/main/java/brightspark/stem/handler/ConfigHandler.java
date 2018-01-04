@@ -7,14 +7,13 @@ import brightspark.stem.util.CommonUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 
 import java.io.File;
 
-/**
- * Created by Mark on 07/11/2016.
- */
+@Mod.EventBusSubscriber
 public class ConfigHandler
 {
     public static class Categories
@@ -54,12 +53,15 @@ public class ConfigHandler
         Config.matterCreatorMaxEnergyInput = configuration.getInt("matterCreatorMaxEnergyInput", Categories.MATTER_CREATOR, Config.matterCreatorMaxEnergyInput, -1, Integer.MAX_VALUE, "Use this to limit the energy input. If <= 0, then it'll accept infinite input (max integer for RF, max long for Tesla).");
         Config.matterCreatorEnergyPerMb = configuration.getInt("matterCreatorEnergyPerMb", Categories.MATTER_CREATOR, Config.matterCreatorEnergyPerMb, 1, Integer.MAX_VALUE, "Amount of energy used per mb of STEM fluid to create an item");
 
+        //Misc
+        Config.useProceduralRecipeGen = configuration.getBoolean("useProceduralRecipeGen", Configuration.CATEGORY_GENERAL, Config.useProceduralRecipeGen, "Whether recipes will attempt to be generated on the fly when requested from the server");
+
         if(configuration.hasChanged())
             configuration.save();
     }
 
     @SubscribeEvent
-    public void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
+    public static void onConfigurationChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event)
     {
         if(event.getModID().equalsIgnoreCase(STEM.MOD_ID))
             //Resync configs
@@ -67,10 +69,10 @@ public class ConfigHandler
     }
 
     @SubscribeEvent
-    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
+    public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event)
     {
         //Send necessary server configs to clients when they login
-        if(!event.player.worldObj.isRemote && event.player instanceof EntityPlayerMP)
+        if(!event.player.world.isRemote && event.player instanceof EntityPlayerMP)
             CommonUtils.NETWORK.sendTo(new MessageSyncConfigs(), (EntityPlayerMP) event.player);
     }
 }

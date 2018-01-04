@@ -16,7 +16,7 @@ public class BlockScannerStorage extends AbstractBlockContainerDirectional<TileS
 {
     public BlockScannerStorage()
     {
-        super("scannerStorage", Material.ROCK);
+        super("scanner_storage", Material.ROCK);
         setHasGui();
     }
 

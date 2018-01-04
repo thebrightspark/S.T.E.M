@@ -10,15 +10,17 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+@Mod.EventBusSubscriber
 public class WrenchHandler
 {
     /*
     private static final int fontColour = 0xFFFFFF;
 
     @SubscribeEvent
-    public void renderOverlay(RenderGameOverlayEvent event)
+    public static void renderOverlay(RenderGameOverlayEvent event)
     {
         Minecraft mc = Minecraft.getMinecraft();
         EntityPlayer player = mc.thePlayer;
@@ -55,7 +57,7 @@ public class WrenchHandler
     */
 
     @SubscribeEvent
-    public void doWrenchBreak(PlayerInteractEvent.RightClickBlock event)
+    public static void doWrenchBreak(PlayerInteractEvent.RightClickBlock event)
     {
         World world = event.getWorld();
         BlockPos pos = event.getPos();

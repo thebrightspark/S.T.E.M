@@ -62,14 +62,14 @@ public class TileLiquidEnergiser extends TileMachineWithFluid
         */
 
         //Handle slots
-        ItemStack slotStack;
+        ItemStack slotStack = slots.get(0);
         //Bucket input
-        if((slotStack = slots[0]) != null && slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots[1] == null)
+        if(slotStack.getItem().equals(Items.BUCKET) && getFluidAmount() >= Fluid.BUCKET_VOLUME && slots.get(1).isEmpty())
         {
             tank.drainInternal(Fluid.BUCKET_VOLUME, true);
-            slotStack.stackSize--;
-            if(slotStack.stackSize <= 0)
-                setInventorySlotContents(0, null);
+            slotStack.shrink(1);
+            if(slotStack.getCount() <= 0)
+                setInventorySlotContents(0, ItemStack.EMPTY);
             setInventorySlotContents(1, StemFluids.getStemBucket());
         }
 

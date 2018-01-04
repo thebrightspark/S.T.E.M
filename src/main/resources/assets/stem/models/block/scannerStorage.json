@@ -1,8 +1,0 @@
-{
-	"parent": "stem:block/machine",
-	"textures": {
-		"north": "stem:blocks/scannerStorage_front",
-		"east": "stem:blocks/scannerStorage_left",
-		"west": "stem:blocks/scannerStorage_right"
-	}
-}

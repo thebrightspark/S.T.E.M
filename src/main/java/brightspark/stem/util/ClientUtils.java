@@ -7,7 +7,6 @@ import brightspark.stem.tileentity.TileMachineWithFluid;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
@@ -15,7 +14,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.Fluid;
@@ -56,24 +54,18 @@ public class ClientUtils
     }
 
     //Register a liquid model
-    public static void regFluidModel(IFluidBlock fluidBlock)
+    public static void regModel(Fluid fluid)
     {
+        IFluidBlock fluidBlock = (IFluidBlock) fluid.getBlock();
         Item item = Item.getItemFromBlock((Block) fluidBlock);
         if(item == null)
         {
-            LogHelper.fatal("Fluid " + ((Block) fluidBlock).getRegistryName() + " gave a null Item!");
+            LogHelper.error("Fluid " + ((Block) fluidBlock).getRegistryName() + " gave a null Item!");
             return;
         }
         ModelBakery.registerItemVariants(item);
         final ModelResourceLocation modelLoc = new ModelResourceLocation(STEM.MOD_ID + ":liquid", fluidBlock.getFluid().getName());
-        ModelLoader.setCustomMeshDefinition(item, new ItemMeshDefinition()
-        {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack)
-            {
-                return modelLoc;
-            }
-        });
+        ModelLoader.setCustomMeshDefinition(item, stack -> modelLoc);
         ModelLoader.setCustomStateMapper((Block) fluidBlock, new StateMapperBase()
         {
             @Override

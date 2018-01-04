@@ -15,7 +15,7 @@ public class BlockMatterScanner extends AbstractBlockMachine<TileMatterScanner>
 {
     public BlockMatterScanner()
     {
-        super("matterScanner");
+        super("matter_scanner");
     }
 
     @Override

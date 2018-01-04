@@ -1,16 +1,21 @@
 package brightspark.stem.recipe;
 
-import brightspark.stem.message.MessageRecipeMakeDirty;
+import brightspark.stem.message.MessageRemoveCachedRecipe;
 import brightspark.stem.util.CommonUtils;
+import brightspark.stem.util.LogHelper;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,37 +25,48 @@ public class CommandStem extends CommandBase
     {
         if(ServerRecipeManager.removeRecipe(stack))
         {
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-            sender.addChatMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stack));
+            sender.sendMessage(new TextComponentString("Removed recipe for " + stack.getDisplayName()));
         }
         else
-            sender.addChatMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
+            sender.sendMessage(new TextComponentString("No recipe found for " + stack.getDisplayName()));
     }
 
     private void addRecipe(ICommandSender sender, ItemStack stack, int fluidAmount)
     {
         if(ServerRecipeManager.addRecipe(new StemRecipe(stack, fluidAmount)))
         {
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(stack));
-            sender.addChatMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stack));
+            sender.sendMessage(new TextComponentString("Added recipe for " + stack.getDisplayName() + " with " + fluidAmount + "mb"));
         }
         else
-            sender.addChatMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
+            sender.sendMessage(new TextComponentString("Recipe for " + stack.getDisplayName() + " already exists!"));
     }
 
+    private ITextComponent recipeToMessage(StemRecipe recipe)
+    {
+        return new TextComponentTranslation(recipe.getOutput().getUnlocalizedName() + ".name")
+                .appendSibling(new TextComponentString(" -> " + recipe.fluidInput + "mb"));
+    }
+
+
+
     @Override
-    public String getCommandName()
+    public String getName()
     {
         return "stem";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender)
+    public String getUsage(ICommandSender sender)
     {
         String text = "\nAdd Specific Item: stem add <itemId> [itemMeta] <fluidAmount>" +
-                "\n Remove Specific Item: stem remove <itemId> [itemMeta]" +
-                "\n Save Recipes To File: stem save" +
-                "\n Reset Recipe File To Default : stem reset";
+                "\nRemove Specific Item: stem remove <itemId> [itemMeta]" +
+                "\nList Recipes: stem list [page]" +
+                "\nList Item Recipe: stem list [itemId] [itemMeta]" +
+                "\nSave Recipes To File: stem save" +
+                "\nReset Recipe File To Default: stem reset" +
+                "\nReload Recipes From File: stem load";
         if(sender instanceof EntityPlayer)
             text += "\nAdd Held Item: stem add <fluidAmount>" +
                     "\nRemove Held Item: stem remove";
@@ -58,7 +74,7 @@ public class CommandStem extends CommandBase
     }
 
     @Override
-    public List<String> getCommandAliases()
+    public List<String> getAliases()
     {
         return Collections.emptyList();
     }
@@ -69,7 +85,7 @@ public class CommandStem extends CommandBase
         if(sender.getEntityWorld().isRemote)
             return;
         if(args.length == 0)
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
 
         boolean isPlayer = sender instanceof EntityPlayer;
 
@@ -80,13 +96,13 @@ public class CommandStem extends CommandBase
                 //Remove held item
                 if(isPlayer)
                 {
-                    if(((EntityPlayer) sender).getHeldItemMainhand() == null)
+                    if(((EntityPlayer) sender).getHeldItemMainhand().isEmpty())
                         throw new CommandException("No item held");
                     else
                     {
                         //Remove recipe
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
-                        heldItem.stackSize = 1;
+                        heldItem.setCount(1);
                         removeRecipe(sender, heldItem);
                     }
                 }
@@ -126,12 +142,12 @@ public class CommandStem extends CommandBase
                 //Add held item
                 if(isPlayer)
                 {
-                    if(((EntityPlayer) sender).getHeldItemMainhand() == null)
+                    if(((EntityPlayer) sender).getHeldItemMainhand().isEmpty())
                         throw new CommandException("No item held");
                     else
                     {
                         ItemStack heldItem = ((EntityPlayer) sender).getHeldItemMainhand().copy();
-                        heldItem.stackSize = 1;
+                        heldItem.setCount(1);
                         int fluidAmount;
                         try
                         {
@@ -190,24 +206,142 @@ public class CommandStem extends CommandBase
             }
             else
                 //Incorrect command
-                throw new WrongUsageException(getCommandUsage(sender));
+                throw new WrongUsageException(getUsage(sender));
         }
         else if(args[0].equals("save") || args[0].equals("s"))
         {
             //Save recipes
             ServerRecipeManager.saveRecipes();
-            sender.addChatMessage(new TextComponentString("Recipes saved"));
+            sender.sendMessage(new TextComponentString("Recipes saved"));
         }
         else if(args[0].equals("reset"))
         {
             //Reset recipes to default
             ServerRecipeManager.resetRecipeFile();
-            CommonUtils.NETWORK.sendToAll(new MessageRecipeMakeDirty(null));
-            sender.addChatMessage(new TextComponentString("Recipes reset to default"));
+            CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe());
+            sender.sendMessage(new TextComponentString("Recipes reset to default"));
+        }
+        else if(args[0].equals("load"))
+        {
+            //Reload the recipes from the file - will invalidate clients for changes
+            List<StemRecipe> oldRecipes = new ArrayList<>(ServerRecipeManager.getRecipes());
+            ServerRecipeManager.readRecipeFile();
+            List<StemRecipe> newRecipes = ServerRecipeManager.getRecipes();
+
+            //Detect all changes
+            List<StemRecipe> changes = new ArrayList<>();
+            newRecipes.forEach(recipe -> {
+                //If a new recipe was added, add to changed
+                if(!oldRecipes.contains(recipe))
+                    changes.add(recipe);
+                else
+                {
+                    for(StemRecipe r : oldRecipes)
+                        //If a recipe has changed, add to changed
+                        if(recipe.isStackEqual(r.getOutput()) && r.getFluidInput() != recipe.getFluidInput())
+                            changes.add(recipe);
+                }
+            });
+            oldRecipes.forEach(recipe -> {
+                //If an old recipe was removed, then add to changed
+                if(!newRecipes.contains(recipe))
+                    changes.add(recipe);
+            });
+
+            if(!changes.isEmpty())
+            {
+                //Update clients with changes
+                List<ItemStack> stacks = new ArrayList<>(changes.size());
+                changes.forEach(recipe -> stacks.add(recipe.getOutput()));
+                LogHelper.info("Sending %s recipe invalidations to clients", stacks.size());
+                CommonUtils.NETWORK.sendToAll(new MessageRemoveCachedRecipe(stacks.toArray(new ItemStack[stacks.size()])));
+            }
+        }
+        else if(args[0].equals("list") || args[0].equals("l"))
+        {
+            //List the recipes
+            int page = Integer.MIN_VALUE;
+            if(args.length > 1)
+            {
+                try
+                {
+                    page = Integer.valueOf(args[1]);
+                }
+                catch(NumberFormatException e) {}
+            }
+
+            if(args.length == 1 || page != Integer.MIN_VALUE)
+            {
+                //Show list of all recipes in pages
+                List<StemRecipe> recipes = ServerRecipeManager.getRecipes();
+                if(recipes.size() == 0)
+                {
+                    sender.sendMessage(new TextComponentTranslation("message.recipes.none"));
+                    return;
+                }
+
+                if(page < 0) page = 0;
+                int numRecipes = recipes.size();
+                int recipesPerPage = 9;
+                int pageMax = numRecipes / recipesPerPage;
+                //We reduce the given page number by 1, because we calculate starting from page 0, but is shown to start from page 1.
+                if(page > 0) page--;
+                if(page * recipesPerPage > numRecipes) page = pageMax;
+
+                //Work out the range to display on the page
+                int min = page * recipesPerPage;
+                int max = min + recipesPerPage;
+                if(numRecipes < max) max = numRecipes;
+
+                //Create the String to send to the player
+                ITextComponent text = new TextComponentString(TextFormatting.YELLOW + "============= ");
+                TextComponentTranslation titleText = new TextComponentTranslation("message.recipes.title", (page + 1), (pageMax + 1));
+                titleText.getStyle().setColor(TextFormatting.GOLD);
+                text.appendSibling(titleText);
+                text.appendText(TextFormatting.YELLOW +  " =============");
+                for(int i = min; i < max; i++)
+                {
+                    StemRecipe recipe = recipes.get(i);
+                    text.appendSibling(new TextComponentString("\n  ")).appendSibling(recipeToMessage(recipe));
+                }
+                sender.sendMessage(text);
+            }
+            else
+            {
+                //Search for recipe of particular item
+                Item search = Item.getByNameOrId(args[1]);
+                if(search == null)
+                {
+                    sender.sendMessage(new TextComponentTranslation("message.recipe.cantfinditem", args[1]));
+                    return;
+                }
+                int meta = Integer.MIN_VALUE;
+                if(args.length >= 3)
+                {
+                    try
+                    {
+                        meta = Integer.parseInt(args[2]);
+                    }
+                    catch(NumberFormatException e) {}
+                }
+                ItemStack stack = meta == Integer.MIN_VALUE ? new ItemStack(search) : new ItemStack(search, 1, meta);
+                StemRecipe searchRecipe = ServerRecipeManager.getRecipeForStack(stack);
+                if(searchRecipe == null)
+                {
+                    sender.sendMessage(new TextComponentTranslation("message.recipe.cantfindrecipe", args[1]));
+                    return;
+                }
+                sender.sendMessage(recipeToMessage(searchRecipe));
+            }
+        }
+        else if(args[0].equalsIgnoreCase("generate"))
+        {
+            //Generate stem recipes
+            RecipeGenerator.generateRecipes(sender);
         }
         else
             //Incorrect command
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
     }
 
     /**
@@ -219,12 +353,12 @@ public class CommandStem extends CommandBase
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
     {
         switch(args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s", "reset");
+                return getListOfStringsMatchingLastWord(args, "add", "a", "remove", "r", "save", "s", "reset", "load", "list", "l");
             case 2:
                 return getListOfStringsMatchingLastWord(args, Item.REGISTRY.getKeys());
             default:

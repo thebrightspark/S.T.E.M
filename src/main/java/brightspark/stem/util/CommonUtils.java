@@ -17,8 +17,6 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class CommonUtils
@@ -33,7 +31,15 @@ public class CommonUtils
         NETWORK.registerMessage(MessageRecipeRequest.Handler.class, MessageRecipeRequest.class, 2, Side.SERVER);
         NETWORK.registerMessage(MessageRecipeReply.Handler.class, MessageRecipeReply.class, 3, Side.CLIENT);
         NETWORK.registerMessage(MessageSyncConfigs.Handler.class, MessageSyncConfigs.class, 4, Side.CLIENT);
-        NETWORK.registerMessage(MessageRecipeMakeDirty.Handler.class, MessageRecipeMakeDirty.class, 5, Side.CLIENT);
+        NETWORK.registerMessage(MessageRemoveCachedRecipe.Handler.class, MessageRemoveCachedRecipe.class, 5, Side.CLIENT);
+    }
+
+    /**
+     * Returns a string of the inputted number with commas added to group the digits.
+     */
+    public static String addDigitGrouping(long number)
+    {
+        return addDigitGrouping(Long.toString(number));
     }
 
     /**
@@ -99,7 +105,7 @@ public class CommonUtils
 
     public static boolean isStemBucket(ItemStack stack)
     {
-        return stack != null && stack.getItem() instanceof UniversalBucket && ((UniversalBucket) stack.getItem()).getFluid(stack).getFluid().equals(StemFluids.fluidStem);
+        return stack.getItem() instanceof UniversalBucket && ((UniversalBucket) stack.getItem()).getFluid(stack).getFluid().equals(StemFluids.fluidStem);
     }
 
     public static ItemStack readStackFromBuf(ByteBuf buf)
@@ -120,14 +126,12 @@ public class CommonUtils
      */
     public static void sortItemStackList(List<ItemStack> list)
     {
-        Collections.sort(list, new Comparator<ItemStack>()
-        {
-            @Override
-            public int compare(ItemStack o1, ItemStack o2)
-            {
-                return o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName());
-            }
-        });
+        list.sort((o1, o2) -> o1.getDisplayName().compareToIgnoreCase(o2.getDisplayName()));
+    }
+
+    public static void sortStemRecipeList(List<StemRecipe> list)
+    {
+        list.sort((o1, o2) -> o1.getOutput().getDisplayName().compareToIgnoreCase(o2.getOutput().getDisplayName()));
     }
 
     /**
@@ -162,6 +166,19 @@ public class CommonUtils
     {
         StemRecipe recipe = getRecipeForStack(stack);
         return recipe != null && recipe.getFluidInput() > 0;
+    }
+
+    /**
+     * Returns an ItemStack as a string in a good format for logging
+     */
+    public static String stackToString(ItemStack stack)
+    {
+        String stackName;
+        if(stack.getItem().getRegistryName().getResourcePath().equalsIgnoreCase("xtones"))
+            stackName = stack.getItem().getRegistryName().toString();
+        else
+            stackName = stack.getDisplayName();
+        return String.format("%s (%s)", stackName, stack);
     }
 
     /**

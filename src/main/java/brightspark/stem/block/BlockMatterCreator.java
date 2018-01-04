@@ -15,7 +15,7 @@ public class BlockMatterCreator extends AbstractBlockMachine<TileMatterCreator>
 {
     public BlockMatterCreator()
     {
-        super("matterCreator");
+        super("matter_creator");
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
@@ -29,7 +30,7 @@ public abstract class AbstractBlockContainerDirectional<T extends TileEntity> ex
      * IBlockstate
      */
     @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand)
     {
         return getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
@@ -50,7 +51,7 @@ public abstract class AbstractBlockContainerDirectional<T extends TileEntity> ex
     @Override
     public IBlockState getStateFromMeta(int meta)
     {
-        return this.getDefaultState().withProperty(FACING, EnumFacing.getFront(meta));
+        return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
     }
 
     /**
@@ -59,7 +60,7 @@ public abstract class AbstractBlockContainerDirectional<T extends TileEntity> ex
     @Override
     public int getMetaFromState(IBlockState state)
     {
-        return state.getValue(FACING).getIndex();
+        return state.getValue(FACING).getHorizontalIndex();
     }
 
     /**

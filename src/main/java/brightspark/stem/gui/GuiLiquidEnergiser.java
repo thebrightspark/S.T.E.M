@@ -14,7 +14,7 @@ public class GuiLiquidEnergiser extends GuiMachineBase
 
     public GuiLiquidEnergiser(InventoryPlayer invPlayer, TileLiquidEnergiser machine)
     {
-        super(new ContainerLiquidEnergiser(invPlayer, machine), "liquidEnergiser");
+        super(new ContainerLiquidEnergiser(invPlayer, machine), "liquid_energiser");
     }
 
     @Override
@@ -28,10 +28,10 @@ public class GuiLiquidEnergiser extends GuiMachineBase
     protected void drawText()
     {
         super.drawText();
-        fontRendererObj.drawString(I18n.format("gui.progress"), 8, 30, textColour);
-        fontRendererObj.drawString(te.getProgressString(), 8, 40, textColour);
-        //fontRendererObj.drawString(I18n.format("gui.averageInput"), 8, 55, textColour);
-        //fontRendererObj.drawString(((TileLiquidEnergiser) te).getAverageInputString(), 8, 65, textColour);
+        fontRenderer.drawString(I18n.format("gui.progress"), 8, 30, textColour);
+        fontRenderer.drawString(te.getProgressString(), 8, 40, textColour);
+        //fontRenderer.drawString(I18n.format("gui.averageInput"), 8, 55, textColour);
+        //fontRenderer.drawString(((TileLiquidEnergiser) te).getAverageInputString(), 8, 65, textColour);
     }
 
     @Override

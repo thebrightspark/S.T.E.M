@@ -37,7 +37,7 @@ public class MessageRecipeRequest implements IMessage
         public IMessage onMessage(MessageRecipeRequest message, MessageContext ctx)
         {
             //Sends recipe data back to the client
-            int fluidAmount = ServerRecipeManager.getStemNeeded(message.recipeStack);
+            long fluidAmount = ServerRecipeManager.getStemNeeded(message.recipeStack);
             return new MessageRecipeReply(message.recipeStack, fluidAmount);
         }
     }

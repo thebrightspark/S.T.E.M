@@ -73,11 +73,11 @@ public abstract class AbstractBlockContainer<T extends TileEntity> extends Block
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ)
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ)
     {
         if(!hasGui)
-            return super.onBlockActivated(world, pos, state, player, hand, heldItem, side, hitX, hitY, hitZ);
-        if(!player.isSneaking() && !WrenchHelper.isWrench(heldItem))
+            return super.onBlockActivated(world, pos, state, player, hand, side, hitX, hitY, hitZ);
+        if(!player.isSneaking() && !WrenchHelper.isWrench(player.getHeldItem(hand)))
             player.openGui(STEM.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }

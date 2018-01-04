@@ -13,7 +13,7 @@ public class GuiMatterScanner extends GuiMachineBase
 
     public GuiMatterScanner(InventoryPlayer invPlayer, TileMatterScanner machine)
     {
-        super(new ContainerMatterScanner(invPlayer, machine), "matterScanner");
+        super(new ContainerMatterScanner(invPlayer, machine), "matter_scanner");
     }
 
     @Override
@@ -29,8 +29,8 @@ public class GuiMatterScanner extends GuiMachineBase
         super.drawText();
 
         TileMatterScanner scanner = (TileMatterScanner) te;
-        drawCenteredString(fontRendererObj, I18n.format("gui.progress") + " " + scanner.getProgressString(), 20, textColour);
+        drawCenteredString(fontRenderer, I18n.format("gui.progress") + " " + scanner.getProgressString(), 20, textColour);
         int colour = scanner.getScanStatusColour();
-        drawCenteredString(fontRendererObj, I18n.format("gui.status") + " " + scanner.getScanStatus(), 66, colour);
+        drawCenteredString(fontRenderer, I18n.format("gui.status") + " " + scanner.getScanStatus(), 66, colour);
     }
 }

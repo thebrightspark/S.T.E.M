@@ -3,12 +3,8 @@ package brightspark.stem.init;
 import brightspark.stem.item.ItemBasicSubTypes;
 import brightspark.stem.item.ItemMemoryChip;
 import brightspark.stem.item.ItemWrench;
-import brightspark.stem.util.ClientUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;
@@ -16,36 +12,39 @@ import java.util.List;
 
 public class StemItems
 {
-    public static List<Item> ITEMS = new ArrayList<Item>();
+    public static List<Item> ITEMS;
 
     public static ItemBasicSubTypes itemBasic;
     public static ItemMemoryChip itemMemoryChip;
     public static ItemWrench itemWrench;
 
-    public static void registerItem(Item item)
+    public static void addItem(Item item)
     {
-        GameRegistry.register(item);
         ITEMS.add(item);
     }
 
-    public static void regItems()
+    public static void init()
     {
-        registerItem(itemBasic = new ItemBasicSubTypes("basic",
-                "blusteelCompound", "ingotBlusteel", "machineProcessor", "internalTank", "memBank",
-                "largeMemBank", "energyCircuit", "infDevice", "scanDevice", "memReader", "memWriter", "exciter",
-                "former", "compressor"));
-        registerItem(itemMemoryChip = new ItemMemoryChip());
-        registerItem(itemWrench = new ItemWrench());
+        ITEMS = new ArrayList<>();
 
-        for(int i = 0; i < itemBasic.getSubNames().length; i++)
-            OreDictionary.registerOre(itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
-        OreDictionary.registerOre("memChip", itemMemoryChip);
+        addItem(itemBasic = new ItemBasicSubTypes("basic",
+                "blusteel_compound", "ingot_blusteel", "machine_processor", "internal_tank", "mem_bank",
+                "large_mem_bank", "energy_circuit", "inf_device", "scan_device", "mem_reader", "mem_writer", "exciter",
+                "former", "compressor"));
+        addItem(itemMemoryChip = new ItemMemoryChip());
+        addItem(itemWrench = new ItemWrench());
     }
 
-    @SideOnly(Side.CLIENT)
-    public static void regModels()
+    public static Item[] getItems()
     {
-        for(Item item : ITEMS)
-            ClientUtils.regModel(item);
+        if(ITEMS == null) init();
+        return ITEMS.toArray(new Item[ITEMS.size()]);
+    }
+
+    public static void regOres()
+    {
+        for(int i = 0; i < itemBasic.getSubNames().length; i++)
+            OreDictionary.registerOre(itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
+        OreDictionary.registerOre("mem_chip", itemMemoryChip);
     }
 }

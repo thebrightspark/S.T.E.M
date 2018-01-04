@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=down": { "model": "stem:liquid_energiser", "x": 90 },
+		"facing=up": { "model": "stem:liquid_energiser", "x": 270 },
+		"facing=north": { "model": "stem:liquid_energiser"},
+		"facing=south": { "model": "stem:liquid_energiser", "y": 180 },
+		"facing=west": { "model": "stem:liquid_energiser", "y": 270 },
+		"facing=east": { "model": "stem:liquid_energiser", "y": 90 }
+	}
+}

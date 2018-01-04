@@ -1,27 +1,18 @@
 package brightspark.stem.tileentity;
 
 import brightspark.stem.Config;
-import brightspark.stem.block.BlockScannerStorage;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.item.ItemMemoryChip;
-import brightspark.stem.recipe.ClientRecipeCache;
 import brightspark.stem.recipe.StemRecipe;
 import brightspark.stem.util.CommonUtils;
-import cofh.api.energy.IEnergyContainerItem;
-import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TileMatterCreator extends TileMachineWithFluid
 {
@@ -165,13 +156,13 @@ public class TileMatterCreator extends TileMachineWithFluid
      */
     private boolean canOutput()
     {
-        ItemStack outputStack = slots[3];
-        return outputStack == null || (recipeCache != null && outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.stackSize < 64);
+        ItemStack outputStack = slots.get(3);
+        return outputStack.isEmpty() || (recipeCache != null && outputStack.isItemEqual(recipeCache.getOutput()) && outputStack.getCount() < 64);
     }
 
     private boolean hasMemoryChip()
     {
-        return slots[2] != null && slots[2].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[2]);
+        return slots.get(2).getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots.get(2));
     }
 
     /*
@@ -191,7 +182,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     public boolean canWork()
     {
         if(recipeCache == null)
-            updateCachedRecipe(hasMemoryChip() ? ItemMemoryChip.getMemory(slots[2]) : null);
+            updateCachedRecipe(hasMemoryChip() ? ItemMemoryChip.getMemory(slots.get(2)) : null);
         return super.canWork() && recipeCache != null && tank.getFluidAmount() > 0 && hasMemoryChip() && canOutput() && progress < recipeCache.getFluidInput();
     }
 
@@ -231,9 +222,9 @@ public class TileMatterCreator extends TileMachineWithFluid
         if(progress >= recipeCache.getFluidInput())
         {
             //Craft item
-            ItemStack stackInOutputSlot = slots[3];
-            if(stackInOutputSlot != null && stackInOutputSlot.isItemEqual(recipeCache.getOutput()))
-                stackInOutputSlot.stackSize++;
+            ItemStack stackInOutputSlot = slots.get(3);
+            if(stackInOutputSlot.isItemEqual(recipeCache.getOutput()))
+                stackInOutputSlot.grow(1);
             else
                 setInventorySlotContents(3, recipeCache.getOutput().copy());
             progress = 0;
@@ -247,15 +238,15 @@ public class TileMatterCreator extends TileMachineWithFluid
 
         //Handle slots
         //Bucket input
-        if(CommonUtils.isStemBucket(slots[0]) && getFluidSpace() >= Fluid.BUCKET_VOLUME &&
-                (slots[1] == null || slots[1].getItem().equals(Items.BUCKET)))
+        if(CommonUtils.isStemBucket(slots.get(0)) && getFluidSpace() >= Fluid.BUCKET_VOLUME &&
+                (slots.get(1).isEmpty() || slots.get(1).getItem().equals(Items.BUCKET)))
         {
             tank.fillInternal(Fluid.BUCKET_VOLUME, true);
-            slots[0].stackSize--;
-            if(slots[0].stackSize <= 0)
-                setInventorySlotContents(0, null);
-            if(slots[1] != null && slots[1].getItem().equals(Items.BUCKET))
-                slots[1].stackSize++;
+            slots.get(0).shrink(1);
+            if(slots.get(0).getCount() <= 0)
+                setInventorySlotContents(0, ItemStack.EMPTY);
+            if(slots.get(1).getItem().equals(Items.BUCKET))
+                slots.get(1).grow(1);
             else
                 setInventorySlotContents(1, new ItemStack(Items.BUCKET));
         }

@@ -14,7 +14,7 @@ public class GuiMatterCreator extends GuiMachineBase
 
     public GuiMatterCreator(InventoryPlayer invPlayer, TileMatterCreator machine)
     {
-        super(new ContainerMatterCreator(invPlayer, machine), "matterCreator");
+        super(new ContainerMatterCreator(invPlayer, machine), "matter_creator");
     }
 
     @Override
@@ -29,11 +29,11 @@ public class GuiMatterCreator extends GuiMachineBase
     protected void drawText()
     {
         super.drawText();
-        fontRendererObj.drawString(I18n.format("gui.progress") + " " + te.getProgressString(), 75, 22, textColour);
+        fontRenderer.drawString(I18n.format("gui.progress") + " " + te.getProgressString(), 75, 22, textColour);
         TileMatterCreator creator = (TileMatterCreator) te;
         int colour = creator.getCreationStatusColour();
-        fontRendererObj.drawString(I18n.format("gui.status"), 75, 65, colour);
-        fontRendererObj.drawString(creator.getCreationStatus(), 75, 77, colour);
+        fontRenderer.drawString(I18n.format("gui.status"), 75, 65, colour);
+        fontRenderer.drawString(creator.getCreationStatus(), 75, 77, colour);
     }
 
     @Override

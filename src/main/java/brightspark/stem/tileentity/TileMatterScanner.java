@@ -4,8 +4,10 @@ import brightspark.stem.Config;
 import brightspark.stem.block.BlockScannerStorage;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.item.ItemMemoryChip;
+import brightspark.stem.recipe.StemRecipe;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,6 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class TileMatterScanner extends TileMachine
 {
     private EnumScanStatus scanStatus = EnumScanStatus.INACTIVE;
+    private StemRecipe cachedRecipe = null;
 
     private static final int colourRed = 0xD20000;
     private static final int colourGold = 0xFF8200;
@@ -70,13 +73,20 @@ public class TileMatterScanner extends TileMachine
         return Config.matterScannerEnergyPerTick;
     }
 
+    private boolean hasRecipeForStack()
+    {
+        if(cachedRecipe == null || !cachedRecipe.isStackEqual(slots.get(0)))
+            cachedRecipe = CommonUtils.getRecipeForStack(slots.get(0));
+        return cachedRecipe != null && cachedRecipe.getFluidInput() > 0;
+    }
+
     @Override
     public boolean canWork()
     {
         if(isWorking())
             return super.canWork();
         else
-            return super.canWork() && slots[0] != null && hasStorageDestination() && CommonUtils.hasRecipeForStack(slots[0]);
+            return super.canWork() && !slots.get(0).isEmpty() && hasStorageDestination() && hasRecipeForStack();
     }
 
     @Override
@@ -90,15 +100,15 @@ public class TileMatterScanner extends TileMachine
         if(progress >= 100)
         {
             //Finish scan
-            if(slots[1] != null)
-                ItemMemoryChip.setMemory(slots[1], slots[0]);
+            if(!slots.get(1).isEmpty())
+                ItemMemoryChip.setMemory(slots.get(1), slots.get(0));
             else
             {
                 TileScannerStorage storage = getAdjacentStorage();
                 if(storage != null)
-                    storage.storeRecipe(slots[0]);
+                    storage.storeRecipe(slots.get(0));
             }
-            slots[0] = null;
+            slots.set(0, ItemStack.EMPTY);
             progress = 0;
         }
     }
@@ -111,16 +121,16 @@ public class TileMatterScanner extends TileMachine
         //Update scan status
         if(progress == 0)
         {
-            if(slots[0] != null && !CommonUtils.hasRecipeForStack(slots[0]))
+            if(!slots.get(0).isEmpty() && !CommonUtils.hasRecipeForStack(slots.get(0)))
                 scanStatus = EnumScanStatus.NO_RECIPE;
-            else if(slots[0] != null && !hasStorageDestination())
+            else if(!slots.get(0).isEmpty() && !hasStorageDestination())
                 scanStatus = EnumScanStatus.NO_STORAGE;
-            else if(!ItemMemoryChip.isMemoryEmpty(slots[1]))
+            else if(!ItemMemoryChip.isMemoryEmpty(slots.get(1)))
                 scanStatus = EnumScanStatus.COMPLETE;
             else
                 scanStatus = EnumScanStatus.INACTIVE;
         }
-        else if(slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots[1]))
+        else if(slots.get(1).getItem() instanceof ItemMemoryChip && !ItemMemoryChip.isMemoryEmpty(slots.get(1)))
             scanStatus = EnumScanStatus.COMPLETE;
         else if(!hasStorageDestination())
             scanStatus = EnumScanStatus.NO_STORAGE;
@@ -138,13 +148,13 @@ public class TileMatterScanner extends TileMachine
 
     private boolean hasMemoryChip()
     {
-        return slots[1] != null && slots[1].getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots[1]);
+        return slots.get(1).getItem() instanceof ItemMemoryChip && ItemMemoryChip.isMemoryEmpty(slots.get(1));
     }
 
     private boolean hasAdjacentStorage()
     {
         for(EnumFacing side : EnumFacing.VALUES)
-            if(worldObj.getBlockState(pos.offset(side)).getBlock() instanceof BlockScannerStorage)
+            if(world.getBlockState(pos.offset(side)).getBlock() instanceof BlockScannerStorage)
                 return true;
         return false;
     }
@@ -156,8 +166,8 @@ public class TileMatterScanner extends TileMachine
     private TileScannerStorage getAdjacentStorage()
     {
         for(EnumFacing side : EnumFacing.VALUES)
-            if(worldObj.getBlockState(pos.offset(side)).getBlock() instanceof BlockScannerStorage)
-                return (TileScannerStorage) worldObj.getTileEntity(pos.offset(side));
+            if(world.getBlockState(pos.offset(side)).getBlock() instanceof BlockScannerStorage)
+                return (TileScannerStorage) world.getTileEntity(pos.offset(side));
         return null;
     }
 }

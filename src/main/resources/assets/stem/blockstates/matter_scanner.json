@@ -1,0 +1,10 @@
+{
+	"variants": {
+		"facing=down": { "model": "stem:matter_scanner", "x": 90 },
+		"facing=up": { "model": "stem:matter_scanner", "x": 270 },
+		"facing=north": { "model": "stem:matter_scanner"},
+		"facing=south": { "model": "stem:matter_scanner", "y": 180 },
+		"facing=west": { "model": "stem:matter_scanner", "y": 270 },
+		"facing=east": { "model": "stem:matter_scanner", "y": 90 }
+	}
+}
