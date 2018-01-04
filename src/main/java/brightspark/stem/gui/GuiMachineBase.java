@@ -56,10 +56,11 @@ public class GuiMachineBase extends GuiContainer
 
         mouseX -= guiLeft;
         mouseY -= guiTop;
-        List<String> tooltip = new ArrayList<String>();
+        List<String> tooltip = new ArrayList<>();
         drawTooltips(tooltip, mouseX, mouseY);
         if(!tooltip.isEmpty())
             drawHoveringText(tooltip, mouseX, mouseY);
+        renderHoveredToolTip(mouseX, mouseY);
     }
 
     protected void drawText()

@@ -3,14 +3,10 @@ package brightspark.stem.tileentity;
 import brightspark.stem.Config;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.init.StemFluids;
-import brightspark.stem.util.CommonUtils;
-import cofh.api.energy.IEnergyContainerItem;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
-
-import java.util.Arrays;
 
 public class TileLiquidEnergiser extends TileMachineWithFluid
 {

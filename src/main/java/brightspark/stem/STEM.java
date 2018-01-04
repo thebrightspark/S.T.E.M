@@ -20,12 +20,13 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.io.File;
 
-@Mod(modid = STEM.MOD_ID, name = STEM.MOD_NAME, version = STEM.VERSION)
+@Mod(modid = STEM.MOD_ID, name = STEM.MOD_NAME, version = STEM.VERSION, dependencies = STEM.DEPENDENCIES)
 public class STEM
 {
     public static final String MOD_ID = "stem";
     public static final String MOD_NAME = "S.T.E.M";
-    public static final String VERSION = "1.10.2-0.1.0";
+    public static final String VERSION = "@VERSION@";
+    public static final String DEPENDENCIES = "after:redstoneflux";
     public static final String GUI_TEXTURE_DIR = "textures/gui/";
     public static File CONFIG_DIR;
 
@@ -73,7 +74,6 @@ public class STEM
 
         StemBlocks.regOres();
         StemItems.regOres();
-        StemRecipes.init();
         WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
 
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
@@ -87,6 +87,7 @@ public class STEM
         StemItems.ITEMS = null;
         StemBlocks.BLOCKS = null;
         StemBlocks.ITEM_BLOCKS = null;
+        StemRecipes.RECIPES = null;
     }
 
     @Mod.EventHandler

@@ -4,7 +4,7 @@ import brightspark.stem.Config;
 import brightspark.stem.energy.StemEnergyStorage;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.NBTHelper;
-import cofh.api.energy.IEnergyReceiver;
+import cofh.redstoneflux.api.IEnergyReceiver;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

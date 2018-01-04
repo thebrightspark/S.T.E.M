@@ -4,7 +4,6 @@ import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.CommonUtils;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IThreadListener;
@@ -14,21 +13,22 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class MessageUpdateTileRecipe implements IMessage
+import java.util.ArrayList;
+import java.util.List;
+
+public class MessageUpdateTileRecipes implements IMessage
 {
     public int x, y, z;
-    public int index;
-    public ItemStack recipeStack;
+    public List<ItemStack> recipeStacks;
 
-    public MessageUpdateTileRecipe() {}
+    public MessageUpdateTileRecipes() {}
 
-    public MessageUpdateTileRecipe(BlockPos pos, int index, ItemStack recipeStack)
+    public MessageUpdateTileRecipes(BlockPos pos, List<ItemStack> recipeStacks)
     {
         x = pos.getX();
         y = pos.getY();
         z = pos.getZ();
-        this.index = index;
-        this.recipeStack = recipeStack;
+        this.recipeStacks = recipeStacks;
     }
 
     @Override
@@ -37,8 +37,10 @@ public class MessageUpdateTileRecipe implements IMessage
         x = buf.readInt();
         y = buf.readInt();
         z = buf.readInt();
-        index = buf.readInt();
-        recipeStack = CommonUtils.readStackFromBuf(buf);
+        int size = buf.readInt();
+        recipeStacks = new ArrayList<>(size);
+        for(int i = 0; i < size; i++)
+            recipeStacks.add(CommonUtils.readStackFromBuf(buf));
     }
 
     @Override
@@ -47,8 +49,8 @@ public class MessageUpdateTileRecipe implements IMessage
         buf.writeInt(x);
         buf.writeInt(y);
         buf.writeInt(z);
-        buf.writeInt(index);
-        CommonUtils.writeStackToBuf(buf, recipeStack);
+        buf.writeInt(recipeStacks.size());
+        recipeStacks.forEach(stack -> CommonUtils.writeStackToBuf(buf, stack));
     }
 
     public BlockPos getPos()
@@ -56,10 +58,10 @@ public class MessageUpdateTileRecipe implements IMessage
         return new BlockPos(x, y, z);
     }
 
-    public static class Handler implements IMessageHandler<MessageUpdateTileRecipe, IMessage>
+    public static class Handler implements IMessageHandler<MessageUpdateTileRecipes, IMessage>
     {
         @Override
-        public IMessage onMessage(final MessageUpdateTileRecipe message, MessageContext ctx)
+        public IMessage onMessage(final MessageUpdateTileRecipes message, MessageContext ctx)
         {
             final IThreadListener mainThread = Minecraft.getMinecraft();
             mainThread.addScheduledTask(new Runnable()
@@ -70,7 +72,7 @@ public class MessageUpdateTileRecipe implements IMessage
                     World world = Minecraft.getMinecraft().world;
                     TileEntity te = world.getTileEntity(message.getPos());
                     if(te instanceof TileScannerStorage)
-                        ((TileScannerStorage) te).setRecipeAtIndex(message.index, message.recipeStack);
+                        ((TileScannerStorage) te).setRecipes(message.recipeStacks);
                 }
             });
 

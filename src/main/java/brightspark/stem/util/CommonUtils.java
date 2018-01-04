@@ -27,7 +27,7 @@ public class CommonUtils
     {
         NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(STEM.MOD_ID);
         NETWORK.registerMessage(MessageUpdateClientContainer.Handler.class, MessageUpdateClientContainer.class, 0, Side.CLIENT);
-        NETWORK.registerMessage(MessageUpdateTileRecipe.Handler.class, MessageUpdateTileRecipe.class, 1, Side.CLIENT);
+        NETWORK.registerMessage(MessageUpdateTileRecipes.Handler.class, MessageUpdateTileRecipes.class, 1, Side.CLIENT);
         NETWORK.registerMessage(MessageRecipeRequest.Handler.class, MessageRecipeRequest.class, 2, Side.SERVER);
         NETWORK.registerMessage(MessageRecipeReply.Handler.class, MessageRecipeReply.class, 3, Side.CLIENT);
         NETWORK.registerMessage(MessageSyncConfigs.Handler.class, MessageSyncConfigs.class, 4, Side.CLIENT);

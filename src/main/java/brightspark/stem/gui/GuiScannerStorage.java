@@ -102,6 +102,8 @@ public class GuiScannerStorage extends GuiContainer
                 fontRenderer.drawString(CommonUtils.addDigitGrouping(energy) + "RF", recipeBox.x + 18, recipeBox.y + 32, colourBlue);
             }
         }
+
+        renderHoveredToolTip(mouseX - guiLeft, mouseY - guiTop);
     }
 
     /**
@@ -117,6 +119,7 @@ public class GuiScannerStorage extends GuiContainer
     /**
      * Called from the main game loop to update the screen.
      */
+    @Override
     public void updateScreen()
     {
         super.updateScreen();
@@ -138,7 +141,7 @@ public class GuiScannerStorage extends GuiContainer
         }
 
         @Override
-        public void drawButton(Minecraft mc, int mouseX, int mouseY)
+        public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
         {
             if(!visible) return;
             mc.getTextureManager().bindTexture(guiImage);

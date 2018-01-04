@@ -1,7 +1,7 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.item.ItemMemoryChip;
-import brightspark.stem.message.MessageUpdateTileRecipe;
+import brightspark.stem.message.MessageUpdateTileRecipes;
 import brightspark.stem.recipe.StemRecipe;
 import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.CommonUtils;
@@ -11,7 +11,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.IContainerListener;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
@@ -117,24 +116,11 @@ public class ContainerScannerStorage extends ContainerMachineBase
         List<ItemStack> scannerRecipes = getMachine().getStoredRecipes();
 
         for(IContainerListener listener : listeners)
-        {
-            for(int i = 0; i < scannerRecipes.size(); i++)
+            if(!cachedRecipes.equals(scannerRecipes))
             {
-                boolean flag = false;
-                if(cachedRecipes.size() <= i)
-                {
-                    cachedRecipes.add(scannerRecipes.get(i));
-                    flag = true;
-                }
-                else if(cachedRecipes.get(i) != scannerRecipes.get(i))
-                {
-                    cachedRecipes.set(i, scannerRecipes.get(i));
-                    flag = true;
-                }
-                if(flag)
-                    CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipe(getMachine().getPos(), i, scannerRecipes.get(i)), (EntityPlayerMP) listener);
+                cachedRecipes = scannerRecipes;
+                CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipes(getMachine().getPos(), scannerRecipes), (EntityPlayerMP) listener);
             }
-        }
     }
 
     /**

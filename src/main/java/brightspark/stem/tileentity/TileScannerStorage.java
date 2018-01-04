@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TileScannerStorage extends StemTileEntity
 {
-    private List<ItemStack> storedRecipes = new ArrayList<ItemStack>();
+    private List<ItemStack> storedRecipes = new ArrayList<>();
 
     private static final String KEY_RECIPES = "recipes";
 
@@ -29,13 +29,8 @@ public class TileScannerStorage extends StemTileEntity
      */
     public void removeMissingRecipes()
     {
-        //Check for missing recipes
-        List<ItemStack> toRemove = new ArrayList<ItemStack>();
-        for(ItemStack stack : storedRecipes)
-            if(! ServerRecipeManager.hasRecipeForStack(stack))
-                toRemove.add(stack);
-        //Remove missing recipes
-        storedRecipes.removeAll(toRemove);
+        //Check for and remove missing recipes
+        storedRecipes.removeIf(itemStack -> !ServerRecipeManager.hasRecipeForStack(itemStack));
         markDirty();
     }
 
@@ -58,14 +53,9 @@ public class TileScannerStorage extends StemTileEntity
         return CommonUtils.itemStackListContains(storedRecipes, stack);
     }
 
-    public void setRecipeAtIndex(int index, ItemStack recipeStack)
+    public void setRecipes(List<ItemStack> recipeStacks)
     {
-        if(storedRecipes.size() <= index)
-            storedRecipes.add(recipeStack);
-        else
-            storedRecipes.set(index, recipeStack);
-
-        sortRecipes();
+        storedRecipes = recipeStacks;
     }
 
     public List<ItemStack> getStoredRecipes()

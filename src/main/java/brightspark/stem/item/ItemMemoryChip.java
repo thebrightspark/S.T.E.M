@@ -2,6 +2,7 @@ package brightspark.stem.item;
 
 import brightspark.stem.recipe.ClientRecipeCache;
 import brightspark.stem.util.CommonUtils;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,6 +11,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class ItemMemoryChip extends ItemBasic
@@ -73,7 +75,7 @@ public class ItemMemoryChip extends ItemBasic
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         ItemStack stackInMem = getMemory(stack);
         if(!stackInMem.isEmpty())

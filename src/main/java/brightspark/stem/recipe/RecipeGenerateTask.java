@@ -2,6 +2,8 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
+import com.google.common.collect.Lists;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.*;
@@ -9,15 +11,13 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.oredict.OreDictionary;
-import net.minecraftforge.oredict.ShapedOreRecipe;
-import net.minecraftforge.oredict.ShapelessOreRecipe;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.*;
 
 public class RecipeGenerateTask implements Runnable
 {
-    private static List<IRecipe> craftingRecipes = CraftingManager.getInstance().getRecipeList();
+    private static List<IRecipe> craftingRecipes = Lists.newArrayList(CraftingManager.REGISTRY);
     private static Map<ItemStack, ItemStack> furnaceRecipes = FurnaceRecipes.instance().getSmeltingList();
 
     private ItemStack itemStack;
@@ -56,7 +56,7 @@ public class RecipeGenerateTask implements Runnable
                 {
                     //If in single player, we're safe to use Item#getSubItems
                     NonNullList<ItemStack> stacks = NonNullList.create();
-                    item.getSubItems(item, null, stacks);
+                    item.getSubItems(CreativeTabs.SEARCH, stacks);
                     stacks.forEach((stack) -> {
                         StemRecipe recipe = genRecipeForStack(stack, true);
                         addRecipe(recipe);
@@ -77,7 +77,7 @@ public class RecipeGenerateTask implements Runnable
     {
         //If recipe already exists, just return it
         StemRecipe stemRecipe = ServerRecipeManager.getRecipeFromCache(stack);
-        if(stemRecipe != null) return stemRecipe;
+        if(stemRecipe != null && stemRecipe.getFluidInput() > 0) return stemRecipe;
 
         LogHelper.info("Trying to generate recipe for %s", CommonUtils.stackToString(stack));
 
@@ -109,8 +109,7 @@ public class RecipeGenerateTask implements Runnable
                 if(!checkedCraftingRecipes.add(recipe))
                     continue;
                 //Get the ingredients of the recipe
-                List ingredients = getIngredients(recipe);
-                if(ingredients == null) continue;
+                List<Ingredient> ingredients = recipe.getIngredients();
                 //Get the fluid amount required from the ingredients
                 long fluidAmount = genFluidFromIngredients(ingredients);
                 //Create a Stem recipe for the stack
@@ -141,7 +140,7 @@ public class RecipeGenerateTask implements Runnable
                 if(!checkedFurnaceRecipes.add(new ImmutablePair<>(furnaceInput, furnaceRecipes.get(furnaceInput))))
                     continue;
                 //Get the fluid amount required from the ingredient
-                long fluidAmount = genFluidFromIngredients(Collections.singletonList(furnaceInput));
+                long fluidAmount = genFluidFromIngredients(Collections.singletonList(Ingredient.fromStacks(furnaceInput)));
                 //Create a Stem recipe for the stack
                 if(fluidAmount > 0)
                 {
@@ -155,40 +154,22 @@ public class RecipeGenerateTask implements Runnable
         return null;
     }
 
-    private long genFluidFromIngredients(List ingredients)
+    private long genFluidFromIngredients(List<Ingredient> ingredients)
     {
         //Make sure we have stem recipes already for all of the ingredients, and sum up the fluid requirements
         long fluidAmount = 0;
-        for(Object ingredient : ingredients)
+        for(Ingredient ingredient : ingredients)
         {
-            //If ingredient is null, then skip it (you get nulls in shaped recipes)
-            if(ingredient == null) continue;
+            //If ingredient is null, then skip it
+            if(ingredient == null || ingredient.getMatchingStacks().length == 0) continue;
 
             long ingFluid = 0;
-            if(ingredient instanceof ItemStack)
+            for(ItemStack stack : ingredient.getMatchingStacks())
             {
-                ItemStack stack = (ItemStack) ingredient;
-                //Some modded recipes use an empty stack rather than null
-                if(stack.isEmpty()) continue;
-
                 ingFluid = genFluidFromStack(stack);
-                if(ingFluid == 0) return 0;
+                if(ingFluid > 0) break;
             }
-            else if(ingredient instanceof NonNullList)
-            {
-                NonNullList<ItemStack> list = (NonNullList<ItemStack>) ingredient;
-                for(ItemStack stack : list)
-                {
-                    if(stack.isEmpty()) continue;
-                    ingFluid = genFluidFromStack(stack);
-                    if(ingFluid > 0) break;
-                }
-                if(ingFluid == 0) return 0;
-            }
-            else
-                //If the ingredient isn't something we expect, then we can't use this recipe
-                return 0;
-
+            if(ingFluid == 0) return 0;
             fluidAmount += ingFluid;
         }
         return fluidAmount;
@@ -217,20 +198,6 @@ public class RecipeGenerateTask implements Runnable
     {
         if(recipe != null && ServerRecipeManager.addRecipe(recipe))
             recipesGenerated++;
-    }
-
-    private static List getIngredients(IRecipe recipe)
-    {
-        List ingredients = null;
-        if(recipe instanceof ShapedRecipes)
-            ingredients = Arrays.asList(((ShapedRecipes) recipe).recipeItems);
-        else if(recipe instanceof ShapelessRecipes)
-            ingredients = ((ShapelessRecipes) recipe).recipeItems;
-        else if(recipe instanceof ShapedOreRecipe)
-            ingredients = Arrays.asList(((ShapedOreRecipe) recipe).getInput());
-        else if(recipe instanceof ShapelessOreRecipe)
-            ingredients = ((ShapelessOreRecipe) recipe).getInput();
-        return ingredients;
     }
 
     private static List<IRecipe> findCraftingRecipes(ItemStack stack, boolean strict)

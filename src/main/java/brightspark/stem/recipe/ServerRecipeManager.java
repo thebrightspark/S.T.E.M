@@ -73,7 +73,8 @@ public class ServerRecipeManager
      */
     public static boolean hasRecipeForStack(ItemStack stack)
     {
-        return getRecipeForStack(stack) != null;
+        StemRecipe recipe = getRecipeForStack(stack);
+        return recipe != null && recipe.getFluidInput() > 0;
     }
 
     /**

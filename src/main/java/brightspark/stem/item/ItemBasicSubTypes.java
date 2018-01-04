@@ -2,7 +2,6 @@ package brightspark.stem.item;
 
 import brightspark.stem.ISubTypes;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -26,13 +25,16 @@ public class ItemBasicSubTypes extends ItemBasic implements ISubTypes
      */
     @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems)
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems)
     {
-        if(hasSubtypes)
-            for(int i = 0; i < getSubNames().length; i++)
-                subItems.add(new ItemStack(itemIn, 1, i));
-        else
-            subItems.add(new ItemStack(itemIn));
+        if(isInCreativeTab(tab))
+        {
+            if(hasSubtypes)
+                for(int i = 0; i < getSubNames().length; i++)
+                    subItems.add(new ItemStack(this, 1, i));
+            else
+                subItems.add(new ItemStack(this));
+        }
     }
 
     /**

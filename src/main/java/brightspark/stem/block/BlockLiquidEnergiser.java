@@ -9,6 +9,7 @@ import brightspark.stem.tileentity.TileMachineWithFluid;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
@@ -24,6 +25,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergiser>
@@ -75,7 +77,7 @@ public class BlockLiquidEnergiser extends AbstractBlockMachine<TileLiquidEnergis
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced)
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn)
     {
         tooltip.add("Progress: " + Math.round(((float) TileMachine.readEnergyFromStack(stack) / (float) Config.liquidEnergiserEnergyPerMb) * 100) + "%");
         FluidStack fluid = TileMachineWithFluid.readFluidFromStack(stack);
