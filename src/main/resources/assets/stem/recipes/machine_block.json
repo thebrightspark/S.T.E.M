@@ -9,7 +9,7 @@
     "key": {
         "B": {
             "type": "forge:ore_dict",
-            "ore": "ingot_blusteel"
+            "ore": "stem_ingot_blusteel"
         },
         "O": {
             "item": "minecraft:iron_bars"

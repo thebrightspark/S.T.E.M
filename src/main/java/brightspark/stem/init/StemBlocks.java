@@ -92,6 +92,6 @@ public class StemBlocks
 
     public static void regOres()
     {
-        OreDictionary.registerOre("machine_block", machineBlock);
+        OreDictionary.registerOre("stem_machine_block", machineBlock);
     }
 }

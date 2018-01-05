@@ -9,7 +9,7 @@
     "key": {
         "I": {
             "type": "forge:ore_dict",
-            "ore": "ingot_blusteel"
+            "ore": "stem_ingot_blusteel"
         },
         "G": {
             "type": "forge:ore_dict",

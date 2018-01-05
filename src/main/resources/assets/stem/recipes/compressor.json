@@ -2,22 +2,25 @@
     "type": "forge:ore_shaped",
     "group": "stem",
     "pattern": [
-        "ICI",
-        "CCC",
-        "ICI"
+        "OPO",
+        "PMP",
+        "OPO"
     ],
     "key": {
-        "I": {
+        "O": {
             "type": "forge:ore_dict",
-            "ore": "stem_ingot_blusteel"
+            "ore": "obsidian"
         },
-        "C": {
+        "P": {
+            "item": "minecraft:piston"
+        },
+        "M": {
             "type": "forge:ore_dict",
-            "ore": "stem_mem_chip"
+            "ore": "stem_machine_processor"
         }
     },
     "result": {
         "item": "stem:basic",
-        "data": 4
+        "data": 13
     }
 }

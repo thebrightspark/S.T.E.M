@@ -9,19 +9,19 @@
     "key": {
         "C": {
             "type": "forge:ore_dict",
-            "ore": "energy_circuit"
+            "ore": "stem_energy_circuit"
         },
         "B": {
             "type": "forge:ore_dict",
-            "ore": "machine_block"
+            "ore": "stem_machine_block"
         },
         "M": {
             "type": "forge:ore_dict",
-            "ore": "mem_chip"
+            "ore": "stem_mem_chip"
         },
         "S": {
             "type": "forge:ore_dict",
-            "ore": "scan_device"
+            "ore": "stem_scan_device"
         }
     },
     "result": {

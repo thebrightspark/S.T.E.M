@@ -2,25 +2,37 @@
     "type": "forge:ore_shaped",
     "group": "stem",
     "pattern": [
-        "OPO",
-        "PMP",
-        "OPO"
+        "IEI",
+        "BUC",
+        "IPI"
     ],
     "key": {
-        "O": {
+        "I": {
             "type": "forge:ore_dict",
-            "ore": "obsidian"
+            "ore": "stem_ingot_blusteel"
+        },
+        "E": {
+            "type": "forge:ore_dict",
+            "ore": "stem_energy_circuit"
+        },
+        "B": {
+            "item": "minecraft:bucket"
+        },
+        "U": {
+            "type": "forge:ore_dict",
+            "ore": "stem_compressor"
+        },
+        "C": {
+            "type": "forge:ore_dict",
+            "ore": "chest"
         },
         "P": {
-            "type": "minecraft:piston"
-        },
-        "M": {
             "type": "forge:ore_dict",
-            "ore": "machine_processor"
+            "ore": "stem_machine_processor"
         }
     },
     "result": {
         "item": "stem:basic",
-        "data": 13
+        "data": 12
     }
 }

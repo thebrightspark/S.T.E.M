@@ -9,19 +9,19 @@
     "key": {
         "R": {
             "type": "forge:ore_dict",
-            "ore": "mem_reader"
+            "ore": "stem_mem_reader"
         },
         "B": {
             "type": "forge:ore_dict",
-            "ore": "machine_block"
+            "ore": "stem_machine_block"
         },
         "W": {
             "type": "forge:ore_dict",
-            "ore": "mem_writer"
+            "ore": "stem_mem_writer"
         },
         "M": {
             "type": "forge:ore_dict",
-            "ore": "large_mem_bank"
+            "ore": "stem_large_mem_bank"
         }
     },
     "result": {

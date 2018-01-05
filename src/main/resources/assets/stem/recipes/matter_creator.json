@@ -9,26 +9,26 @@
     "key": {
         "C": {
             "type": "forge:ore_dict",
-            "ore": "energy_circuit"
+            "ore": "stem_energy_circuit"
         },
         "E": {
             "type": "forge:ore_dict",
-            "ore": "exciter"
+            "ore": "stem_exciter"
         },
         "B": {
             "type": "forge:ore_dict",
-            "ore": "machine_block"
+            "ore": "stem_machine_block"
         },
         "F": {
             "type": "forge:ore_dict",
-            "ore": "former"
+            "ore": "stem_former"
         },
         "T": {
             "type": "forge:ore_dict",
-            "ore": "internal_tank"
+            "ore": "stem_internal_tank"
         }
     },
     "result": {
-        "item": "stem:scanner_storage"
+        "item": "stem:matter_creator"
     }
 }

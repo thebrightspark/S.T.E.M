@@ -9,7 +9,7 @@
     "key": {
         "I": {
             "type": "forge:ore_dict",
-            "ore": "ingot_blusteel"
+            "ore": "stem_ingot_blusteel"
         },
         "Q": {
             "type": "forge:ore_dict",
@@ -25,6 +25,6 @@
         }
     },
     "result": {
-        "item": "stem:memory_chip"
+        "item": "stem:mem_chip"
     }
 }

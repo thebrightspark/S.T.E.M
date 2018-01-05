@@ -17,7 +17,7 @@
         },
         "P": {
             "type": "forge:ore_dict",
-            "ore": "machine_processor"
+            "ore": "stem_machine_processor"
         }
     },
     "result": {

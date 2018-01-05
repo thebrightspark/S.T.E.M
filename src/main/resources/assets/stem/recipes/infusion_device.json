@@ -13,7 +13,7 @@
         },
         "C": {
             "type": "forge:ore_dict",
-            "ore": "energy_circuit"
+            "ore": "stem_energy_circuit"
         },
         "G": {
             "type": "forge:ore_dict",

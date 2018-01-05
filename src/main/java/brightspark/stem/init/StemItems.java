@@ -44,7 +44,7 @@ public class StemItems
     public static void regOres()
     {
         for(int i = 0; i < itemBasic.getSubNames().length; i++)
-            OreDictionary.registerOre(itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
-        OreDictionary.registerOre("mem_chip", itemMemoryChip);
+            OreDictionary.registerOre("stem_" + itemBasic.getSubNames()[i], new ItemStack(itemBasic, 1, i));
+        OreDictionary.registerOre("stem_mem_chip", itemMemoryChip);
     }
 }

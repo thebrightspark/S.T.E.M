@@ -9,11 +9,11 @@
     "key": {
         "I": {
             "type": "forge:ore_dict",
-            "ore": "ingot_blusteel"
+            "ore": "stem_ingot_blusteel"
         },
         "B": {
             "type": "forge:ore_dict",
-            "ore": "mem_bank"
+            "ore": "stem_mem_bank"
         },
         "D": {
             "type": "forge:ore_dict",
