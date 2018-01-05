@@ -1,6 +1,6 @@
 {
     "type": "forge:ore_shaped",
-    "group": "stem",
+
     "pattern": [
         "IGI",
         "G G",
