@@ -118,8 +118,7 @@ public class ServerRecipeManager
         writer.writeNext(new String[] {""});
 
         //Write recipes
-        for(StemRecipe r : recipes)
-            writer.writeNext(r.toCsvStringArray());
+        recipes.forEach(r -> writer.writeNext(r.toCsvStringArray()));
 
         try
         {
@@ -130,7 +129,7 @@ public class ServerRecipeManager
             throw new RuntimeException("Couldn't close CSV Writer");
         }
 
-        LogHelper.info("Saved " + recipes.size() + " recipes successfully.");
+        LogHelper.info("Saved %s recipes successfully.", recipes.size());
     }
 
     public static void init()
@@ -197,10 +196,7 @@ public class ServerRecipeManager
                 if(recipe != null) recipes.add(recipe);
             }
 
-            LogHelper.info("Recipe file read successfully.");
-
-            for(StemRecipe r : recipes)
-                LogHelper.info(r.toString());
+            LogHelper.info("Recipe %s recipes from file successfully.", recipes.size());
         }
     }
 
