@@ -1,0 +1,79 @@
+//Items
+
+item.wrench.name=配置魔杖
+item.wrench.tooltip=工具可以有多种形式……
+wrenchMode.mode=模式：
+wrenchMode.turn=旋转
+wrenchMode.config_side=配置
+wrenchMode.overlay.mode=当前扳手模式：
+wrenchMode.overlay.side=%s 面允许：
+
+item.mem_chip.name=内存芯片
+
+item.basic.blusteel_compound.name=蓝钢复合物
+item.basic.ingot_blusteel.name=蓝钢锭
+item.basic.machine_processor.name=机器处理器
+item.basic.internal_tank.name=内部储罐
+item.basic.mem_bank.name=内存条
+item.basic.large_mem_bank.name=大型内存条
+item.basic.energy_circuit.name=能量输入电路
+item.basic.inf_device.name=注入装置
+item.basic.scan_device.name=扫描装置
+item.basic.mem_reader.name=内存读取器
+item.basic.mem_writer.name=内存写入器
+item.basic.exciter.name=S.T.E.M 激发装置
+item.basic.former.name=物质成形器
+item.basic.compressor.name=压缩单元
+
+//Blocks
+
+tile.machine_block.name=机器方块
+tile.liquid_energiser.name=液体生成机
+tile.matter_scanner.name=物质扫描仪
+tile.scanner_storage.name=扫描存储器
+tile.matter_creator.name=物质构造器
+
+//Fluids
+
+tile.stem.name=S.T.E.M
+fluid.stem=S.T.E.M
+
+//Generic
+
+tooltip.shift=按住 SHIFT 查看详情
+
+sideEnergyPerm.mode=%s 面允许：
+sideEnergyPerm.all=全部
+sideEnergyPerm.input=输入
+sideEnergyPerm.output=输出
+sideEnergyPerm.none=无
+
+message.recipes.cantfinditem=不能找到物品 '%s'
+message.recipes.cantfindrecipe=不能找到有关于物品 '%s' 的配方
+message.recipes.none=没有配方
+message.recipes.title=配方 - 页面 %d / %d
+
+//GUIs
+
+gui.energyStorage.max=最大：
+gui.progress=进度：
+gui.averageInput=平均输入：
+gui.status=状态
+gui.inactive=未激活
+gui.recipe=没有配方
+
+gui.scan.recipe=没有配方
+gui.scan.storage=等待存储
+gui.scan.active=扫描中……
+gui.scan.complete=扫描完成
+
+gui.create.active=构造中……
+gui.create.output=无输出槽
+gui.create.energy=没有能量
+gui.create.fluid=没有液体
+gui.create.complete=构造完成
+
+//Misc
+
+waila.energyStorage.stored=能量：
+waila.energyStorage.inOut=最大输入/输出：
