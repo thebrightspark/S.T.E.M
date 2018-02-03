@@ -66,7 +66,9 @@ public class StemRecipe
             LogHelper.warn("Couldn't find item '" + recipe[0] + "' from recipe: " + recipe[0] + ", " + recipe[1] + ", " + recipe[2]);
             return null;
         }
-        return new StemRecipe(new ItemStack(item, 1, Integer.parseInt(recipe[1])), Long.parseLong(recipe[2]));
+        String metaString = recipe[1].trim();
+        int meta = metaString.isEmpty() ? 0 : Integer.parseInt(metaString);
+        return new StemRecipe(new ItemStack(item, 1, meta), Long.parseLong(recipe[2]));
     }
 
     @Override

@@ -2,6 +2,7 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.Config;
 import brightspark.stem.STEM;
+import brightspark.stem.init.StemRecipes;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import com.opencsv.CSVReader;
@@ -204,6 +205,9 @@ public class ServerRecipeManager
     {
         LogHelper.info("Creating default recipe file...");
 
+        if(stemRecipeFile.exists() && stemRecipeFile.delete())
+            LogHelper.info("Existing recipe file deleted");
+
         CSVWriter writer;
         try
         {
@@ -241,6 +245,8 @@ public class ServerRecipeManager
      */
     public static void resetRecipeFile()
     {
+        recipes.clear();
+        StemRecipes.initServerRecipes();
         createDefaultRecipeFile();
         readRecipeFile();
     }
