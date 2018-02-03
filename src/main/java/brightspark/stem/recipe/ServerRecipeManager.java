@@ -197,7 +197,7 @@ public class ServerRecipeManager
                 if(recipe != null) recipes.add(recipe);
             }
 
-            LogHelper.info("Recipe %s recipes from file successfully.", recipes.size());
+            LogHelper.info("Read %s recipes from file successfully.", recipes.size());
         }
     }
 
