@@ -183,7 +183,7 @@ public class TileMatterCreator extends TileMachineWithFluid
     {
         if(recipeCache == null)
             updateCachedRecipe(hasMemoryChip() ? ItemMemoryChip.getMemory(slots.get(2)) : null);
-        return super.canWork() && recipeCache != null && tank.getFluidAmount() > 0 && hasMemoryChip() && canOutput() && progress < recipeCache.getFluidInput();
+        return super.canWork() && recipeCache != null && tank.getFluidAmount() > 0 && hasMemoryChip() && canOutput();
     }
 
     @Override

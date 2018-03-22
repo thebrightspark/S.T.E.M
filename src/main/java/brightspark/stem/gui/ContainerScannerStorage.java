@@ -117,10 +117,9 @@ public class ContainerScannerStorage extends ContainerMachineBase
 
         for(IContainerListener listener : listeners)
             if(!cachedRecipes.equals(scannerRecipes))
-            {
-                cachedRecipes = scannerRecipes;
                 CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipes(getMachine().getPos(), scannerRecipes), (EntityPlayerMP) listener);
-            }
+
+        cachedRecipes = scannerRecipes;
     }
 
     /**

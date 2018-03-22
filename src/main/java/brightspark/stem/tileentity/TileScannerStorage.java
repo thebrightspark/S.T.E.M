@@ -16,7 +16,7 @@ public class TileScannerStorage extends StemTileEntity
 {
     private List<ItemStack> storedRecipes = new ArrayList<>();
 
-    private static final String KEY_RECIPES = "recipes";
+    public static final String KEY_RECIPES = "recipes";
 
     public TileScannerStorage()
     {
@@ -115,12 +115,8 @@ public class TileScannerStorage extends StemTileEntity
     {
         //Write recipes
         NBTTagList recipeList = new NBTTagList();
-        for(int i = 0; i < slots.size(); ++i)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-            storedRecipes.get(i).writeToNBT(tag);
-            recipeList.appendTag(tag);
-        }
+        for(ItemStack storedRecipe : storedRecipes)
+            recipeList.appendTag(storedRecipe.writeToNBT(new NBTTagCompound()));
         NBTHelper.setList(stack, KEY_RECIPES, recipeList);
 
         super.writeDataToStack(stack);

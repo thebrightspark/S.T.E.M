@@ -1,12 +1,11 @@
 package brightspark.stem.handler;
 
-import brightspark.stem.block.AbstractBlockMachine;
-import brightspark.stem.tileentity.TileMachine;
+import brightspark.stem.block.AbstractBlockContainer;
+import brightspark.stem.tileentity.StemTileEntity;
 import brightspark.stem.util.WrenchHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -64,18 +63,18 @@ public class WrenchHandler
         EntityPlayer player = event.getEntityPlayer();
         Block block = world.getBlockState(pos).getBlock();
         if(!WrenchHelper.isWrench(event.getItemStack()) || !player.isSneaking() ||
-                !(block instanceof AbstractBlockMachine) ||
-                !((AbstractBlockMachine) block).canPickupWithWrench())
+                !(block instanceof AbstractBlockContainer) ||
+                !((AbstractBlockContainer) block).canPickupWithWrench())
             return;
         if(!world.isRemote)
         {
             //Break machine only on server
             IBlockState state = world.getBlockState(pos);
-            AbstractBlockMachine machine = (AbstractBlockMachine) state.getBlock();
-            TileEntity te = machine.getTileEntity(world, pos);
-            if(!(te instanceof TileMachine))
+            AbstractBlockContainer machine = (AbstractBlockContainer) state.getBlock();
+            StemTileEntity te = machine.getTileEntity(world, pos);
+            if(te == null)
                 return;
-            ((TileMachine) te).usedWrenchToBreak = true;
+            te.usedWrenchToBreak = true;
             if(machine.removedByPlayer(state, world, pos, player, true))
                 machine.harvestBlock(world, player, pos, state, te, event.getItemStack());
         }
