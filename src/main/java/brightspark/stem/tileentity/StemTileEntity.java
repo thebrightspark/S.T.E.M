@@ -12,17 +12,19 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
 import javax.annotation.Nullable;
 
-/**
- * Created by Mark on 11/12/2016.
- */
 public class StemTileEntity extends TileEntity implements ISidedInventory
 {
     //The ItemStacks stored in this tile
     protected NonNullList<ItemStack> slots;
+    protected IItemHandler itemHandler;
     //This is used by getSlotsForFace
     protected int[] slotsForFaces;
     //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench.json is used.
@@ -34,6 +36,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public StemTileEntity(int numSlots)
     {
         slots = NonNullList.withSize(numSlots, ItemStack.EMPTY);
+        itemHandler = new InvWrapper(this);
         slotsForFaces = CommonUtils.createAscIntArray(numSlots);
     }
 
@@ -266,5 +269,13 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public boolean hasCustomName()
     {
         return false;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) itemHandler : super.getCapability(capability, facing);
     }
 }
