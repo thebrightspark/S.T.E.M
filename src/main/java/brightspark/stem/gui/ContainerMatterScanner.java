@@ -5,9 +5,7 @@ import brightspark.stem.tileentity.TileMatterScanner;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 
-import javax.annotation.Nullable;
-
-public class ContainerMatterScanner extends ContainerMachineBase
+public class ContainerMatterScanner extends ContainerMachineBase<TileMatterScanner>
 {
     public ContainerMatterScanner(InventoryPlayer invPlayer, TileMatterScanner machine)
     {
@@ -17,14 +15,11 @@ public class ContainerMatterScanner extends ContainerMachineBase
     @Override
     protected void addSlots()
     {
-        //Energy Input Slot
-        //addSlotToContainer(new SlotEnergyInput(inventory, 26, 64));
-
         //Input Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 44, 39));
+        addSlotToContainer(new SlotLockable(inventory, 44, 39));
 
         //Memory Chip Slot
-        addSlotToContainer(new SlotLockable((TileMatterScanner) inventory, 110, 39)
+        addSlotToContainer(new SlotLockable(inventory, 110, 39)
         {
             @Override
             public boolean isItemValid(ItemStack stack)

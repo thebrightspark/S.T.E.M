@@ -3,6 +3,7 @@ package brightspark.stem.util;
 import brightspark.stem.ISubTypes;
 import brightspark.stem.STEM;
 import brightspark.stem.gui.GuiMachineBase;
+import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.tileentity.TileMachineWithFluid;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -114,7 +115,8 @@ public class ClientUtils
 
     public static void drawGuiProgressArrow(GuiMachineBase gui, Rectangle arrow, int guiLeft, int guiTop)
     {
-        int arrowWidth = Math.round(((float) gui.te.getProgress() / 100f) * arrow.width);
+        if(!(gui.te instanceof TileMachine)) return;
+        int arrowWidth = Math.round(((float) ((TileMachine) gui.te).getProgress() / 100f) * arrow.width);
         gui.drawTexturedModalRect(arrow.x + guiLeft, arrow.y + guiTop, 186, 0, arrowWidth, arrow.height);
     }
 }

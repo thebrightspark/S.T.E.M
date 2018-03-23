@@ -8,7 +8,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 import java.awt.*;
 import java.util.List;
 
-public class GuiLiquidEnergiser extends GuiMachineBase
+public class GuiLiquidEnergiser extends GuiMachineBase<TileLiquidEnergiser>
 {
     public final Rectangle fluidBar = new Rectangle(98, 23, 16, 47);
 

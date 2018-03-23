@@ -19,15 +19,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 
-public class ContainerMachineBase extends Container
+public class ContainerMachineBase<T extends StemTileEntity> extends Container
 {
-    protected StemTileEntity inventory;
+    protected T inventory;
     protected int[] cachedFields;
     protected int slotI = 0;
     protected int invStartX = 8;
     protected int invStartY = 93;
 
-    public ContainerMachineBase(InventoryPlayer invPlayer, StemTileEntity machine)
+    public ContainerMachineBase(InventoryPlayer invPlayer, T machine)
     {
         inventory = machine;
         init();
@@ -180,26 +180,6 @@ public class ContainerMachineBase extends Container
         public boolean isItemValid(@Nullable ItemStack stack)
         {
             return false;
-        }
-    }
-
-    public class SlotEnergyInput extends SlotMachine
-    {
-        public SlotEnergyInput(IInventory inventoryIn, int xPosition, int yPosition)
-        {
-            super(inventoryIn, xPosition, yPosition);
-        }
-
-        @Override
-        public int getSlotStackLimit()
-        {
-            return 1;
-        }
-
-        @Override
-        public boolean isItemValid(@Nullable ItemStack stack)
-        {
-            return stack != null && stack.getItem() instanceof IEnergyProvider;
         }
     }
 

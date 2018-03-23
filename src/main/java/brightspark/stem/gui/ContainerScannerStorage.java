@@ -17,9 +17,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContainerScannerStorage extends ContainerMachineBase
+public class ContainerScannerStorage extends ContainerMachineBase<TileScannerStorage>
 {
-    protected List<ItemStack> cachedRecipes = new ArrayList<ItemStack>();
+    protected List<ItemStack> cachedRecipes = new ArrayList<>();
     public int recipeSelected = 0;
 
     public ContainerScannerStorage(InventoryPlayer invPlayer, TileScannerStorage machine)
@@ -29,14 +29,9 @@ public class ContainerScannerStorage extends ContainerMachineBase
             machine.removeMissingRecipes();
     }
 
-    private TileScannerStorage getMachine()
-    {
-        return (TileScannerStorage) inventory;
-    }
-
     public StemRecipe getCurrentRecipe()
     {
-        return getMachine().getRecipeAtIndex(recipeSelected);
+        return inventory.getRecipeAtIndex(recipeSelected);
     }
 
     /**
@@ -52,14 +47,14 @@ public class ContainerScannerStorage extends ContainerMachineBase
         if(chipSavedStack.isEmpty())
         {
             //Save current recipe to item
-            if(getMachine().getStoredRecipes() == null || getMachine().getStoredRecipes().isEmpty())
+            if(inventory.getStoredRecipes() == null || inventory.getStoredRecipes().isEmpty())
                 return;
             ItemMemoryChip.setMemory(newItem, getCurrentRecipe().getOutput());
         }
         else
         {
             //Save recipe on item to storage
-            getMachine().storeRecipe(chipSavedStack);
+            inventory.storeRecipe(chipSavedStack);
             ItemMemoryChip.clearMemory(newItem);
         }
 
@@ -76,7 +71,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
         ItemStack returnStack = super.slotClick(slotId, dragType, clickTypeIn, player);
 
         ItemStack inputStack = inventory.getStackInSlot(0);
-        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip && (getMachine().hasRecipes() || !ItemMemoryChip.isMemoryEmpty(inputStack)))
+        if(inputStack != null && inputStack.getItem() instanceof ItemMemoryChip && (inventory.hasRecipes() || !ItemMemoryChip.isMemoryEmpty(inputStack)))
         {
             if(!player.world.isRemote)
                 inputSlotChanged(inputStack);
@@ -113,11 +108,11 @@ public class ContainerScannerStorage extends ContainerMachineBase
         super.detectAndSendChanges();
 
         //Sends changes with the recipes
-        List<ItemStack> scannerRecipes = getMachine().getStoredRecipes();
+        List<ItemStack> scannerRecipes = inventory.getStoredRecipes();
 
         for(IContainerListener listener : listeners)
             if(!cachedRecipes.equals(scannerRecipes))
-                CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipes(getMachine().getPos(), scannerRecipes), (EntityPlayerMP) listener);
+                CommonUtils.NETWORK.sendTo(new MessageUpdateTileRecipes(inventory.getPos(), scannerRecipes), (EntityPlayerMP) listener);
 
         cachedRecipes = scannerRecipes;
     }
@@ -150,7 +145,7 @@ public class ContainerScannerStorage extends ContainerMachineBase
                 return true;
             case 1: //Right Arrow
                 recipeSelected++;
-                if(recipeSelected >= getMachine().getStoredRecipes().size())
+                if(recipeSelected >= inventory.getStoredRecipes().size())
                     recipeSelected--;
                 return true;
             default:

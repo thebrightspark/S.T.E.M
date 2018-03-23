@@ -1,18 +1,15 @@
 package brightspark.stem.gui;
 
 import brightspark.stem.Config;
-import brightspark.stem.STEM;
 import brightspark.stem.recipe.ClientRecipeCache;
 import brightspark.stem.tileentity.TileScannerStorage;
 import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -21,10 +18,8 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 
-public class GuiScannerStorage extends GuiContainer
+public class GuiScannerStorage extends GuiMachineBase<TileScannerStorage>
 {
-    private static final ResourceLocation guiImage = new ResourceLocation(STEM.MOD_ID, STEM.GUI_TEXTURE_DIR + "scanner_storage.png");
-    protected TileScannerStorage te;
     protected ContainerScannerStorage container;
     private static final int colourRed = 0x7A3D3D;
     private static final int colourBlue = 0x3B7177;
@@ -32,7 +27,7 @@ public class GuiScannerStorage extends GuiContainer
 
     public GuiScannerStorage(InventoryPlayer invPlayer, TileScannerStorage machine)
     {
-        super(new ContainerScannerStorage(invPlayer, machine));
+        super(new ContainerScannerStorage(invPlayer, machine), "scanner_storage");
         te = machine;
         container = (ContainerScannerStorage) inventorySlots;
         xSize = 176;
@@ -137,7 +132,7 @@ public class GuiScannerStorage extends GuiContainer
         public ArrowButton(int buttonId, int x, int y, boolean isLeftArrow)
         {
             super(buttonId, guiLeft + x, guiTop + y, 17, 11, "");
-            iconX = isLeftArrow ? iconX : iconX + width;
+            if(isLeftArrow) iconX += width;
         }
 
         @Override

@@ -7,7 +7,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 import java.awt.*;
 
-public class GuiMatterCreator extends GuiMachineBase
+public class GuiMatterCreator extends GuiMachineBase<TileMatterCreator>
 {
     protected Rectangle fluidBar = new Rectangle(8, 23, 16, 47);
     protected Rectangle arrow = new Rectangle(102, 39, 24, 17);
@@ -30,10 +30,9 @@ public class GuiMatterCreator extends GuiMachineBase
     {
         super.drawText();
         fontRenderer.drawString(I18n.format("gui.progress") + " " + te.getProgressString(), 75, 22, textColour);
-        TileMatterCreator creator = (TileMatterCreator) te;
-        int colour = creator.getCreationStatusColour();
+        int colour = te.getCreationStatusColour();
         fontRenderer.drawString(I18n.format("gui.status"), 75, 65, colour);
-        fontRenderer.drawString(creator.getCreationStatus(), 75, 77, colour);
+        fontRenderer.drawString(te.getCreationStatus(), 75, 77, colour);
     }
 
     @Override

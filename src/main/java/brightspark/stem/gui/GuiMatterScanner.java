@@ -7,7 +7,7 @@ import net.minecraft.entity.player.InventoryPlayer;
 
 import java.awt.*;
 
-public class GuiMatterScanner extends GuiMachineBase
+public class GuiMatterScanner extends GuiMachineBase<TileMatterScanner>
 {
     protected Rectangle arrow = new Rectangle(73, 38, 24, 17);
 
@@ -28,9 +28,8 @@ public class GuiMatterScanner extends GuiMachineBase
     {
         super.drawText();
 
-        TileMatterScanner scanner = (TileMatterScanner) te;
-        drawCenteredString(fontRenderer, I18n.format("gui.progress") + " " + scanner.getProgressString(), 20, textColour);
-        int colour = scanner.getScanStatusColour();
-        drawCenteredString(fontRenderer, I18n.format("gui.status") + " " + scanner.getScanStatus(), 66, colour);
+        drawCenteredString(fontRenderer, I18n.format("gui.progress") + " " + te.getProgressString(), 20, textColour);
+        int colour = te.getScanStatusColour();
+        drawCenteredString(fontRenderer, I18n.format("gui.status") + " " + te.getScanStatus(), 66, colour);
     }
 }

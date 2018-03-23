@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ContainerLiquidEnergiser extends ContainerMachineBase
+public class ContainerLiquidEnergiser extends ContainerMachineBase<TileLiquidEnergiser>
 {
     public ContainerLiquidEnergiser(InventoryPlayer invPlayer, TileLiquidEnergiser machine)
     {

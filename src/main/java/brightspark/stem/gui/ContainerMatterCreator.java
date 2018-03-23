@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ContainerMatterCreator extends ContainerMachineBase
+public class ContainerMatterCreator extends ContainerMachineBase<TileMatterCreator>
 {
     public ContainerMatterCreator(InventoryPlayer invPlayer, TileMatterCreator machine)
     {
@@ -33,7 +33,7 @@ public class ContainerMatterCreator extends ContainerMachineBase
         addSlotToContainer(new SlotOutputOnly(inventory, 37, 54));
 
         //Memory chip slot
-        addSlotToContainer(new SlotChip((TileMatterCreator) inventory, 79, 39));
+        addSlotToContainer(new SlotChip(inventory, 79, 39));
 
         //Item output slot
         addSlotToContainer(new SlotOutputOnly(inventory, 133, 39));
