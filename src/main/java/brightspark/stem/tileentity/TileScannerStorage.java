@@ -161,11 +161,7 @@ public class TileScannerStorage extends StemTileEntity
         //Write recipes
         NBTTagList recipeList = new NBTTagList();
         for(ItemStack stack : storedRecipes)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-            stack.writeToNBT(tag);
-            recipeList.appendTag(tag);
-        }
+            recipeList.appendTag(stack.writeToNBT(new NBTTagCompound()));
         nbt.setTag(KEY_RECIPES, recipeList);
 
         return super.writeToNBT(nbt);

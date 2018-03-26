@@ -132,7 +132,7 @@ public class GuiScannerStorage extends GuiMachineBase<TileScannerStorage>
         public ArrowButton(int buttonId, int x, int y, boolean isLeftArrow)
         {
             super(buttonId, guiLeft + x, guiTop + y, 17, 11, "");
-            if(isLeftArrow) iconX += width;
+            if(!isLeftArrow) iconX += width;
         }
 
         @Override

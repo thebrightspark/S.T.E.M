@@ -85,6 +85,11 @@ public class STEM
     {
         //Run stuff after mods have initialized here
 
+        //Init recipes
+        ServerRecipeManager.init();
+        StemRecipes.initServerRecipes();
+        ServerRecipeManager.readRecipeFile();
+
         StemItems.ITEMS = null;
         StemBlocks.BLOCKS = null;
         StemBlocks.ITEM_BLOCKS = null;
@@ -95,11 +100,6 @@ public class STEM
     {
         //Register commands
         event.registerServerCommand(new CommandStem());
-
-        //Init recipes
-        ServerRecipeManager.init();
-        StemRecipes.initServerRecipes();
-        ServerRecipeManager.readRecipeFile();
     }
 
     @Mod.EventHandler
