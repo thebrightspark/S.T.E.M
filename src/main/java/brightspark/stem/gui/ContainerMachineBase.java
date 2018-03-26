@@ -4,7 +4,6 @@ import brightspark.stem.message.MessageUpdateClientContainer;
 import brightspark.stem.tileentity.StemTileEntity;
 import brightspark.stem.tileentity.TileMachine;
 import brightspark.stem.util.CommonUtils;
-import cofh.redstoneflux.api.IEnergyProvider;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;

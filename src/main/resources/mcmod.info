@@ -16,8 +16,8 @@
           "screenshots": [],
           "parent": "",
           "dependants": [],
-          "dependencies": ["redstoneflux"],
-          "requiredMods": ["redstoneflux"],
+          "dependencies": [""],
+          "requiredMods": [""],
           "useDependencyInformation": true
         }
     ]
