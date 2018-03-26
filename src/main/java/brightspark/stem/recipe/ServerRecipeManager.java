@@ -2,11 +2,11 @@ package brightspark.stem.recipe;
 
 import brightspark.stem.Config;
 import brightspark.stem.STEM;
-import brightspark.stem.init.StemRecipes;
 import brightspark.stem.util.CommonUtils;
 import brightspark.stem.util.LogHelper;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 import java.io.File;
@@ -224,6 +224,9 @@ public class ServerRecipeManager
         writer.writeNext(new String[] {"Output Item ID", "Output Item Metadata", "Input fluid amount"});
         writer.writeNext(new String[] {""});
 
+        //Add default recipe
+        ServerRecipeManager.addRecipe(new StemRecipe(Items.DIAMOND, 10));
+
         //Write recipes
         for(StemRecipe r : recipes)
             writer.writeNext(r.toCsvStringArray());
@@ -246,7 +249,6 @@ public class ServerRecipeManager
     public static void resetRecipeFile()
     {
         recipes.clear();
-        StemRecipes.initServerRecipes();
         createDefaultRecipeFile();
         readRecipeFile();
     }

@@ -5,7 +5,6 @@ import brightspark.stem.handler.GuiHandler;
 import brightspark.stem.init.StemBlocks;
 import brightspark.stem.init.StemFluids;
 import brightspark.stem.init.StemItems;
-import brightspark.stem.init.StemRecipes;
 import brightspark.stem.recipe.CommandStem;
 import brightspark.stem.recipe.ServerRecipeManager;
 import brightspark.stem.util.CommonUtils;
@@ -17,6 +16,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.File;
 
@@ -72,7 +72,7 @@ public class STEM
     {
         //Initialize GUIs, tile entities, recipies, event handlers here
 
-        StemRecipes.init();
+        GameRegistry.addSmelting(new ItemStack(StemItems.itemBasic, 1, 0), new ItemStack(StemItems.itemBasic, 1, 1), 1f);
         StemBlocks.regOres();
         StemItems.regOres();
         WrenchHelper.addWrench(StemItems.itemWrench.getRegistryName().toString());
@@ -87,7 +87,6 @@ public class STEM
 
         //Init recipes
         ServerRecipeManager.init();
-        StemRecipes.initServerRecipes();
         ServerRecipeManager.readRecipeFile();
 
         StemItems.ITEMS = null;
