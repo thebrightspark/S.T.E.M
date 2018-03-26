@@ -24,14 +24,13 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
 {
     //The ItemStacks stored in this tile
     protected NonNullList<ItemStack> slots;
-    protected IItemHandler itemHandler;
+    private IItemHandler itemHandler;
     //This is used by getSlotsForFace
-    protected int[] slotsForFaces;
+    private int[] slotsForFaces;
     //This is used in block.getDrops() so that certain data is saved to the ItemStack when a wrench.json is used.
     public boolean usedWrenchToBreak = false;
-    protected boolean shouldSaveInventoryToNBT = true;
 
-    public static final String KEY_INVENTORY = "inventory";
+    private static final String KEY_INVENTORY = "inventory";
 
     public StemTileEntity(int numSlots)
     {
@@ -43,9 +42,8 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void copyDataFrom(StemTileEntity machine)
     {
         //Copy inventory
-        if(shouldSaveInventoryToNBT)
-            for(int i = 0; i < machine.slots.size(); ++ i)
-                slots.set(i, machine.slots.get(i));
+        for(int i = 0; i < machine.slots.size(); ++ i)
+            slots.set(i, machine.slots.get(i));
     }
 
     /**
@@ -56,19 +54,16 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
         if(!stack.hasTagCompound())
             stack.setTagCompound(new NBTTagCompound());
         //Write inventory
-        if(shouldSaveInventoryToNBT)
+        NBTTagList stackList = new NBTTagList();
+        for(int i = 0; i < slots.size(); ++ i)
         {
-            NBTTagList stackList = new NBTTagList();
-            for(int i = 0; i < slots.size(); ++ i)
-            {
-                if(slots.get(i).isEmpty()) continue;
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setByte("slot", (byte) i);
-                slots.get(i).writeToNBT(tag);
-                stackList.appendTag(tag);
-            }
-            NBTHelper.setList(stack, KEY_INVENTORY, stackList);
+            if(slots.get(i).isEmpty()) continue;
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setByte("slot", (byte) i);
+            slots.get(i).writeToNBT(tag);
+            stackList.appendTag(tag);
         }
+        NBTHelper.setList(stack, KEY_INVENTORY, stackList);
     }
 
     /**
@@ -77,14 +72,11 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void readDataFromStack(ItemStack stack)
     {
         //Read inventory
-        if(shouldSaveInventoryToNBT)
+        NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
+        for(int i = 0; i < stackList.tagCount(); ++ i)
         {
-            NBTTagList stackList = NBTHelper.getList(stack, KEY_INVENTORY);
-            for(int i = 0; i < stackList.tagCount(); ++ i)
-            {
-                NBTTagCompound tag = stackList.getCompoundTagAt(i);
-                slots.set(tag.getByte("slot"), new ItemStack(tag));
-            }
+            NBTTagCompound tag = stackList.getCompoundTagAt(i);
+            slots.set(tag.getByte("slot"), new ItemStack(tag));
         }
     }
 
@@ -92,14 +84,11 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public void readFromNBT(NBTTagCompound nbt)
     {
         //Read inventory
-        if(shouldSaveInventoryToNBT)
+        NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
+        for(int i = 0; i < stackList.tagCount(); ++ i)
         {
-            NBTTagList stackList = nbt.getTagList(KEY_INVENTORY, Constants.NBT.TAG_COMPOUND);
-            for(int i = 0; i < stackList.tagCount(); ++ i)
-            {
-                NBTTagCompound tag = stackList.getCompoundTagAt(i);
-                slots.set(tag.getByte("slot"), new ItemStack(tag));
-            }
+            NBTTagCompound tag = stackList.getCompoundTagAt(i);
+            slots.set(tag.getByte("slot"), new ItemStack(tag));
         }
 
         super.readFromNBT(nbt);
@@ -109,19 +98,16 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     public NBTTagCompound writeToNBT(NBTTagCompound nbt)
     {
         //Write inventory
-        if(shouldSaveInventoryToNBT)
+        NBTTagList stackList = new NBTTagList();
+        for(int i = 0; i < slots.size(); ++ i)
         {
-            NBTTagList stackList = new NBTTagList();
-            for(int i = 0; i < slots.size(); ++ i)
-            {
-                if(slots.get(i).isEmpty()) continue;
-                NBTTagCompound tag = new NBTTagCompound();
-                tag.setByte("slot", (byte) i);
-                slots.get(i).writeToNBT(tag);
-                stackList.appendTag(tag);
-            }
-            nbt.setTag(KEY_INVENTORY, stackList);
+            if(slots.get(i).isEmpty()) continue;
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setByte("slot", (byte) i);
+            slots.get(i).writeToNBT(tag);
+            stackList.appendTag(tag);
         }
+        nbt.setTag(KEY_INVENTORY, stackList);
 
         return super.writeToNBT(nbt);
     }

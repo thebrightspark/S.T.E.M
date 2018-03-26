@@ -21,7 +21,6 @@ public class TileScannerStorage extends StemTileEntity
     public TileScannerStorage()
     {
         super(2);
-        shouldSaveInventoryToNBT = false;
     }
 
     /**
