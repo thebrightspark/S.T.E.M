@@ -75,5 +75,7 @@ gui.create.complete=Creation Complete
 
 //Misc
 
+itemGroup.stem=S.T.E.M
+
 waila.energyStorage.stored=Energy:
 waila.energyStorage.inOut=Max Input/Output:

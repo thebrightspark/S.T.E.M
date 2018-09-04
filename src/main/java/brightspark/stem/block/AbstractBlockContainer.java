@@ -35,7 +35,7 @@ public abstract class AbstractBlockContainer<T extends StemTileEntity> extends B
     {
         super(mat);
         setCreativeTab(STEM.STEM_TAB);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setRegistryName(name);
         setHardness(2f);
         setResistance(10f);

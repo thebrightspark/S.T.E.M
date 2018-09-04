@@ -36,10 +36,8 @@ public class StemBlocks
 
     public static void registerTE(Class<? extends TileEntity> te, Block block)
     {
-        GameRegistry.registerTileEntity(te, block.getRegistryName().getResourcePath());
+        GameRegistry.registerTileEntity(te, block.getRegistryName());
     }
-
-
 
     public static void init()
     {

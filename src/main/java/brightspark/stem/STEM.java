@@ -36,15 +36,9 @@ public class STEM
     public static final CreativeTabs STEM_TAB = new CreativeTabs(MOD_ID)
     {
         @Override
-        public ItemStack getTabIconItem()
+        public ItemStack createIcon()
         {
             return new ItemStack(StemFluids.fluidStem.getBlock());
-        }
-
-        @Override
-        public String getTranslatedTabLabel()
-        {
-            return MOD_NAME;
         }
     };
 

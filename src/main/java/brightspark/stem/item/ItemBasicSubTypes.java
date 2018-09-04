@@ -42,16 +42,16 @@ public class ItemBasicSubTypes extends ItemBasic implements ISubTypes
      * different names based on their damage or NBT.
      */
     @Override
-    public String getUnlocalizedName(ItemStack stack)
+    public String getTranslationKey(ItemStack stack)
     {
         if(hasSubtypes)
         {
             int meta = stack.getMetadata();
             String[] names = getSubNames();
             if(meta >= 0 && meta < names.length)
-                return super.getUnlocalizedName(stack) + "." + names[meta];
+                return super.getTranslationKey(stack) + "." + names[meta];
         }
-        return super.getUnlocalizedName(stack);
+        return super.getTranslationKey(stack);
     }
 
     @Override

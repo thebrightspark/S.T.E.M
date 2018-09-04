@@ -59,7 +59,7 @@ public class GuiMachineBase<T extends StemTileEntity> extends GuiContainer
 
     protected void drawText()
     {
-        fontRenderer.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, textColour);
+        fontRenderer.drawString(I18n.format(te.getBlockType().getTranslationKey() + ".name"), 8, 6, textColour);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, 82, textColour);
     }
 

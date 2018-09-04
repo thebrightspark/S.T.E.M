@@ -174,7 +174,7 @@ public class CommonUtils
     public static String stackToString(ItemStack stack)
     {
         String stackName;
-        if(stack.getItem().getRegistryName().getResourcePath().equalsIgnoreCase("xtones"))
+        if(stack.getItem().getRegistryName().getPath().equalsIgnoreCase("xtones"))
             stackName = stack.getItem().getRegistryName().toString();
         else
             stackName = stack.getDisplayName();

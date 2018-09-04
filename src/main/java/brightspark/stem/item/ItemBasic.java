@@ -11,7 +11,7 @@ public class ItemBasic extends Item
     public ItemBasic(String itemName)
     {
         setCreativeTab(STEM.STEM_TAB);
-        setUnlocalizedName(itemName);
+        setTranslationKey(itemName);
         setRegistryName(itemName);
     }
 

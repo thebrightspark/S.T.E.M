@@ -10,7 +10,7 @@ public class BlockBasic extends Block
     {
         super(mat);
         setCreativeTab(STEM.STEM_TAB);
-        setUnlocalizedName(name);
+        setTranslationKey(name);
         setRegistryName(name);
         setHardness(2f);
         setResistance(10f);

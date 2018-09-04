@@ -45,7 +45,7 @@ public class CommandStem extends CommandBase
 
     private ITextComponent recipeToMessage(StemRecipe recipe)
     {
-        return new TextComponentTranslation(recipe.getOutput().getUnlocalizedName() + ".name")
+        return new TextComponentTranslation(recipe.getOutput().getTranslationKey() + ".name")
                 .appendSibling(new TextComponentString(" -> " + CommonUtils.addDigitGrouping(recipe.fluidInput) + "mb"));
     }
 

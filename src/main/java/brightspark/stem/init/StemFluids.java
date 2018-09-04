@@ -48,7 +48,7 @@ public class StemFluids
     {
         return new BlockFluidClassic(fluid, new MaterialLiquid(colour))
                 .setRegistryName(fluid.getName())
-                .setUnlocalizedName(fluid.getName())
+                .setTranslationKey(fluid.getName())
                 .setCreativeTab(STEM.STEM_TAB);
     }
 

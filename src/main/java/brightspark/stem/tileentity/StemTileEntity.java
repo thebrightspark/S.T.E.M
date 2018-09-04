@@ -248,7 +248,7 @@ public class StemTileEntity extends TileEntity implements ISidedInventory
     @Override
     public String getName()
     {
-        return blockType.getRegistryName().getResourcePath();
+        return blockType.getRegistryName().getPath();
     }
 
     @Override

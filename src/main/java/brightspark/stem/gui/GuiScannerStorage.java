@@ -57,7 +57,7 @@ public class GuiScannerStorage extends GuiMachineBase<TileScannerStorage>
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        fontRenderer.drawString(I18n.format(te.getBlockType().getUnlocalizedName() + ".name"), 8, 6, 4210752);
+        fontRenderer.drawString(I18n.format(te.getBlockType().getTranslationKey() + ".name"), 8, 6, 4210752);
         fontRenderer.drawString(I18n.format("container.inventory"), 8, 82, 4210752);
 
         List<ItemStack> recipes = te.getStoredRecipes();
