@@ -8,7 +8,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
+
+import javax.annotation.Nullable;
 
 @Optional.Interface(modid = "redstoneflux", iface = "cofh.redstoneflux.api.IEnergyReceiver", striprefs = true)
 public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITickable
@@ -208,5 +212,21 @@ public class TileMachine extends StemTileEntity implements IEnergyReceiver, ITic
     public int getFieldCount()
     {
         return 2;
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing)
+    {
+        return capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
+    {
+        if(capability == CapabilityEnergy.ENERGY)
+            return (T) energy;
+        return super.getCapability(capability, facing);
     }
 }
