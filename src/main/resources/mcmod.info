@@ -16,8 +16,8 @@
           "screenshots": [],
           "parent": "",
           "dependants": [],
-          "dependencies": [""],
-          "requiredMods": [""],
+          "dependencies": [],
+          "requiredMods": [],
           "useDependencyInformation": true
         }
     ]
