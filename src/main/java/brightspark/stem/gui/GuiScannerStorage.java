@@ -7,6 +7,7 @@ import brightspark.stem.util.CommonUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -77,7 +78,10 @@ public class GuiScannerStorage extends GuiMachineBase<TileScannerStorage>
             fontRenderer.drawString(numText, x, recipeBox.y + 2, colourBlue);
 
             //Draw item
+            GlStateManager.pushMatrix();
+            RenderHelper.enableGUIStandardItemLighting();
             itemRender.renderItemAndEffectIntoGUI(recipeStack, recipeBox.x, recipeBox.y + 16);
+            GlStateManager.popMatrix();
             //Draw item name
             fontRenderer.drawString(recipeStack.getDisplayName(), recipeBox.x + 18, recipeBox.y + 12, colourBlue);
 
